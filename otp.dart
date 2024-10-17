@@ -1,6 +1,11 @@
+/* otp.dart */
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); // Initialize Firebase
   runApp(OTPVerificationApp());
 }
 
@@ -18,7 +23,49 @@ class OTPVerificationApp extends StatelessWidget {
   }
 }
 
-class OTPVerificationScreen extends StatelessWidget {
+class OTPVerificationScreen extends StatefulWidget {
+  @override
+  _OTPVerificationScreenState createState() => _OTPVerificationScreenState();
+}
+
+class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  late String _verificationId;
+  String _phoneNumber = '+123456789'; // Example phone number (Use a valid phone number)
+
+  Future<void> _verifyPhoneNumber() async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: _phoneNumber,
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await _auth.signInWithCredential(credential);
+        // Handle successful verification
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        // Handle unsuccessful verification
+        if (e.code == 'invalid-phone-number') {
+          print('The provided phone number is not valid.');
+        }
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        _verificationId = verificationId;
+        // Update UI, ask user to enter the OTP received
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        _verificationId = verificationId;
+      },
+    );
+  }
+
+  void _sendOtpViaSms() {
+    _verifyPhoneNumber(); // Initiate phone number verification
+  }
+
+  // Simulated Send OTP via Email feature
+  void _sendOtpViaEmail() {
+    print("OTP sent to Email - This feature is not implemented using Firebase yet.");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +123,7 @@ class OTPVerificationScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 24),
                     ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: _sendOtpViaSms,
                       icon: Icon(Icons.sms, color: Colors.white),
                       label: Text('Send OTP via SMS'),
                       style: ElevatedButton.styleFrom(
@@ -96,7 +143,7 @@ class OTPVerificationScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 16),
                     ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: _sendOtpViaEmail,
                       icon: Icon(Icons.email, color: Color(0xFF222741)),
                       label: Text('Send OTP via Email'),
                       style: ElevatedButton.styleFrom(
@@ -117,7 +164,9 @@ class OTPVerificationScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       child: Text('Back'),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.black,

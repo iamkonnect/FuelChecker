@@ -15,6 +15,9 @@ class MyApp extends StatelessWidget {
 }
 
 class FuelCheckPage extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +26,7 @@ class FuelCheckPage extends StatelessWidget {
           // Background image
           Positioned.fill(
             child: Image.asset(
-              './assets/rectangle-1.svg', // Ensure you have this image in your assets
+              './assets/rectangle-1.svg', // Ensure the image is in your assets
               fit: BoxFit.cover,
             ),
           ),
@@ -40,7 +43,7 @@ class FuelCheckPage extends StatelessWidget {
           ),
           // Dots alignment at the bottom
           Positioned(
-            bottom: 285,
+            bottom: 350,
             left: 95,
             right: 95,
             child: Row(
@@ -63,6 +66,38 @@ class FuelCheckPage extends StatelessWidget {
               './assets/i-os-status-bar-black.svg',
             ),
           ),
+          // Login Form
+          Positioned(
+            left: 40,
+            right: 40,
+            bottom: 100,
+            child: Column(
+              children: [
+                TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(),
+                  ),
+                  obscureText: true, // To hide the password
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () => _submitLogin(context),
+                  child: Text('Submit'),
+                ),
+              ],
+            ),
+          ),
           // Line at the bottom
           Positioned(
             bottom: 10,
@@ -76,5 +111,34 @@ class FuelCheckPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // Function to validate email format
+  bool _isValidEmail(String email) {
+    final RegExp regex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return regex.hasMatch(email);
+  }
+
+  // Updated function to include email validation
+  void _submitLogin(BuildContext context) {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    if (!_isValidEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please enter a valid email address'),
+      ));
+      return;
+    }
+
+    if (email.isNotEmpty && password.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Login successful'),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please enter both email and password'),
+      ));
+    }
   }
 }

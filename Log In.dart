@@ -1,3 +1,4 @@
+/* Log In.dart */
 import 'package:flutter/material.dart';
 
 void main() {
@@ -21,6 +22,8 @@ class LogInPage extends StatefulWidget {
 
 class _LogInPageState extends State<LogInPage> {
   bool showPassword = false;
+  final _emailOrUsernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +46,15 @@ class _LogInPageState extends State<LogInPage> {
                 ),
               ),
               SizedBox(height: 48),
-              buildTextField("Email"),
+              buildTextField("Username or Email", _emailOrUsernameController),
               SizedBox(height: 16),
               buildPasswordField(),
               SizedBox(height: 24),
               Center(
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Navigate to the Sign Up page
+                  },
                   child: Text(
                     "Don’t have an account? Sign Up",
                     style: TextStyle(
@@ -73,7 +78,11 @@ class _LogInPageState extends State<LogInPage> {
                       padding:
                           EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      // Implement login logic here
+                      // For example: navigate to dashboard if successful
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardPage()));
+                    },
                     child: Text(
                       "Log In",
                       style: TextStyle(
@@ -88,7 +97,10 @@ class _LogInPageState extends State<LogInPage> {
               SizedBox(height: 16),
               Center(
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Logic to send reset password email
+                    sendResetPasswordEmail(_emailOrUsernameController.text);
+                  },
                   child: Text(
                     "Forgot your password?",
                     style: TextStyle(
@@ -106,8 +118,9 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 
-  Widget buildTextField(String label) {
+  Widget buildTextField(String label, TextEditingController controller) {
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
@@ -127,6 +140,7 @@ class _LogInPageState extends State<LogInPage> {
 
   Widget buildPasswordField() {
     return TextField(
+      controller: _passwordController,
       obscureText: !showPassword,
       decoration: InputDecoration(
         labelText: "Password",
@@ -156,6 +170,27 @@ class _LogInPageState extends State<LogInPage> {
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(color: Colors.transparent),
         ),
+      ),
+    );
+  }
+
+  void sendResetPasswordEmail(String emailOrUsername) {
+    // Add the logic to send an email to reset password.
+    // This typically involves checking if the input is a valid email
+    // and then triggering a back-end service call to send the reset email.
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("Password Reset"),
+        content: Text("An email has been sent to reset your password."),
+        actions: <Widget>[
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
       ),
     );
   }
