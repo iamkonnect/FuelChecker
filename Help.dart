@@ -1,3 +1,4 @@
+/* Help.dart */
 import 'package:flutter/material.dart';
 
 void main() {
@@ -34,7 +35,9 @@ class HelpScreen extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           icon: Image.asset('./assets/arrow-left.png'),
-          onPressed: () {},
+          onPressed: () {
+            _navigateToLocationScreen(context);
+          },
         ),
       ),
       body: Padding(
@@ -43,13 +46,28 @@ class HelpScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 60),
-            _buildSectionTitle('Find the cheapest fuel on my route'),
+            GestureDetector(
+              onTap: () {
+                _requestCheapestFuelInfo();
+              },
+              child: _buildSectionTitle('Find the cheapest fuel on my route'),
+            ),
             _buildSectionContent('1. Fuel Check gives you...'),
             SizedBox(height: 42),
-            _buildSectionTitle('Set a favourite station'),
+            GestureDetector(
+              onTap: () {
+                _setFavouriteStation();
+              },
+              child: _buildSectionTitle('Set a favourite station'),
+            ),
             _buildSectionContent('1. Fuel Check gives you...'),
             SizedBox(height: 42),
-            _buildSectionTitle('Notification'),
+            GestureDetector(
+              onTap: () {
+                _enableNotifications();
+              },
+              child: _buildSectionTitle('Notification'),
+            ),
             _buildSectionContent('1. Fuel Check gives you...'),
           ],
         ),
@@ -88,4 +106,69 @@ class HelpScreen extends StatelessWidget {
       ),
     );
   }
+
+  void _navigateToLocationScreen(BuildContext context) {
+    // Simulate navigation back to the location screen
+    Navigator.of(context).pop();
+    // Or push to location screen if it’s a separate screen
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => LocationScreen()));
+  }
+
+  void _requestCheapestFuelInfo() {
+    // Simulate request to the backend to find the cheapest fuel
+    print('Requesting the cheapest fuel info...');
+    // Display notification about the results (or mock data)
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('Notification'),
+        content: Text('Cheapest fuel info received! Check your app updates for details.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _setFavouriteStation() {
+    // Simulate setting the favourite fuel station
+    print('Setting Puma Petroleum as your favourite fuel station...');
+    // Display confirmation
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('Favourite Station'),
+        content: Text('Puma Petroleum has been set as your favourite station.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _enableNotifications() {
+    // Simulate enabling notifications for updates
+    print('Enabling notifications...');
+    // Notify the user
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('Notification'),
+        content: Text('Notifications have been enabled for updates.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
 }
+

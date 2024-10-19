@@ -1,3 +1,4 @@
+/* Fuel Station Map.dart */
 import 'package:flutter/material.dart';
 
 void main() {
@@ -38,11 +39,10 @@ class FuelStationsScreen extends StatelessWidget {
                   Expanded(
                     child: Stack(
                       children: [
-                        // Map background
+                        // Mock-up of interactive map
                         Positioned.fill(
-                          child: Image.asset(
-                            './assets/rectangle-776.svg',
-                            fit: BoxFit.cover,
+                          child: Container(
+                            color: Colors.grey[300], // Placeholder for map
                           ),
                         ),
                         // Station widgets
@@ -51,18 +51,26 @@ class FuelStationsScreen extends StatelessWidget {
                           left: 65,
                           child: StationWidget(
                             imageAsset: './assets/iconly-light-location-5.svg',
-                            label: "Blend E5\n\$1.40",
+                            label: "Blend E5\n\$1.40\nPuma",
                           ),
                         ),
                         Positioned(
-                          top: 201,
-                          left: 168,
+                          top: 131,
+                          left: 200,
                           child: StationWidget(
                             imageAsset: './assets/iconly-light-location-4.svg',
-                            label: "Blend E5\n\$1.50",
+                            label: "Blend E10\n\$1.55\nBP",
                           ),
                         ),
-                        // Add more stations similar to above...
+                        Positioned(
+                          top: 210,
+                          left: 130,
+                          child: StationWidget(
+                            imageAsset: './assets/iconly-light-location-3.svg',
+                            label: "Diesel\n\$1.30\nShell",
+                          ),
+                        ),
+                        // Add additional station widgets as necessary...
                       ],
                     ),
                   ),
@@ -85,7 +93,7 @@ class FuelStationsScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0x1E232E80),
+                                color: Color.fromRGBO(30, 35, 46, 0.5),
                               ),
                             ),
                           ),

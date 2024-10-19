@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(FuelSearchApp());
@@ -15,6 +16,19 @@ class FuelSearchApp extends StatelessWidget {
 }
 
 class FuelSearchScreen extends StatelessWidget {
+  
+  _launchMaps(String location, {String? destination}) async {
+    final String baseUrl = 'https://www.google.com/maps/search/';
+    final String url = destination != null
+        ? '$baseUrl$destination+near+$location'
+        : '$baseUrl$location';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,6 +79,19 @@ class FuelSearchScreen extends StatelessWidget {
                         color: Color(0xFFDF2626),
                       ),
                     ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Placeholder location string; replace with a function to retrieve actual location if available
+                        _launchMaps('Harare, Zimbabwe', destination: 'Puma Petroleum');
+                      },
+                      child: Text(
+                        'Find Nearest Station',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -82,7 +109,7 @@ class FuelSearchScreen extends StatelessWidget {
                         Expanded(
                           child: TextField(
                             decoration: InputDecoration(
-                              hintText: 'Puma Petroleum',
+                              hintText: 'Enter fuel station or location',
                               hintStyle: TextStyle(
                                 fontFamily: 'Agency FB',
                                 fontWeight: FontWeight.w700,
@@ -255,3 +282,4 @@ class FuelCard extends StatelessWidget {
     );
   }
 }
+
