@@ -7,6 +7,8 @@ void main() {
 }
 
 class UpdateDetailsPage extends StatelessWidget {
+  const UpdateDetailsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

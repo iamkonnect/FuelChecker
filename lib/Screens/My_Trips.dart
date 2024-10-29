@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyTripApp extends StatelessWidget {
+  const MyTripApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,6 +19,8 @@ class MyTripApp extends StatelessWidget {
 }
 
 class MyTripPage extends StatelessWidget {
+  const MyTripPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +101,7 @@ class MyTripPage extends StatelessWidget {
 }
 
 class DotIndicator extends StatelessWidget {
-  const DotIndicator({Key? key, required this.isActive}) : super(key: key);
+  const DotIndicator({super.key, required this.isActive});
 
   final bool isActive;
 

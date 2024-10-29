@@ -5,6 +5,8 @@ void main() {
 }
 
 class SignUpApp extends StatelessWidget {
+  const SignUpApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,6 +20,8 @@ class SignUpApp extends StatelessWidget {
 }
 
 class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +83,7 @@ class SignUpScreen extends StatelessWidget {
                 buildInputField("Confirm Password", "Enter your password"),
                 buildPhoneInputField("Phone Number", "+263", "734 578 011"),
                 SizedBox(height: 24.0),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(

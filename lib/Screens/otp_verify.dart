@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,6 +16,8 @@ class MyApp extends StatelessWidget {
 }
 
 class OTPVerificationScreen extends StatelessWidget {
+  const OTPVerificationScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final double paddingHorizontal = 24.0;
@@ -100,7 +104,7 @@ class TextFieldWithLabel extends StatelessWidget {
   final String label;
   final String value;
 
-  TextFieldWithLabel({required this.label, required this.value});
+  const TextFieldWithLabel({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +149,7 @@ class OTPButton extends StatelessWidget {
   final Color textColor;
   final VoidCallback onPressed;
 
-  OTPButton({
+  const OTPButton({super.key, 
     required this.iconPath,
     required this.label,
     required this.color,
@@ -177,12 +181,19 @@ class OTPButton extends StatelessWidget {
 class BackButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  BackButton({required this.onPressed});
+  const BackButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+      ),
       child: Text(
         'Back',
         style: TextStyle(
@@ -190,13 +201,6 @@ class BackButton extends StatelessWidget {
           fontWeight: FontWeight.w700,
           color: Colors.white,
         ),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
-        ),
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
       ),
     );
   }

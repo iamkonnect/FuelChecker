@@ -5,6 +5,8 @@ void main() {
 }
 
 class FuelStationsApp extends StatelessWidget {
+  const FuelStationsApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,6 +17,8 @@ class FuelStationsApp extends StatelessWidget {
 }
 
 class FuelMapPage extends StatelessWidget {
+  const FuelMapPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +75,7 @@ class FuelStationPrice extends StatelessWidget {
   final String imagePath;
   final String price;
 
-  FuelStationPrice({required this.imagePath, required this.price});
+  const FuelStationPrice({super.key, required this.imagePath, required this.price});
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +104,8 @@ class FuelStationPrice extends StatelessWidget {
 }
 
 class FuelTypeBox extends StatelessWidget {
+  const FuelTypeBox({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -130,6 +136,8 @@ class FuelTypeBox extends StatelessWidget {
 }
 
 class BottomNavigation extends StatelessWidget {
+  const BottomNavigation({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(

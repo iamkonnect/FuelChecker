@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_checker/Screens/FuelMap.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -11,13 +14,22 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class FeedbackPage extends StatelessWidget {
+class FeedbackPage extends StatefulWidget {
+  const FeedbackPage({super.key}); // Add const here
+
+  @override
+  _FeedbackPageState createState() => _FeedbackPageState();
+}
+
+class _FeedbackPageState extends State<FeedbackPage> {
   final TextEditingController feedbackController = TextEditingController();
+  int? rating; // To store the star rating
 
   void submitFeedback(BuildContext context) {
     final feedback = feedbackController.text;
     final email = 'support@fuelcheckerzw.com';
-    // Send email function can be called here.
+    
+    // Here you can implement email sending logic or any other feedback handling logic.
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -27,8 +39,29 @@ class FeedbackPage extends StatelessWidget {
 
     // Navigate back to the Fuel Map
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => FuelMapPage()),
+      MaterialPageRoute(builder: (context) => const FuelMapPage()), // Add const here
     );
+  }
+
+  Widget buildStar(int index) {
+    return IconButton(
+      icon: Icon(
+        index <= (rating ?? 0) ? Icons.star : Icons.star_border,
+        color: Colors.amber,
+        size: 40,
+      ),
+      onPressed: () {
+        setState(() {
+          rating = index; // Update the rating based on the star clicked
+        });
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    feedbackController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,7 +91,7 @@ class FeedbackPage extends StatelessWidget {
           children: [
             SizedBox(height: 24),
             Text(
-              'Do you like Fuel Check?',
+              'Rate your experience with Fuel Check:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -66,23 +99,8 @@ class FeedbackPage extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  icon: Image.asset('./assets/group-768.svg'),
-                  iconSize: 95,
-                  onPressed: () {
-                    // Handle thumb up action
-                  },
-                ),
-                IconButton(
-                  icon: Image.asset('./assets/group-769.svg'),
-                  iconSize: 95,
-                  onPressed: () {
-                    // Handle thumb down action
-                  },
-                ),
-              ],
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(5, (index) => buildStar(index + 1)),
             ),
             SizedBox(height: 24),
             Text(
@@ -131,20 +149,4 @@ class FeedbackPage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class FuelMapPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Fuel Map'),
-      ),
-      body: Center(
-        child: Text('Fuel Map Content Here'),
-      ),
-    );
-  }
-}
+   

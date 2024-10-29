@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 void main() => runApp(HelpScreen());
 
 class HelpScreen extends StatelessWidget {
+  const HelpScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,6 +14,8 @@ class HelpScreen extends StatelessWidget {
 }
 
 class HelpPage extends StatelessWidget {
+  const HelpPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +76,7 @@ class HelpPage extends StatelessWidget {
 class SectionTitle extends StatelessWidget {
   final String text;
 
-  SectionTitle({required this.text});
+  const SectionTitle({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +96,7 @@ class SectionTitle extends StatelessWidget {
 class DescriptionText extends StatelessWidget {
   final String text;
 
-  DescriptionText({required this.text});
+  const DescriptionText({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {

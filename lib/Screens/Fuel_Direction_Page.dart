@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,6 +17,8 @@ class MyApp extends StatelessWidget {
 }
 
 class SearchMapPage extends StatelessWidget {
+  const SearchMapPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,6 +66,8 @@ class SearchMapPage extends StatelessWidget {
 }
 
 class SearchFields extends StatelessWidget {
+  const SearchFields({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -118,6 +124,8 @@ class SearchFields extends StatelessWidget {
 }
 
 class FilterButton extends StatelessWidget {
+  const FilterButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -142,6 +150,8 @@ class FilterButton extends StatelessWidget {
 }
 
 class InformationCard extends StatelessWidget {
+  const InformationCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -174,6 +184,8 @@ class InformationCard extends StatelessWidget {
 }
 
 class BottomNavBar extends StatelessWidget {
+  const BottomNavBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
