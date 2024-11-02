@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,6 +14,8 @@ class MyApp extends StatelessWidget {
 }
 
 class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +95,7 @@ class RegisterPage extends StatelessWidget {
 class SocialButton extends StatelessWidget {
   final String asset;
 
-  SocialButton({required this.asset});
+  const SocialButton({super.key, required this.asset});
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +118,7 @@ class InputField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
 
-  InputField({
+  const InputField({super.key, 
     required this.label,
     required this.hintText,
     this.obscureText = false,
@@ -154,6 +158,8 @@ class InputField extends StatelessWidget {
 }
 
 class RememberMeSwitch extends StatefulWidget {
+  const RememberMeSwitch({super.key});
+
   @override
   _RememberMeSwitchState createState() => _RememberMeSwitchState();
 }
@@ -189,9 +195,11 @@ class _RememberMeSwitchState extends State<RememberMeSwitch> {
 }
 
 class SignUpButton extends StatelessWidget {
+  const SignUpButton({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FuelSearchPage extends StatelessWidget {
+  const FuelSearchPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

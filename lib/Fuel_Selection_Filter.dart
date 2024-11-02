@@ -5,6 +5,8 @@ void main() {
 }
 
 class FuelCheckApp extends StatelessWidget {
+  const FuelCheckApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,6 +17,8 @@ class FuelCheckApp extends StatelessWidget {
 }
 
 class FuelCheckPage extends StatelessWidget {
+  const FuelCheckPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

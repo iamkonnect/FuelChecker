@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 void main() => runApp(FuelCheckApp());
 
 class FuelCheckApp extends StatelessWidget {
+  const FuelCheckApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,6 +15,8 @@ class FuelCheckApp extends StatelessWidget {
 }
 
 class LogOutScreen extends StatelessWidget {
+  const LogOutScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

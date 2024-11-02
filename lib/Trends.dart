@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,6 +20,8 @@ class MyApp extends StatelessWidget {
 }
 
 class TrendsPage extends StatelessWidget {
+  const TrendsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,14 +32,14 @@ class TrendsPage extends StatelessWidget {
             child: Column(
               children: [
                 // Status Bar placeholder
-                Container(
+                SizedBox(
                   height: 44,
                   width: double.infinity,
                   child: Image.asset('./assets/i-os-status-bar-black.svg'),
                 ),
                 SizedBox(height: 37),
                 // Trend image
-                Container(
+                SizedBox(
                   height: 220,
                   width: 220,
                   child: Image.asset('./assets/image-2.svg'),
@@ -109,7 +113,7 @@ class TrendsPage extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 // Bottom image placeholder
-                Container(
+                SizedBox(
                   height: 10,
                   width: 200,
                   child: Image.asset('./assets/rectangle-9.svg'),
