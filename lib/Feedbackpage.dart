@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_checker/Screens/FuelMap.dart';
+import 'package:fuel_checker/FuelMap.dart'; // Ensure FuelMapPage is defined in this file
 
 void main() => runApp(MyApp());
 
@@ -9,39 +9,52 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: FeedbackPage(),
+      home: const FeedbackPage(), // Make this const
     );
   }
 }
 
 class FeedbackPage extends StatefulWidget {
-  const FeedbackPage({super.key}); // Add const here
+  const FeedbackPage({super.key}); // Keep const here
 
   @override
-  _FeedbackPageState createState() => _FeedbackPageState();
+  FeedbackPageState createState() => FeedbackPageState();
 }
 
-class _FeedbackPageState extends State<FeedbackPage> {
+class FeedbackPageState extends State<FeedbackPage> {
   final TextEditingController feedbackController = TextEditingController();
   int? rating; // To store the star rating
 
-  void submitFeedback(BuildContext context) {
-    final feedback = feedbackController.text;
-    final email = 'support@fuelcheckerzw.com';
-    
-    // Here you can implement email sending logic or any other feedback handling logic.
-    
+void submitFeedback(BuildContext context) {
+  final feedback = feedbackController.text;
+
+  if (feedback.isEmpty || rating == null) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Feedback submitted'),
+        content: Text('Please provide feedback and a rating.'),
       ),
     );
-
-    // Navigate back to the Fuel Map
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const FuelMapPage()), // Add const here
-    );
+    return;
   }
+
+  final sun = 'support@fuelcheckerzw.com';
+
+  // Here you can implement email sending logic or any other feedback handling logic.
+  // For example, you could call an API to send the feedback to the email address.
+
+  // Example: sendFeedbackToEmail(email, feedback, rating);
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('Feedback submitted'),
+    ),
+  );
+
+  // Navigate back to the Fuel Map
+  Navigator.of(context).pushReplacement(
+    MaterialPageRoute(builder: (context) => const FuelMapPage()), // Ensure FuelMapPage is defined
+  );
+}
 
   Widget buildStar(int index) {
     return IconButton(
@@ -69,7 +82,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Image.asset('./assets/arrow-left.svg'),
+          icon: Image.asset('assets/arrow-left.svg'), // Ensure this path is correct
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Colors.white,
@@ -122,31 +135,4 @@ class _FeedbackPageState extends State<FeedbackPage> {
             TextField(
               controller: feedbackController,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.all(16.0),
-                hintText: 'Enter your comments here',
-              ),
-              maxLines: 4,
-            ),
-            SizedBox(height: 24),
-            Center(
-              child: ElevatedButton(
-                onPressed: () => submitFeedback(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFdf2626),
-                  padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100.0),
-                  ),
-                  textStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                child: Text('Submit'),
-              ),
-            ),
-          ],
-        ),
-      ),
-   
+                border: OutlineInput;

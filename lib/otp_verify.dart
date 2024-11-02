@@ -20,7 +20,6 @@ class OTPVerificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double paddingHorizontal = 24.0;
 
     return Scaffold(
       backgroundColor: Color(0xFFF7F7F7),
