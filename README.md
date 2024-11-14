@@ -1,6 +1,6 @@
 # fuel_checker
 
-A new Flutter project.
+A new Fuel checker project.
 
 ## Getting Started
 
