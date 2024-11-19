@@ -33,21 +33,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-//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 TOKEN
-// class MyFirstScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('First Screen'),
-//       ),
-//       body: Center(
-//         child: Text(
-//           'Hello, Flutter!',
-//           style: TextStyle(fontSize: 24),
-//         ),
-//       ),
-//     );
-//   }
-// }
