@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// Example before:
+final apiKey = "ghp_123456789ABCDEF"; // Secret!
+
 void main() {
   runApp(MyApp());
 }
