@@ -1,29 +1,53 @@
 import 'package:flutter/material.dart';
-import 'widgets/fuel_calculator.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fuel Checker',
+      title: 'My First Flutter App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
       ),
-      home: const Scaffold(
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: FuelCalculator(),
-          ),
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Screen'),
+      ),
+      body: Center(
+        child: Text(
+          'Welcome to the FuelChecker First Screen!',
+          style: TextStyle(fontSize: 24),
         ),
       ),
     );
   }
 }
+
+//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 TOKEN
+// class MyFirstScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('First Screen'),
+//       ),
+//       body: Center(
+//         child: Text(
+//           'Hello, Flutter!',
+//           style: TextStyle(fontSize: 24),
+//         ),
+//       ),
+//     );
+//   }
+// }
