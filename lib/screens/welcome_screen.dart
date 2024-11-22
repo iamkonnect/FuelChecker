@@ -21,24 +21,23 @@ class WelcomeScreen extends StatelessWidget {
                   Icon(
                     Icons.location_on,
                     size: 80,
-                    color: Colors.red, // Adjust the icon color as needed
+                    color: Colors.red,
                   ),
-                  SizedBox(width: 10), // Space between icon and text
+                  SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'FUEL',
                         style: TextStyle(
-                          fontSize: 36, // Large text
-                          fontWeight: FontWeight.bold, // Bold styling
-                          color: Colors.black, // White text for visibility
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                           shadows: [
                             Shadow(
                               offset: Offset(2, 2),
                               blurRadius: 4,
-                              color: Colors.black
-                                  .withOpacity(0.6), // Shadow effect
+                              color: Colors.black.withOpacity(0.6),
                             ),
                           ],
                         ),
@@ -46,15 +45,14 @@ class WelcomeScreen extends StatelessWidget {
                       Text(
                         'CHECKER',
                         style: TextStyle(
-                          fontSize: 36, // Large text
-                          fontWeight: FontWeight.bold, // Bold styling
-                          color: Colors.black, // White text for visibility
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                           shadows: [
                             Shadow(
                               offset: Offset(2, 2),
                               blurRadius: 4,
-                              color: Colors.black
-                                  .withOpacity(0.6), // Shadow effect
+                              color: Colors.black.withOpacity(0.6),
                             ),
                           ],
                         ),
@@ -63,7 +61,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 20), // Space between the two rows
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(4, (index) {
@@ -71,7 +69,7 @@ class WelcomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: CircleAvatar(
                       radius: 10,
-                      backgroundColor: Colors.black, // Black circles
+                      backgroundColor: Colors.black,
                     ),
                   );
                 }),
