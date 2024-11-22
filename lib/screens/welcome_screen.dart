@@ -20,7 +20,7 @@ class WelcomeScreen extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.location_on,
-                    size: 80,
+                    size: 100,
                     color: Colors.red,
                   ),
                   SizedBox(width: 10),
@@ -30,8 +30,8 @@ class WelcomeScreen extends StatelessWidget {
                       Text(
                         'FUEL',
                         style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                          fontWeight: FontWeight.w900,
                           color: Colors.black,
                           shadows: [
                             Shadow(
@@ -45,8 +45,8 @@ class WelcomeScreen extends StatelessWidget {
                       Text(
                         'CHECKER',
                         style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                          fontWeight: FontWeight.w900,
                           color: Colors.black,
                           shadows: [
                             Shadow(
