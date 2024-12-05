@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'signup_screen_final_copy_updated_v3.dart'; // Importing the updated SignUpScreen
+
 class WelcomeScreen extends StatelessWidget {
+const WelcomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+          decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('lib/assets/images/map_background.png'),
             fit: BoxFit.cover,
@@ -15,66 +19,47 @@ class WelcomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.location_on,
-                    size: 80,
-                    color: Colors.red, // Adjust the icon color as needed
-                  ),
-                  SizedBox(width: 10), // Space between icon and text
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'FUEL',
-                        style: TextStyle(
-                          fontSize: 36, // Large text
-                          fontWeight: FontWeight.bold, // Bold styling
-                          color: Colors.black, // White text for visibility
-                          shadows: [
-                            Shadow(
-                              offset: Offset(2, 2),
-                              blurRadius: 4,
-                              color: Colors.black
-                                  .withOpacity(0.6), // Shadow effect
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        'CHECKER',
-                        style: TextStyle(
-                          fontSize: 36, // Large text
-                          fontWeight: FontWeight.bold, // Bold styling
-                          color: Colors.black, // White text for visibility
-                          shadows: [
-                            Shadow(
-                              offset: Offset(2, 2),
-                              blurRadius: 4,
-                              color: Colors.black
-                                  .withOpacity(0.6), // Shadow effect
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              // Updated Logo
+              Image.asset('lib/assets/images/logo-full-color-150-x-1.svg'), // Logo
+const SizedBox(height: 20), // Space between logo and text
+              Text(
+                'FUEL CHECK',
+                style: TextStyle(
+                  fontSize: 36,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  shadows: [
+                    Shadow(
+                      offset: const Offset(2, 2),
+                      blurRadius: 4,
+                      color: Colors.black.withOpacity(0.6),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 20), // Space between the two rows
+              const SizedBox(height: 20), // Space between text and dots
+              // Loading Dots
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(4, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                children: List.generate(5, (index) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
                     child: CircleAvatar(
                       radius: 10,
-                      backgroundColor: Colors.black, // Black circles
+                      backgroundColor: Colors.black,
                     ),
                   );
                 }),
+              ),
+              // Sign Up Button
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SignUpScreen()), // Updated reference
+                  );
+                },
+                child: const Text('Sign Up'),
               ),
             ],
           ),
