@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-class OtpVerificationScreen extends StatelessWidget {
-  const OtpVerificationScreen({super.key});
+class OtpVerificationScreenV4 extends StatelessWidget {
+  final String phoneNumber; // Add phoneNumber parameter
+
+  const OtpVerificationScreenV4({super.key, required this.phoneNumber}); // Update constructor
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +31,8 @@ class OtpVerificationScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Please enter the codes sent to your email/sms',
+                Text( // Display the phone number
+                  'Please enter the codes sent to your phone: $phoneNumber',
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
@@ -39,7 +41,7 @@ class OtpVerificationScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(4, (index) {
                     return SizedBox(
-                      width: 60,
+                      width: 200,
                       child: TextField(
                         textAlign: TextAlign.center,
                         decoration: const InputDecoration(
@@ -59,22 +61,32 @@ class OtpVerificationScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 // Enter Button
-                ElevatedButton(
-                  onPressed: () {
-                    // Logic to verify OTP
-                  },
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  child: const Text('Enter'),
-                ),
-                const SizedBox(height: 20),
-                // Back Button
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Go back to the previous screen
-                  },
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                  child: const Text('Back'),
-                ),
+ElevatedButton(
+  onPressed: () {
+    // Logic to verify OTP
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color(0xFFDF2626),
+    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+    elevation: 5,
+  ),
+  child: const Text('Enter'),
+),
+const SizedBox(height: 20),
+// Back Button
+ElevatedButton(
+  onPressed: () {
+    Navigator.pop(context); // Go back to the previous screen
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color(0xFFDF2626),
+    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+    elevation: 5,
+  ),
+  child: const Text('Back'),
+),
               ],
             ),
           ),
