@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +26,7 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Logo
-              Image.asset('lib/assets/images/logo-full-color-150-x-1.svg'),
+              Image.asset('lib/assets/images/logo-full-color-150-x-1.png', height: 150),
               const SizedBox(height: 20),
               Text(
                 'FUEL CHECK',
@@ -41,6 +49,7 @@ class LoginScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
                         filled: true,
@@ -50,6 +59,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     TextField(
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         filled: true,
@@ -59,28 +69,55 @@ class LoginScreen extends StatelessWidget {
                       obscureText: true,
                     ),
                     const SizedBox(height: 20),
-ElevatedButton(
-  onPressed: () {
-    // Handle login logic here
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFFDF2626),
-    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-    elevation: 5,
-  ),
-  child: const Text('Login'),
-),
-const SizedBox(height: 10),
-TextButton(
-  onPressed: () {
-    // Handle forgot password logic here
-  },
-  child: const Text(
-    'Forgot your password? Click here',
-    style: TextStyle(color: Colors.blue),
-  ),
-),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final email = _emailController.text;
+                        final password = _passwordController.text;
+
+                        if (email == 'akwera@gmail.com' && password == '1234Abc!') {
+                          // Navigate to the fuel type selection screen
+                          Navigator.pushNamed(context, '/fuel_type_selection');
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Login successful!')),
+                            );
+                          }
+                        } else {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Invalid credentials')),
+                            );
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFDF2626),
+                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        elevation: 5,
+                      ),
+                      child: const Text('Login'),
+                    ),
+                    const SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/forgot_password');
+                      },
+                      child: const Text(
+                        'Forgot your password? Click here',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/signup');
+                      },
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -89,5 +126,12 @@ TextButton(
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

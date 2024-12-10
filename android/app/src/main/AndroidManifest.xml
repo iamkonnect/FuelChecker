@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application
+<application
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao"/>
         android:label="my_first_flutter_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

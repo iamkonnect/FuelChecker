@@ -1,4 +1,4 @@
-# my_first_flutter_app
+# fuel_checker_app
 
 A new Flutter project.
 

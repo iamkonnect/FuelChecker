@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'signup_screen_v7.dart'; // Importing the updated SignUpScreenV7
-import 'login_screen.dart'; // Importing the new LoginScreen
 
-class WelcomeScreenV7 extends StatelessWidget {
-  const WelcomeScreenV7({super.key});
+import 'login_screen.dart'; // Importing the new LoginScreen
+import 'signup_screen_v7.dart'; // Importing the updated SignUpScreenV7
+import 'terms_and_conditions_screen.dart'; // Importing the TermsAndConditionsScreen
+
+class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class WelcomeScreenV7 extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Updated Logo
-              Image.asset('lib/assets/images/logo-full-color-150-x-1.svg'), // Logo
+              Image.asset('lib/assets/images/logo-full-color-150-x-1.png', height: 150), // Logo
               const SizedBox(height: 20), // Space between logo and text
               Text(
                 'FUEL CHECK',
@@ -83,6 +85,31 @@ ElevatedButton(
     elevation: 5,
   ),
   child: const Text('Login'),
+),
+const SizedBox(height: 20), // Space between login and next buttons
+ElevatedButton(
+  onPressed: () {
+    // Check if the user is new
+    bool isNewUser = true; // Replace with actual logic to check if the user is new
+    if (isNewUser) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const TermsAndConditionsScreen()), // Navigate to terms and conditions screen
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SignUpScreenV7()), // Navigate to sign up screen
+      );
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color(0xFFDF2626),
+    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+    elevation: 5,
+  ),
+  child: const Text('Next'),
 ),
             ],
           ),
