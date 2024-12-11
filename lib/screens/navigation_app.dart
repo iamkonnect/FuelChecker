@@ -76,6 +76,35 @@ class _NavigationAppState extends State<NavigationApp> {
   // Build the Google Map
   @override
   Widget build(BuildContext context) {
+    int _selectedIndex = 0;
+
+    void _onItemTapped(int index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+      // Handle navigation based on the selected index
+      switch (index) {
+        case 0:
+          // Navigate to Home
+          break;
+        case 1:
+          // Navigate to Favorites
+          break;
+        case 2:
+          // Navigate to Trends
+          break;
+        case 3:
+          // Navigate to My Trips
+          break;
+        case 4:
+          // Navigate to Nearby
+          break;
+        case 5:
+          // Navigate to Settings
+          break;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Navigation App'),
@@ -94,6 +123,38 @@ class _NavigationAppState extends State<NavigationApp> {
         onPressed: _goToCurrentLocation,
         tooltip: 'Current Location',
         child: const Icon(Icons.my_location),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png')),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
+            label: 'Trends',
+          ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
+            label: 'My Trips',
+          ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('lib/assets/images/nearby.png')),
+            label: 'Nearby',
+          ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('lib/assets/images/Settings.png')),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color(0xFFDF2626), // Change selected color
+        unselectedItemColor: Colors.black, // Default color
+        onTap: _onItemTapped,
       ),
     );
   }

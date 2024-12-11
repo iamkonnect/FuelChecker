@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'otp_verification_screen_v4.dart'; // Importing the OTP Verification Screen
-import 'terms_and_conditions_screen.dart'; // Importing the Terms and Conditions Screen
+import 'login_screen.dart'; // Importing the Login Screen
 
 class SignUpScreenV7 extends StatefulWidget {
   const SignUpScreenV7({super.key});
@@ -12,17 +11,54 @@ class SignUpScreenV7 extends StatefulWidget {
 class SignUpScreenV7State extends State<SignUpScreenV7> {
   final TextEditingController countryCodeController = TextEditingController(); // Controller for country code
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  String _passwordStrength = '';
+  Color _passwordStrengthColor = Colors.black;
+
+  String evaluatePasswordStrength(String password) {
+    if (password.length < 8) {
+      _passwordStrengthColor = Colors.red;
+      return 'Weak';
+    } else if (password.contains(RegExp(r'[A-Z]')) &&
+               password.contains(RegExp(r'[0-9]')) &&
+               password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      _passwordStrengthColor = Colors.green;
+      return 'Strong';
+    } else {
+      _passwordStrengthColor = Colors.orange;
+      return 'Moderate';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Welcome')),
+      appBar: AppBar(
+        title: const Text(''),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.arrow_forward),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()), // Navigate to Login Screen
+              );
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Image.asset(
+                'lib/assets/images/logo-full-color-150-x-1.png',
+                height: 100, // Adjust height as needed
+              ),
+              const SizedBox(height: 20),
               const Text(
                 'Welcome to Fuel Checker!',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -58,22 +94,37 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                 ),
               ),
               const SizedBox(height: 10),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: _passwordController,
+                decoration: const InputDecoration(
                   labelText: 'Password',
+                  prefixIcon: Icon(Icons.lock),
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+                onChanged: (value) {
+                  setState(() {
+                    _passwordStrength = evaluatePasswordStrength(value);
+                  });
+                },
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _confirmPasswordController,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm Password',
                   prefixIcon: Icon(Icons.lock),
                   border: OutlineInputBorder(),
                 ),
                 obscureText: true,
               ),
               const SizedBox(height: 10),
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'Confirm Password',
-                  prefixIcon: Icon(Icons.lock),
-                  border: OutlineInputBorder(),
+              Text(
+                'Password Strength: $_passwordStrength',
+                style: TextStyle(
+                  color: _passwordStrengthColor,
+                  fontWeight: FontWeight.bold,
                 ),
-                obscureText: true,
               ),
               const SizedBox(height: 10),
               // Text field for country code
@@ -96,30 +147,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  if (mounted) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const TermsAndConditionsScreen()),
-                    ).then((value) {
-                      if (value == true && mounted) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => OtpVerificationScreenV4(phoneNumber: phoneController.text)), // Pass phone number
-                        );
-                      }
-                    });
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFDF2626),
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  elevation: 5,
-                ),
-                child: const Text('Sign Up', style: TextStyle(fontSize: 18)),
-              ),
+              // Removed the Sign Up button
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

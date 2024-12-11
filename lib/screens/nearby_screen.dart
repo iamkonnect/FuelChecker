@@ -30,14 +30,14 @@ class _FuelCheckerAppState extends State<FuelCheckerApp> {
       dieselPrice: 1.59,
     ),
     FuelStation(
-      name: 'Puma Petroleum',
-      distance: '3 km away',
+      name: 'Shell',
+      distance: '5 km away',
       blendESPrice: 1.36,
       dieselPrice: 1.50,
     ),
     FuelStation(
-      name: 'Puma Petroleum',
-      distance: '3 km away',
+      name: 'Totalenergies',
+      distance: '7 km away',
       blendESPrice: 1.27,
       dieselPrice: 1.40,
     ),
@@ -49,32 +49,34 @@ class _FuelCheckerAppState extends State<FuelCheckerApp> {
       appBar: AppBar(
         title: const Text('Fuel Nearby'),
       ),
-      body: ListView.builder(
-        itemCount: fuelStations.length,
-        itemBuilder: (context, index) {
-          final fuelStation = fuelStations[index];
-          return Card(
-            child: ListTile(
-              leading: Image.asset('assets/puma_logo.png'),
-              title: Text(fuelStation.name),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(fuelStation.distance),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Text('Blend ES: \$${fuelStation.blendESPrice.toStringAsFixed(2)}'),
-                      const SizedBox(width: 16),
-                      Text('Diesel: \$${fuelStation.dieselPrice.toStringAsFixed(2)}'),
-                    ],
+      body: fuelStations.isEmpty
+          ? const Center(child: Text('No fuel stations available.'))
+          : ListView.builder(
+              itemCount: fuelStations.length,
+              itemBuilder: (context, index) {
+                final fuelStation = fuelStations[index];
+                return Card(
+                  child: ListTile(
+                    leading: Image.asset('lib/assets/images/logo-full-color-150-x-1.png'),
+                    title: Text(fuelStation.name),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(fuelStation.distance),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Text('Blend ES: \$${fuelStation.blendESPrice.toStringAsFixed(2)}'),
+                            const SizedBox(width: 16),
+                            Text('Diesel: \$${fuelStation.dieselPrice.toStringAsFixed(2)}'),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }

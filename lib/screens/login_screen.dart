@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'signup_screen_v7.dart'; // Importing the Sign Up Screen
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,6 +11,18 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  bool isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return emailRegex.hasMatch(email);
+  }
+
+  bool isValidPassword(String password) {
+    return password.length >= 8 &&
+           password.contains(RegExp(r'[A-Z]')) &&
+           password.contains(RegExp(r'[0-9]')) &&
+           password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,23 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Logo
-              Image.asset('lib/assets/images/logo-full-color-150-x-1.png', height: 150),
+              Image.asset('lib/assets/images/logo-full-color-150-x-1.png', height: 300),
               const SizedBox(height: 20),
-              Text(
-                'FUEL CHECK',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  shadows: [
-                    Shadow(
-                      offset: const Offset(2, 2),
-                      blurRadius: 4,
-                      color: Colors.black.withOpacity(0.6),
-                    ),
-                  ],
-                ),
-              ),
+              // Removed the text "FUEL CHECK"
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -74,20 +73,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         final email = _emailController.text;
                         final password = _passwordController.text;
 
-                        if (email == 'akwera@gmail.com' && password == '1234Abc!') {
-                          // Navigate to the fuel type selection screen
-                          Navigator.pushNamed(context, '/fuel_type_selection');
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Login successful!')),
-                            );
-                          }
-                        } else {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Invalid credentials')),
-                            );
-                          }
+                        if (!isValidEmail(email)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Invalid email format')),
+                          );
+                          return;
+                        }
+
+                        if (!isValidPassword(password)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Password must be at least 8 characters long and include uppercase letters, numbers, and special characters.')),
+                          );
+                          return;
+                        }
+
+                        // Simulate successful login for demonstration
+                        Navigator.pushNamed(context, '/fuel_type_selection');
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Login successful!')),
+                          );
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -111,7 +116,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 10),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/signup');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const SignUpScreenV7()), // Navigate to Sign Up Screen
+                        );
                       },
                       child: const Text(
                         'Sign Up',

@@ -18,101 +18,92 @@ class WelcomeScreen extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Updated Logo
-              Image.asset('lib/assets/images/logo-full-color-150-x-1.png', height: 150), // Logo
-              const SizedBox(height: 20), // Space between logo and text
-              Text(
-                'FUEL CHECK',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  shadows: [
-                    Shadow(
-                      offset: const Offset(2, 2),
-                      blurRadius: 4,
-                      color: shadowColor,
+        child: Stack(
+          children: [
+            Positioned(
+              top: 40,
+              right: 20,
+              child: Column(
+                children: [
+                  // Updated Logo
+                  Image.asset('lib/assets/images/logo-full-color-150-x-1.png', height: 300), // Logo
+                  const SizedBox(height: 20), // Space between logo and text
+                  // Removed the text "FUEL CHECK"
+                  const SizedBox(height: 20), // Space between text and dots
+                  // Loading Dots
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.0),
+                        child: CircleAvatar(
+                          radius: 10,
+                          backgroundColor: Colors.black,
+                        ),
+                      );
+                    }),
+                  ),
+                  // Sign Up Button
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SignUpScreenV7()), // Updated reference
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFDF2626),
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      elevation: 5,
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20), // Space between text and dots
-              // Loading Dots
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(5, (index) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    child: CircleAvatar(
-                      radius: 10,
-                      backgroundColor: Colors.black,
+                    child: const Text('Sign Up'),
+                  ),
+                  const SizedBox(height: 20), // Space between sign-up and login buttons
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginScreen()), // New reference
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFDF2626),
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      elevation: 5,
                     ),
-                  );
-                }),
+                    child: const Text('Login'),
+                  ),
+                  const SizedBox(height: 20), // Space between login and next buttons
+                  ElevatedButton(
+                    onPressed: () {
+                      // Check if the user is new
+                      bool isNewUser = true; // Replace with actual logic to check if the user is new
+                      if (isNewUser) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const TermsAndConditionsScreen()), // Navigate to terms and conditions screen
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const SignUpScreenV7()), // Navigate to sign up screen
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFDF2626),
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      elevation: 5,
+                    ),
+                    child: const Text('Next'),
+                  ),
+                ],
               ),
-              // Sign Up Button
-ElevatedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SignUpScreenV7()), // Updated reference
-    );
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFFDF2626),
-    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-    elevation: 5,
-  ),
-  child: const Text('Sign Up'),
-),
-const SizedBox(height: 20), // Space between sign-up and login buttons
-ElevatedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()), // New reference
-    );
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFFDF2626),
-    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-    elevation: 5,
-  ),
-  child: const Text('Login'),
-),
-const SizedBox(height: 20), // Space between login and next buttons
-ElevatedButton(
-  onPressed: () {
-    // Check if the user is new
-    bool isNewUser = true; // Replace with actual logic to check if the user is new
-    if (isNewUser) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const TermsAndConditionsScreen()), // Navigate to terms and conditions screen
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SignUpScreenV7()), // Navigate to sign up screen
-      );
-    }
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFFDF2626),
-    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-    elevation: 5,
-  ),
-  child: const Text('Next'),
-),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
