@@ -75,11 +75,11 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     child: const Text('Login'),
                   ),
-                  const SizedBox(height: 20), // Space between login and next buttons
+                  const SizedBox(height: 20), 
                   ElevatedButton(
                     onPressed: () {
                       // Check if the user is new
-                      bool isNewUser = true; // Replace with actual logic to check if the user is new
+                      bool isNewUser = true; 
                       if (isNewUser) {
                         Navigator.push(
                           context,
