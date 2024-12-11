@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/welcome_screen_v7.dart'; // Importing the WelcomeScreen
+import 'screens/welcome_screen.dart'; // Importing the WelcomeScreen
 import 'screens/login_screen.dart'; // Importing the LoginScreen
 import 'screens/fuel_type_selection_screen.dart'; // Importing the FuelTypeSelectionScreen
 import 'screens/forgot_password_screen.dart'; // Importing the ForgotPasswordScreen
