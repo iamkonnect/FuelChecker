@@ -1,6 +1,7 @@
 {
-    "cmake.sourceDirectory": "C:/Users/infin/Desktop/FuelChecker/FuelChecker/linux",
+    "cmake.sourceDirectory": "C:/Users/infin/Desktop/FuelChecker/linux",
     "yaml.schemas": {
         "https://json.schemastore.org/pubspec.json": "file:///c%3A/Users/infin/Desktop/FuelChecker/FuelChecker/pubspec.yaml"
-    }
+    },
+    "cmake.options.statusBarVisibility": "hidden"
 }
