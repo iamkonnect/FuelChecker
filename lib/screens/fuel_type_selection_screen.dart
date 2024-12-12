@@ -31,7 +31,7 @@ class _FuelTypeSelectionScreenState extends State<FuelTypeSelectionScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/logo-full-color-150-x-1.png'),
+            Image.asset('lib/assets/images/logo-full-color-150-x-1.png', height: 300),
             const SizedBox(height: 32.0),
             const Text(
               'Please select your Fuel Type',

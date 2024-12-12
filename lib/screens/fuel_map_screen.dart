@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -32,8 +33,8 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
 
           // Fuel station markers
           const Positioned(
-            top: 100,
-            left: 100,
+            inset-block-start: 100,
+            inset-inline-start: 100,
             child: FuelStationMarker(
               stationName: 'Totalenergies',
               blendE5Price: '\$1.40',
@@ -41,8 +42,8 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
             ),
           ),
           const Positioned(
-            top: 250,
-            left: 200,
+            inset-block-start: 250,
+            inset-inline-start: 200,
             child: FuelStationMarker(
               stationName: 'Engen',
               blendE5Price: '\$1.36',
@@ -50,8 +51,8 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
             ),
           ),
           const Positioned(
-            top: 350,
-            left: 400,
+            inset-block-start: 350,
+            inset-inline-start: 400,
             child: FuelStationMarker(
               stationName: 'Puma',
               blendE5Price: '\$1.36',
@@ -59,8 +60,8 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
             ),
           ),
           const Positioned(
-            top: 450,
-            left: 550,
+            inset-block-start: 450,
+            inset-inline-start: 550,
             child: FuelStationMarker(
               stationName: 'Puma',
               blendE5Price: '\$1.27',
@@ -68,8 +69,8 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
             ),
           ),
           const Positioned(
-            top: 100,
-            right:  100,
+            inset-block-start: 100,
+            inset-inline-end:  100,
             child: FuelStationMarker(
               stationName: 'Shell',
               blendE5Price: '\$1.45',
@@ -90,7 +91,7 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
           ),
           BottomNavigationBarItem(
             icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
-            label: 'Trends',
+            label: 'Trends', // Ensure this is correctly placed
           ),
           BottomNavigationBarItem(
             icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
