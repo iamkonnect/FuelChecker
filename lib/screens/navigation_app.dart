@@ -76,11 +76,11 @@ class _NavigationAppState extends State<NavigationApp> {
   // Build the Google Map
   @override
   Widget build(BuildContext context) {
-    int _selectedIndex = 0;
+    int selectedIndex = 0;
 
-    void _onItemTapped(int index) {
+    void onItemTapped(int index) {
       setState(() {
-        _selectedIndex = index;
+        selectedIndex = index;
       });
       // Handle navigation based on the selected index
       switch (index) {
@@ -151,10 +151,10 @@ class _NavigationAppState extends State<NavigationApp> {
             label: 'Settings',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: selectedIndex,
         selectedItemColor: const Color(0xFFDF2626), // Change selected color
         unselectedItemColor: Colors.black, // Default color
-        onTap: _onItemTapped,
+        onTap: onItemTapped,
       ),
     );
   }

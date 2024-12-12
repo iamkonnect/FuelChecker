@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart'; // Importing the Login Screen
+import 'login_screen.dart'; // Importing the LoginScreen
 
 class SignUpScreenV7 extends StatefulWidget {
   const SignUpScreenV7({super.key});
@@ -42,7 +42,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()), // Navigate to Login Screen
+                MaterialPageRoute(builder: (context) => LoginScreen()), // Navigate to Login Screen
               );
             },
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -28,7 +29,8 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
       body: Stack(
         children: <Widget>[
           // Map widget
-          Image.asset('assets/fuel_map.png'), // Replace with your actual image asset
+          Image.asset(
+              'assets/fuel_map.png'), // Replace with your actual image asset
 
           // Fuel station markers
           const Positioned(
@@ -69,7 +71,7 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
           ),
           const Positioned(
             top: 100,
-            right:  100,
+            right: 100,
             child: FuelStationMarker(
               stationName: 'Shell',
               blendE5Price: '\$1.45',
@@ -105,11 +107,10 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
             label: 'Settings',
           ),
         ],
-        currentIndex: 0, // Set the current index based on your logic
-        selectedItemColor: const Color(0xFFDF2626), // Change selected color
-        unselectedItemColor: Colors.black, // Default color
+        currentIndex: 0,
+        selectedItemColor: const Color(0xFFDF2626),
+        unselectedItemColor: Colors.black,
         onTap: (index) {
-          // Handle navigation based on the index
           switch (index) {
             case 0:
               // Navigate to Home
@@ -141,7 +142,8 @@ class FuelStationMarker extends StatelessWidget {
   final String blendE5Price;
   final String dieselPrice;
 
-  const FuelStationMarker({super.key, 
+  const FuelStationMarker({
+    super.key,
     required this.stationName,
     required this.blendE5Price,
     required this.dieselPrice,
