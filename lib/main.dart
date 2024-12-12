@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
-import 'screens/welcome_screen.dart'; // Importing the WelcomeScreen
-import 'screens/login_screen.dart'; // Importing the LoginScreen
-import 'screens/fuel_type_selection_screen.dart'; // Importing the FuelTypeSelectionScreen
-import 'screens/forgot_password_screen.dart'; // Importing the ForgotPasswordScreen
-import 'screens/navigation_app.dart'; // Importing the NavigationApp
-import 'screens/nearby_screen.dart'; // Importing the NearbyScreen
-import 'screens/fuel_map_screen.dart'; // Importing the FuelMapScreen
+import 'screens/welcome_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/fuel_type_selection_screen.dart';
+import 'screens/forgot_password_screen.dart';
+import 'screens/navigation_app.dart';
+import 'screens/fuel_checker_app.dart';
+import 'screens/fuel_map_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fuel Checker',
+      title: 'My First Flutter App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
