@@ -29,12 +29,13 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
       body: Stack(
         children: <Widget>[
           // Map widget
-          Image.asset('assets/fuel_map.png'), // Replace with your actual image asset
+          Image.asset(
+              'assets/fuel_map.png'), // Replace with your actual image asset
 
           // Fuel station markers
           const Positioned(
-            inset-block-start: 100,
-            inset-inline-start: 100,
+            top: 100,
+            left: 100,
             child: FuelStationMarker(
               stationName: 'Totalenergies',
               blendE5Price: '\$1.40',
@@ -42,8 +43,8 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
             ),
           ),
           const Positioned(
-            inset-block-start: 250,
-            inset-inline-start: 200,
+            top: 250,
+            left: 200,
             child: FuelStationMarker(
               stationName: 'Engen',
               blendE5Price: '\$1.36',
@@ -51,8 +52,8 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
             ),
           ),
           const Positioned(
-            inset-block-start: 350,
-            inset-inline-start: 400,
+            top: 350,
+            left: 400,
             child: FuelStationMarker(
               stationName: 'Puma',
               blendE5Price: '\$1.36',
@@ -60,8 +61,8 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
             ),
           ),
           const Positioned(
-            inset-block-start: 450,
-            inset-inline-start: 550,
+            top: 450,
+            left: 550,
             child: FuelStationMarker(
               stationName: 'Puma',
               blendE5Price: '\$1.27',
@@ -69,8 +70,8 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
             ),
           ),
           const Positioned(
-            inset-block-start: 100,
-            inset-inline-end:  100,
+            top: 100,
+            right: 100,
             child: FuelStationMarker(
               stationName: 'Shell',
               blendE5Price: '\$1.45',
@@ -91,7 +92,7 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
           ),
           BottomNavigationBarItem(
             icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
-            label: 'Trends', // Ensure this is correctly placed
+            label: 'Trends',
           ),
           BottomNavigationBarItem(
             icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
@@ -106,11 +107,10 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
             label: 'Settings',
           ),
         ],
-        currentIndex: 0, // Set the current index based on your logic
-        selectedItemColor: const Color(0xFFDF2626), // Change selected color
-        unselectedItemColor: Colors.black, // Default color
+        currentIndex: 0,
+        selectedItemColor: const Color(0xFFDF2626),
+        unselectedItemColor: Colors.black,
         onTap: (index) {
-          // Handle navigation based on the index
           switch (index) {
             case 0:
               // Navigate to Home
@@ -142,7 +142,8 @@ class FuelStationMarker extends StatelessWidget {
   final String blendE5Price;
   final String dieselPrice;
 
-  const FuelStationMarker({super.key, 
+  const FuelStationMarker({
+    super.key,
     required this.stationName,
     required this.blendE5Price,
     required this.dieselPrice,
