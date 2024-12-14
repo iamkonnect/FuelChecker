@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'login_screen.dart'; // Importing the LoginScreen
-import 'signup_screen_v7.dart'; // Importing the SignUpScreenV7
-import 'terms_and_conditions_screen.dart'; // Importing the TermsAndConditionsScreen
+// Importing the SignUpScreenV7
+// Importing the TermsAndConditionsScreen
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -16,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
             );
           },
         ),

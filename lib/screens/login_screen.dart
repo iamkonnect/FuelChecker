@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart'; 
-import 'welcome_screen.dart'; // Import the WelcomeScreen
+// Import the WelcomeScreen
 import 'fuel_type_selection_screen.dart'; // Import the FuelTypeSelectionScreen
 import 'signup_screen_v7.dart'; // Import for the SignUpScreenV7
 import 'forgot_password_screen.dart'; // Import the ForgotPasswordScreen
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
