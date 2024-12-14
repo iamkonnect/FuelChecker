@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'otp_verification_screen_v4.dart'; // Importing the OTP verification screen
 
 class SignUpScreenV7 extends StatefulWidget {
   const SignUpScreenV7({super.key});
@@ -41,9 +42,12 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
     }
 
     // Handle sign-up logic here (e.g., API call)
-    // For now, just show a success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Sign up successful!')),
+    // Navigate to OTP screen after successful sign-up
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OtpVerificationScreenV4(phoneNumber: _phoneController.text),
+      ),
     );
   }
 
@@ -148,11 +152,19 @@ IconButton(
 Row(
   mainAxisAlignment: MainAxisAlignment.center,
   children: List.generate(7, (index) {
+    Color barColor = Colors.grey; // Default color
+    if (_passwordController.text.length < 8) {
+      barColor = Colors.red; // First three bars are red
+    } else if (_passwordController.text.length < 12) {
+      barColor = index < 3 ? Colors.red : (index == 3 ? Colors.orange : Colors.green);
+    } else {
+      barColor = Colors.green; // All bars green for strong password
+    }
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 2),
       height: 10,
       width: 30,
-      color: index < (_passwordController.text.length ~/ 2) ? Colors.green : Colors.grey,
+      color: barColor,
     );
   }),
 ),
