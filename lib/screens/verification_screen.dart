@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'fuel_map_screen.dart'; // Importing the FuelMapScreen
+// Importing the FuelMapScreen
 
 class VerificationScreen extends StatelessWidget {
   final bool isVerified; // New variable to check verification status
@@ -41,7 +41,7 @@ class VerificationScreen extends StatelessWidget {
                       fontSize: 18,
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Back to OTP',
                     style: TextStyle(
                       fontSize: 18,

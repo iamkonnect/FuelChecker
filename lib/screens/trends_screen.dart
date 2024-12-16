@@ -66,23 +66,23 @@ class TrendsScreen extends StatelessWidget {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png')),
+            icon: ImageIcon(AssetImage('assets/images/Favourites.png')),
             label: 'Favorites',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
+            icon: ImageIcon(AssetImage('assets/images/Trends.png')),
             label: 'Trends',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
+            icon: ImageIcon(AssetImage('assets/images/my trips.png')),
             label: 'My Trips',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/nearby.png')),
+            icon: ImageIcon(AssetImage('assets/images/nearby.png')),
             label: 'Nearby',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Settings.png')),
+            icon: ImageIcon(AssetImage('assets/images/Settings.png')),
             label: 'Settings',
           ),
         ],

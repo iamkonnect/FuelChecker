@@ -31,7 +31,7 @@ class _OtpVerificationScreenV4State extends State<OtpVerificationScreenV4> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => VerificationScreen(isVerified: true),
+          builder: (context) => const VerificationScreen(isVerified: true),
         ),
       );
     } else {
@@ -50,7 +50,7 @@ class _OtpVerificationScreenV4State extends State<OtpVerificationScreenV4> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/assets/images/map_background.png'),
+            image: AssetImage('assets/images/map_background.png'),
             fit: BoxFit.cover,
           ),
         ),
