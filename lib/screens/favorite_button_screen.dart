@@ -1,35 +1,36 @@
 import 'package:flutter/material.dart';
-import 'my_trip_button_screen.dart'; // Import MyTripButtonScreen
+import 'summary_screen.dart'; // Importing the SummaryScreen
 
-class TrendsButtonScreen extends StatelessWidget {
-  const TrendsButtonScreen({super.key});
+class FavoriteButtonScreen extends StatelessWidget {
+  const FavoriteButtonScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Trends'),
+        title: const Text('Favorite'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // Add an image asset if needed
             Image.asset(
-              'lib/assets/images/Trends.png', // Adding the Trends image
+              'lib/assets/images/Favourites.png', // Corrected image name
               height: 200, // Adjust height as needed
             ),
             const SizedBox(height: 20),
             const Text(
-              'Trends', // Title for the trends section
+              'Favorite', // Title for the favorites section
               style: TextStyle(
-                fontSize: 24, // Adjust font size as needed
-                fontWeight: FontWeight.bold, // Make the title bold
-                color: Colors.black, // Set title color
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             const SizedBox(height: 20),
             const Text(
-              'Enjoy a quick glance of\ncurrent trends and analytics\non petrol prices, cheapest fill\ndays, price ranges in your\nlocal area',
+              'Customize and personalize by adding your favorite stations in the app.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16),
             ),
@@ -42,7 +43,7 @@ class TrendsButtonScreen extends StatelessWidget {
                   height: 10,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.orange,
+                    color: Colors.black, // First dot
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -51,7 +52,7 @@ class TrendsButtonScreen extends StatelessWidget {
                   height: 10,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.black,
+                    color: Colors.black, // Second dot
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -60,7 +61,7 @@ class TrendsButtonScreen extends StatelessWidget {
                   height: 10,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.black,
+                    color: Colors.black, // Third dot
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -69,7 +70,7 @@ class TrendsButtonScreen extends StatelessWidget {
                   height: 10,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.black,
+                    color: Colors.orange, // Fourth dot
                   ),
                 ),
               ],
@@ -77,17 +78,16 @@ class TrendsButtonScreen extends StatelessWidget {
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
-              // Navigate to the My Trip Button Screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyTripButtonScreen()), // Ensure to import MyTripButtonScreen
-              );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SummaryScreen()), // Navigate to SummaryScreen
+                );
               },
               style: ElevatedButton.styleFrom(
-                fixedSize: const Size(327, 48), // Set the size of the button
-                backgroundColor: Colors.red, // Set button color to red
+                fixedSize: const Size(327, 48),
+                backgroundColor: Colors.red,
                 textStyle: const TextStyle(
-                  color: Colors.white, // Change text color to white
+                  color: Colors.white,
                 ),
               ),
               child: const Text('Next'),
