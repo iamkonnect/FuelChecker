@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'verification_screen.dart'; // Importing the VerificationScreen
 
 class OtpVerificationScreenV4 extends StatefulWidget {
   final String phoneNumber; // Add phoneNumber parameter
@@ -26,8 +27,13 @@ class _OtpVerificationScreenV4State extends State<OtpVerificationScreenV4> {
   void _verifyOtp() {
     final enteredOtp = _otpCodes.join();
     if (enteredOtp == '123456') {
-      // OTP is correct, proceed to the filter screen
-      Navigator.pushReplacementNamed(context, '/filter_screen');
+      // OTP is correct, proceed to the verification screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const VerificationScreen(isVerified: true),
+        ),
+      );
     } else {
       // OTP is incorrect, show a more detailed error message
       if (mounted) {
@@ -44,7 +50,7 @@ class _OtpVerificationScreenV4State extends State<OtpVerificationScreenV4> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/assets/images/map_background.png'),
+            image: AssetImage('lib/assets/images/map_background.png'), // Ensure correct path
             fit: BoxFit.cover,
           ),
         ),
