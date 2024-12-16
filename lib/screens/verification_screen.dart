@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// Importing the FuelMapScreen
+import 'trends_button_screen.dart'; // Importing the TrendsButtonScreen
 
 class VerificationScreen extends StatelessWidget {
   final bool isVerified; // New variable to check verification status
@@ -48,11 +48,34 @@ class VerificationScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
               Icon(
                 Icons.check_circle,
                 size: 100,
                 color: isVerified ? Colors.green : Colors.red,
+              ),
+              const SizedBox(height: 20),
+              // New Enter Button
+              ElevatedButton(
+                onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TrendsButtonScreen()),
+                );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 243, 33, 33),
+                  fixedSize: const Size(327, 51), // Set the size of the button
+                  textStyle: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                child: const Text(
+                  'Enter',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
               ),
             ],
           ),
@@ -61,3 +84,4 @@ class VerificationScreen extends StatelessWidget {
     );
   }
 }
+

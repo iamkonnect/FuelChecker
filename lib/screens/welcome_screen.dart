@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'login_screen.dart'; // Importing the LoginScreen
+import 'trends_button_screen.dart'; // Importing the TrendsButtonScreen
 // Importing the SignUpScreenV7
 // Importing the TermsAndConditionsScreen
 
@@ -51,6 +52,16 @@ class WelcomeScreen extends StatelessWidget {
                   );
                 }),
               ),
+              const SizedBox(height: 20), // Margin before the button
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => TrendsButtonScreen()),
+              //     );
+              //   },
+              //   child: Text('Go to Trends'),
+              // ),
             ],
           ),
         ),
