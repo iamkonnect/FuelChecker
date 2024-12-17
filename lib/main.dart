@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => WelcomeScreen(), // Updated to non-const
+        '/': (context) => const WelcomeScreen(), // Updated to non-const
         '/login': (context) => const LoginScreen(),
         '/fuel_type_selection': (context) => const FuelTypeSelectionScreen(),
         '/forgot_password': (context) => const ForgotPasswordScreen(),

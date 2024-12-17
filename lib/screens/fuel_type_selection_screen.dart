@@ -74,7 +74,11 @@ class _FuelTypeSelectionScreenState extends State<FuelTypeSelectionScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
-                textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                textStyle: const TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white, // Change text color to white
+                ),
               ),
               child: const Text('Continue'),
             ),

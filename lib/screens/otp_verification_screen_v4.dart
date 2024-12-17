@@ -101,6 +101,7 @@ class _OtpVerificationScreenV4State extends State<OtpVerificationScreenV4> {
                     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                     elevation: 5,
+                    textStyle: const TextStyle(color: Colors.white), // Change text color to white
                   ),
                   child: const Text('Enter'),
                 ),
@@ -115,6 +116,7 @@ class _OtpVerificationScreenV4State extends State<OtpVerificationScreenV4> {
                     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                     elevation: 5,
+                    textStyle: const TextStyle(color: Colors.white), // Change text color to white
                   ),
                   child: const Text('Back'),
                 ),

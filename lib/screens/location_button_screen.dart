@@ -79,7 +79,7 @@ class LocationButtonScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-    MaterialPageRoute(builder: (context) => FavoriteButtonScreen()), // Navigate to FavoriteButtonScreen
+    MaterialPageRoute(builder: (context) => const FavoriteButtonScreen()), // Navigate to FavoriteButtonScreen
                 );
               },
               style: ElevatedButton.styleFrom(
