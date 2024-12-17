@@ -10,11 +10,21 @@ class SignUpScreenV7 extends StatefulWidget {
 }
 
 class SignUpScreenV7State extends State<SignUpScreenV7> {
+  bool _obscureText = true; // To toggle password visibility
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _countryCodeController = TextEditingController(text: '+263');
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _countryCodeController =
+      TextEditingController(text: '+263');
   final TextEditingController _phoneController = TextEditingController();
   Color _passwordStrengthColor = Colors.black;
   String _passwordStrength = '';
@@ -62,7 +72,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OtpVerificationScreenV4(phoneNumber: _phoneController.text),
+        builder: (context) =>
+            OtpVerificationScreenV4(phoneNumber: _phoneController.text),
       ),
     );
   }
@@ -96,22 +107,67 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                 const SizedBox(height: 20),
                 const Text(
                   'Welcome',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black), // Increased size and bold
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black), // Increased size and bold
                 ),
                 const SizedBox(height: 20),
-                const Text('Register with', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
+                const Text('Register with',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black)),
                 const SizedBox(height: 20),
                 Wrap(
                   alignment: WrapAlignment.center,
-                  spacing: 20,
+                  spacing: 10, // Reduced the spacing between icons
                   children: [
-                    Image.asset('lib/assets/images/Facebook Icon.png', width: 20, height: 20), // Updated Facebook icon name
-                    Image.asset('lib/assets/images/apple icon logo.png', width: 20, height: 20), // Updated Apple icon
-                    Image.asset('lib/assets/images/Black Google Icon.png', width: 20, height: 20), // Google icon
+                    Container(
+                      padding: const EdgeInsets.all(
+                          10), // Reduced padding inside the icon container
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Colors.grey), // Add a border with a color
+                        borderRadius: BorderRadius.circular(
+                            10), // Slightly rounded corners
+                      ),
+                      child: Image.asset(
+                        'lib/assets/images/Facebook Icon.png',
+                        width: 20,
+                        height: 20,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Image.asset(
+                        'lib/assets/images/apple icon logo.png',
+                        width: 20,
+                        height: 20,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Image.asset(
+                        'lib/assets/images/Black Google Icon.png',
+                        width: 20,
+                        height: 20,
+                      ),
+                    ),
                   ],
                 ),
+
                 const SizedBox(height: 10),
-                const Text('or', style: TextStyle(fontSize: 16, color: Colors.black)),
+                const Text('or',
+                    style: TextStyle(fontSize: 16, color: Colors.black)),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: 328,
@@ -119,7 +175,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                     controller: _fullNameController,
                     decoration: InputDecoration(
                       labelText: 'Full Name',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                 ),
@@ -130,7 +187,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                 ),
@@ -139,42 +197,53 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                   width: 328,
                   child: TextField(
                     controller: _passwordController,
+                    obscureText: _obscureText,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: _togglePasswordVisibility,
+                      ),
                     ),
-                    obscureText: true,
-                    onChanged: (value) {
-                      setState(() {
-                        evaluatePasswordStrength(value);
-                      });
-                    },
                   ),
                 ),
                 const SizedBox(height: 10),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // Align to the center
+                  mainAxisAlignment:
+                      MainAxisAlignment.center, // Align to the center
                   children: [
                     const SizedBox(width: 10), // Align with input fields
                     for (int i = 0; i < 3; i++)
                       Container(
                         width: 40, // Adjusted width for better visibility
-                        height: 8, // Increased height for better visibility
-                        color: _passwordStrengthColor == Colors.red ? Colors.red : Colors.grey,
+                        height: 2, // Increased height for better visibility
+                        color: _passwordStrengthColor == Colors.red
+                            ? Colors.red
+                            : Colors.grey,
                         margin: const EdgeInsets.symmetric(horizontal: 2),
                       ),
                     for (int i = 0; i < 1; i++)
                       Container(
                         width: 40, // Adjusted width for better visibility
-                        height: 8, // Increased height for better visibility
-                        color: _passwordStrengthColor == Colors.orange ? Colors.orange : Colors.grey,
+                        height: 2, // Increased height for better visibility
+                        color: _passwordStrengthColor == Colors.orange
+                            ? Colors.orange
+                            : Colors.grey,
                         margin: const EdgeInsets.symmetric(horizontal: 2),
                       ),
                     for (int i = 0; i < 3; i++)
                       Container(
                         width: 40, // Adjusted width for better visibility
-                        height: 8, // Increased height for better visibility
-                        color: _passwordStrengthColor == Colors.green ? Colors.green : Colors.grey,
+                        height: 2, // Increased height for better visibility
+                        color: _passwordStrengthColor == Colors.green
+                            ? Colors.green
+                            : Colors.grey,
                         margin: const EdgeInsets.symmetric(horizontal: 2),
                       ),
                   ],
@@ -186,7 +255,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                     controller: _confirmPasswordController,
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                     obscureText: true,
                   ),
@@ -201,18 +271,23 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                         controller: _countryCodeController,
                         decoration: InputDecoration(
                           labelText: 'Code',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 5), // Reduced space between fields for better alignment
+                    const SizedBox(
+                        width:
+                            5), // Reduced space between fields for better alignment
                     SizedBox(
-                      width: 210, // Increased width for the Phone Number input field
+                      width:
+                          210, // Increased width for the Phone Number input field
                       child: TextField(
                         controller: _phoneController,
                         decoration: InputDecoration(
                           labelText: 'Phone Number',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
                     ),
@@ -223,26 +298,36 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     minimumSize: const Size(328, 51), // Set the button size
                   ),
                   onPressed: _signUp,
-                  child: const Text('Sign Up', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: const Text('Sign Up',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
                 ),
-                const SizedBox(height: 20), // Spacing before the Remember Me section
+                const SizedBox(
+                    height: 20), // Spacing before the Remember Me section
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Switch(
-                      value: _rememberMe, // Use the state variable for the switch
+                      value:
+                          _rememberMe, // Use the state variable for the switch
                       onChanged: (value) {
                         setState(() {
                           _rememberMe = value; // Update the state when toggled
                         });
                       },
-                      activeColor: Colors.red, // Color when the switch is active
-                      inactiveTrackColor: Colors.white, // Set inactive track color to white
-                      inactiveThumbColor: Colors.grey, // Set inactive thumb color to grey
+                      activeColor:
+                          Colors.red, // Color when the switch is active
+                      inactiveTrackColor:
+                          Colors.white, // Set inactive track color to white
+                      inactiveThumbColor:
+                          Colors.grey, // Set inactive thumb color to grey
                     ),
                     const SizedBox(width: 10), // Space between switch and text
                     const Text(
@@ -254,7 +339,9 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20), // Additional spacing after the Remember Me section
+                const SizedBox(
+                    height:
+                        20), // Additional spacing after the Remember Me section
               ],
             ),
           ),
