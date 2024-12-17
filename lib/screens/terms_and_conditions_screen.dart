@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'fuel_type_selection_screen.dart'; // Importing the FuelTypeSelectionScreen
+
 class TermsAndConditionsScreen extends StatefulWidget {
   const TermsAndConditionsScreen({super.key});
 
@@ -49,10 +51,16 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFDF2626), // Red color
+                textStyle: const TextStyle(
+                  color: Colors.white, // Change text color to white
+                ),
               ),
               onPressed: _isAccepted ? () {
                 // Navigate to the next screen or perform any action
-                Navigator.pop(context, true);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FuelTypeSelectionScreen()), // Navigate to FuelTypeSelectionScreen
+                );
               } : () {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(

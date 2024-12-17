@@ -80,7 +80,7 @@ class TrendsButtonScreen extends StatelessWidget {
               // Navigate to the My Trip Button Screen
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyTripButtonScreen()), // Ensure to import MyTripButtonScreen
+                MaterialPageRoute(builder: (context) => const MyTripButtonScreen()), // Ensure to import MyTripButtonScreen
               );
               },
               style: ElevatedButton.styleFrom(

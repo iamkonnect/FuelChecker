@@ -39,12 +39,14 @@ class VerificationScreen extends StatelessWidget {
                     ),
                     textStyle: const TextStyle(
                       fontSize: 18,
+                      color: Colors.white, // Change text color to white
                     ),
                   ),
                   child: const Text(
                     'Back to OTP',
                     style: TextStyle(
                       fontSize: 18,
+                      color: Colors.white, // Change text color to white
                     ),
                   ),
                 ),
@@ -58,22 +60,24 @@ class VerificationScreen extends StatelessWidget {
               // New Enter Button
               ElevatedButton(
                 onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TrendsButtonScreen()),
-                );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TrendsButtonScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 243, 33, 33),
                   fixedSize: const Size(327, 51), // Set the size of the button
                   textStyle: const TextStyle(
                     fontSize: 18,
+                    color: Colors.white, // Change text color to white
                   ),
                 ),
                 child: const Text(
                   'Enter',
                   style: TextStyle(
                     fontSize: 18,
+                    color: Colors.white, // Change text color to white
                   ),
                 ),
               ),
@@ -84,4 +88,3 @@ class VerificationScreen extends StatelessWidget {
     );
   }
 }
-

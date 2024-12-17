@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'terms_and_conditions_screen.dart'; // Importing the TermsAndConditionsScreen
+import 'fuel_type_selection_screen.dart'; // Importing the FuelTypeSelectionScreen
 
 class SummaryScreen extends StatelessWidget {
+  const SummaryScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +54,8 @@ class SummaryScreen extends StatelessWidget {
 }
 
 class NextScreen extends StatelessWidget {
+  const NextScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
