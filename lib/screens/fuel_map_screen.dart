@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+import 'dart:convert'; // Add this import for JSON decoding
+import 'package:http/http.dart' as http; // Add this import for HTTP requests
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -10,6 +15,78 @@ class FuelMapScreen extends StatefulWidget {
 }
 
 class _FuelMapScreenState extends State<FuelMapScreen> {
+  LatLng _currentLocation = const LatLng(0, 0); // Default location
+  final Set<Marker> _markers = {}; // Initialize markers
+  int _selectedIndex = 1; // Default to Fuel Map
+
+  Future<void> _fetchFuelStations() async {
+    const String apiUrl = 'https://api.here.com/v1/fuelstations'; // Replace with actual API endpoint
+    final response = await http.get(Uri.parse(apiUrl), headers: {
+      'Authorization': 'Bearer YOUR_API_KEY', // Replace with your API key
+    });
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      List<dynamic> stations = data['fuelStations']['fuelStation'];
+      for (var station in stations) {
+        double latitude = station['position']['latitude'];
+        double longitude = station['position']['longitude'];
+        String name = station['name'];
+        double price = station['fuelPrice'][0]['price']; // Assuming first price is the relevant one
+
+        _markers.add(
+          Marker(
+            point: LatLng(latitude, longitude),
+                child: Column(
+                    children: [
+                        const Icon(Icons.local_gas_station, size: 40, color: Colors.red),
+                        Text(name),
+                        Text('\$${price.toStringAsFixed(2)}'),
+                    ],
+            ),
+          ),
+        );
+      }
+    } else {
+      throw Exception('Failed to load fuel stations');
+    }
+  }
+
+  void _addFuelStationMarkers() async {
+    await _fetchFuelStations();
+    setState(() {});
+  }
+
+  Future<void> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+    _addFuelStationMarkers(); // Fetch and display markers
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/nearby');
+        break;
+      case 1: // Stay on Fuel Map
+      case 2:
+        Navigator.pushNamed(context, '/settings');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,14 +102,12 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
           ),
         ],
       ),
-      body: Stack(
+      body: const Stack(
         children: <Widget>[
-          // Map widget
-          Image.asset(
-              'assets/fuel_map.png'), // Replace with your actual image asset
-
-          // Fuel station markers
-          const Positioned(
+          Center(
+            child: Text('Map functionality has been removed.'),
+          ),
+          Positioned(
             top: 100,
             left: 100,
             child: FuelStationMarker(
@@ -41,7 +116,7 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
               dieselPrice: '\$1.25',
             ),
           ),
-          const Positioned(
+          Positioned(
             top: 250,
             left: 200,
             child: FuelStationMarker(
@@ -50,7 +125,7 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
               dieselPrice: '\$1.50',
             ),
           ),
-          const Positioned(
+          Positioned(
             top: 350,
             left: 400,
             child: FuelStationMarker(
@@ -59,16 +134,7 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
               dieselPrice: '\$1.50',
             ),
           ),
-          const Positioned(
-            top: 450,
-            left: 550,
-            child: FuelStationMarker(
-              stationName: 'Puma',
-              blendE5Price: '\$1.27',
-              dieselPrice: '\$1.56',
-            ),
-          ),
-          const Positioned(
+          Positioned(
             top: 100,
             right: 100,
             child: FuelStationMarker(
@@ -82,55 +148,20 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png')),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
-            label: 'Trends',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
-            label: 'My Trips',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/nearby.png')),
+            icon: Icon(Icons.near_me),
             label: 'Nearby',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Settings.png')),
+            icon: Icon(Icons.map),
+            label: 'Fuel Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ],
-        currentIndex: 0,
-        selectedItemColor: const Color(0xFFDF2626),
-        unselectedItemColor: Colors.black,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              // Navigate to Home
-              break;
-            case 1:
-              // Navigate to Favorites
-              break;
-            case 2:
-              // Navigate to Trends
-              break;
-            case 3:
-              // Navigate to My Trips
-              break;
-            case 4:
-              // Navigate to Nearby
-              break;
-            case 5:
-              // Navigate to Settings
-              break;
-          }
-        },
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }

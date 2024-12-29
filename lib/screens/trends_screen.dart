@@ -92,24 +92,12 @@ class TrendsScreen extends StatelessWidget {
         onTap: (index) {
           // Handle navigation based on the index
           switch (index) {
-            case 0:
-              // Navigate to Home
-              break;
-            case 1:
-              // Navigate to Favorites
-              break;
-            case 2:
-              // Navigate to Trends
-              break;
-            case 3:
-              // Navigate to My Trips
-              break;
-            case 4:
-              // Navigate to Nearby
-              break;
-            case 5:
-              // Navigate to Settings
-              break;
+            case 0: // Navigate to Home
+            case 1: // Navigate to Favorites
+            case 2: // Navigate to Trends
+            case 3: // Navigate to My Trips
+            case 4: // Navigate to Nearby
+            case 5: // Navigate to Settings
           }
         },
       ),

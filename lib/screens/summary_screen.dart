@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'terms_and_conditions_screen.dart'; // Importing the TermsAndConditionsScreen
-import 'fuel_type_selection_screen.dart'; // Importing the FuelTypeSelectionScreen
+// Importing the FuelTypeSelectionScreen
 
 class SummaryScreen extends StatelessWidget {
   const SummaryScreen({super.key});

@@ -26,7 +26,12 @@ class _OtpVerificationScreenV4State extends State<OtpVerificationScreenV4> {
 
   void _verifyOtp() {
     final enteredOtp = _otpCodes.join();
-    if (enteredOtp == '123456') {
+    if (enteredOtp.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid 6-digit OTP')),
+      );
+      return;
+    } else if (enteredOtp == '123456') { // Placeholder for backend verification
       // OTP is correct, proceed to the verification screen
       Navigator.pushReplacement(
         context,
@@ -72,6 +77,7 @@ class _OtpVerificationScreenV4State extends State<OtpVerificationScreenV4> {
                 const SizedBox(height: 10),
                 Text( // Display the phone number
                   'Please enter the codes sent to your phone: ${widget.phoneNumber}',
+                  style: const TextStyle(color: Colors.black), // Set text color to black
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
