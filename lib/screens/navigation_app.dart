@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+// Importing the SettingsMenu
+import 'favorite_screen.dart'; // Importing the FavoriteScreen
+import 'trends_button_screen.dart'; // Importing the TrendsButtonScreen
+import 'my_trip_button_screen.dart'; // Importing the MyTripButtonScreen
+import 'nearby_screen.dart'; // Importing the NearbyScreen
+import 'settings_screen.dart'; // Importing the SettingsScreen
+import 'welcome_screen.dart'; // Importing the WelcomeScreen
 
 class NavigationApp extends StatefulWidget {
   const NavigationApp({Key? key}) : super(key: key);
@@ -85,12 +92,41 @@ class _NavigationAppState extends State<NavigationApp> {
       // Handle navigation based on the selected index
       switch (index) {
         case 0:
-          // Navigate to Home
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const WelcomeScreen()), // Navigate to Home
+          );
           break;
         case 1:
-          // Navigate to Favorites
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const FavoriteScreen()), // Navigate to Favorites
+          );
           break;
-        case 2:
+        case 2: 
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const TrendsButtonScreen()), // Navigate to Trends
+          );
+          break;
+        case 3:
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MyTripButtonScreen()), // Navigate to My Trips
+          );
+          break;
+        case 4:
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const NearbyScreen()), // Navigate to Nearby
+          );
+          break;
+        case 5:
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SettingsScreen()), // Navigate to Settings
+          );
+          break;
           // Navigate to Trends
           break;
         case 3:

@@ -9,8 +9,40 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      body: const Center(
-        child: Text('Settings Screen'),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            SwitchListTile(
+              title: const Text('Notifications'),
+              value: true, // This should be dynamic
+              onChanged: (bool value) {
+                // Implement notification toggle functionality
+              },
+            ),
+            ListTile(
+              title: const Text('Language'),
+              subtitle: const Text('English'),
+              onTap: () {
+                // Implement language selection functionality
+              },
+            ),
+            ListTile(
+              title: const Text('Theme'),
+              subtitle: const Text('Light'),
+              onTap: () {
+                // Implement theme selection functionality
+              },
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Implement logout functionality
+              },
+              child: const Text('Logout'),
+            ),
+          ],
+        ),
       ),
     );
   }

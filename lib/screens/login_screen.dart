@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart'; // Importing email validator package
 // Import the WelcomeScreen
 import 'fuel_type_selection_screen.dart'; // Import the FuelTypeSelectionScreen
 import 'signup_screen_v7.dart'; // Import for the SignUpScreenV7
@@ -26,7 +27,22 @@ class _LoginScreenState extends State<LoginScreen> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    if (email == 'akwera@gmail.com' && password == '1234Abc!') {
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email cannot be empty')),
+      );
+      return;
+    } else if (!EmailValidator.validate(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid email format')),
+      );
+      return;
+    } else if (password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password cannot be empty')),
+      );
+      return;
+    } else if (email == 'akwera@gmail.com' && password == '1234Abc!') {
       // Navigate to the FuelTypeSelectionScreen on successful login
       Navigator.pushReplacement(
         context,

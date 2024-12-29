@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'trends_button_screen.dart'; // Importing the TrendsButtonScreen
+// Importing the SignUpScreen
 
 class VerificationScreen extends StatelessWidget {
   final bool isVerified; // New variable to check verification status

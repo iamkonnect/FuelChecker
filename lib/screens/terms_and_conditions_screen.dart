@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'fuel_type_selection_screen.dart'; // Importing the FuelTypeSelectionScreen
 
 class TermsAndConditionsScreen extends StatefulWidget {
@@ -45,8 +44,6 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                 });
               },
             ),
-            const SizedBox(height: 10.0),
-            const Text('I have read and I accept the terms and conditions'),
             const SizedBox(height: 20.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -57,10 +54,12 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
               ),
               onPressed: _isAccepted ? () {
                 // Navigate to the next screen or perform any action
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FuelTypeSelectionScreen()), // Navigate to FuelTypeSelectionScreen
-                );
+                if (mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FuelTypeSelectionScreen()), // Navigate to FuelTypeSelectionScreen
+                  );
+                }
               } : () {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
