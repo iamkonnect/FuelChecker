@@ -10,7 +10,7 @@ import 'settings_screen.dart'; // Importing the SettingsScreen
 import 'welcome_screen.dart'; // Importing the WelcomeScreen
 
 class NavigationApp extends StatefulWidget {
-  const NavigationApp({Key? key}) : super(key: key);
+  const NavigationApp({super.key});
 
   @override
   State<NavigationApp> createState() => _NavigationAppState();

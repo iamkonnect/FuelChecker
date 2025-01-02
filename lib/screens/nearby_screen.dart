@@ -16,7 +16,7 @@ class FuelStation {
 }
 
 class NearbyScreen extends StatelessWidget {
-  const NearbyScreen({Key? key}) : super(key: key);
+  const NearbyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

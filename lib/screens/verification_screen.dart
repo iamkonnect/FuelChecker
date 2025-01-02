@@ -5,7 +5,7 @@ import 'trends_button_screen.dart'; // Importing the TrendsButtonScreen
 class VerificationScreen extends StatelessWidget {
   final bool isVerified; // New variable to check verification status
 
-  const VerificationScreen({Key? key, required this.isVerified}) : super(key: key);
+  const VerificationScreen({super.key, required this.isVerified});
 
   @override
   Widget build(BuildContext context) {
