@@ -21,6 +21,13 @@ class SettingsScreen extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profile Details'),
+              onTap: () {
+                Navigator.pushNamed(context, '/profile-detail');
+              },
+            ),
+            ListTile(
               title: const Text('Language'),
               subtitle: const Text('English'),
               onTap: () {
