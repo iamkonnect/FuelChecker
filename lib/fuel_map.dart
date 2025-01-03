@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(FuelStationsApp());
+  runApp(const FuelStationsApp());
 }
 
 class FuelStationsApp extends StatelessWidget {
@@ -13,7 +13,7 @@ class FuelStationsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Fuel Stations',
       home: FuelMapPage(),
     );
@@ -26,7 +26,7 @@ class FuelMapPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF7F7F7),
+      backgroundColor: const Color(0xFFF7F7F7),
       body: Stack(
         children: [
           // Google Map Placeholder
@@ -37,7 +37,7 @@ class FuelMapPage extends StatelessWidget {
             ),
           ),
           // Fuel Station Icons with Prices
-          Positioned(
+          const Positioned(
             top: 84,
             left: 329,
             child: FuelStationPrice(
@@ -45,7 +45,7 @@ class FuelMapPage extends StatelessWidget {
               price: 'Diesel\n\$1.56',
             ),
           ),
-          Positioned(
+          const Positioned(
             top: 348,
             left: 303,
             child: FuelStationPrice(
@@ -59,11 +59,11 @@ class FuelMapPage extends StatelessWidget {
           Positioned(
             top: MediaQuery.of(context).size.height - 182,
             left: MediaQuery.of(context).size.width / 2 - 152.5,
-            child: FuelTypeBox(),
+            child: const FuelTypeBox(),
           ),
 
           // Bottom Navigation Bar
-          Positioned(
+          const Positioned(
             bottom: 0,
             left: 0,
             right: 0,
@@ -95,10 +95,10 @@ class FuelStationPrice extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
           ),
-          padding: EdgeInsets.all(4),
+          padding: const EdgeInsets.all(4),
           child: Text(
             price,
-            style: TextStyle(fontSize: 8, color: Colors.black),
+            style: const TextStyle(fontSize: 8, color: Colors.black),
             textAlign: TextAlign.center,
           ),
         ),
@@ -114,13 +114,13 @@ class FuelTypeBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 305,
-      padding: EdgeInsets.symmetric(vertical: 11, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Color(0xFFF3F4F6)),
+        border: Border.all(color: const Color(0xFFF3F4F6)),
       ),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
@@ -147,7 +147,7 @@ class BottomNavigation extends StatelessWidget {
     return BottomAppBar(
       child: Container(
         height: 108,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
         ),
@@ -174,10 +174,10 @@ class BottomNavigation extends StatelessWidget {
           width: 25,
           height: 25,
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Text(
           label,
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
         ),
       ],
     );
