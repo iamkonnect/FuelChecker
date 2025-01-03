@@ -3,7 +3,7 @@ import 'otp_verification_screen_v4.dart'; // Importing the OTP verification scre
 import 'package:email_validator/email_validator.dart'; // Importing email validator package
 
 class SignUpScreenV7 extends StatefulWidget {
-  const SignUpScreenV7({Key? key}) : super(key: key);
+  const SignUpScreenV7({super.key});
 
   @override
   SignUpScreenV7State createState() => SignUpScreenV7State();

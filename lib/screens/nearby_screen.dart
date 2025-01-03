@@ -1,49 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'feedback_screen.dart'; // Import the FeedbackScreen
+import '../models/fuel_price.dart'; // Import FuelStation model
 
-class FuelStation {
-  final String name;
-  final String distance;
-  final double blendESPrice;
-  final double dieselPrice;
-
-  FuelStation({
-    required this.name,
-    required this.distance,
-    required this.blendESPrice,
-    required this.dieselPrice,
-  });
-}
-
-class NearbyScreen extends StatelessWidget {
-  const NearbyScreen({Key? key}) : super(key: key);
+class NearbyScreen extends StatefulWidget {
+  const NearbyScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<FuelStation> fuelStations = [
+  State<NearbyScreen> createState() => _NearbyScreenState();
+}
+
+class _NearbyScreenState extends State<NearbyScreen> {
+  Position? _currentPosition;
+  List<FuelStation> _fuelStations = [];
+  List<FuelStation> _nearbyStations = [];
+
+  Future<void> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ),
+    );
+    setState(() {
+      _currentPosition = position;
+      _nearbyStations = getNearbyStations(_fuelStations, position.latitude, position.longitude);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fuelStations = [
       FuelStation(
         name: 'Puma Petroleum',
-        distance: '3 km away',
+        location: 'Ardbennie Harare',
+        latitude: -17.8419,
+        longitude: 31.0678,
         blendESPrice: 1.39,
         dieselPrice: 1.59,
       ),
       FuelStation(
         name: 'Shell',
-        distance: '5 km away',
+        location: 'Avondale Harare',
+        latitude: -17.7936,
+        longitude: 31.0425,
         blendESPrice: 1.36,
         dieselPrice: 1.50,
       ),
       FuelStation(
         name: 'Totalenergies',
-        distance: '7 km away',
+        location: 'Belgravia Harare',
+        latitude: -17.8056,
+        longitude: 31.0489,
         blendESPrice: 1.27,
         dieselPrice: 1.40,
       ),
     ];
+    _getCurrentLocation();
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     // Show feedback prompt after displaying fuel stations
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (fuelStations.isNotEmpty) {
+      if (mounted && _nearbyStations.isNotEmpty) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -54,17 +75,21 @@ class NearbyScreen extends StatelessWidget {
                 TextButton(
                   child: const Text('Yes'),
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const FeedbackScreen()), // Navigate to FeedbackScreen
-                    );
+                    if (mounted) {
+                      Navigator.of(context).pop(); // Close the dialog
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const FeedbackScreen()), // Navigate to FeedbackScreen
+                      );
+                    }
                   },
                 ),
                 TextButton(
                   child: const Text('No'),
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
+                    if (mounted) {
+                      Navigator.of(context).pop(); // Close the dialog
+                    }
                   },
                 ),
               ],
@@ -78,12 +103,18 @@ class NearbyScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Fuel Nearby'),
       ),
-      body: fuelStations.isEmpty
-          ? const Center(child: Text('No fuel stations available.'))
-          : ListView.builder(
-              itemCount: fuelStations.length,
-              itemBuilder: (context, index) {
-                final fuelStation = fuelStations[index];
+      body: _currentPosition == null
+          ? const Center(child: CircularProgressIndicator())
+          : _nearbyStations.isEmpty
+              ? const Center(child: Text('No fuel stations within 5km.'))
+              : ListView.builder(
+                  itemCount: _nearbyStations.length,
+                  itemBuilder: (context, index) {
+                    final fuelStation = _nearbyStations[index];
+                    final distance = fuelStation.distanceFrom(
+                      _currentPosition!.latitude,
+                      _currentPosition!.longitude,
+                    );
                 return Card(
                   child: ListTile(
                     leading: Image.asset('lib/assets/images/logo-full-color-150-x-1.png'),
@@ -91,7 +122,7 @@ class NearbyScreen extends StatelessWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(fuelStation.distance),
+                        Text('${distance.toStringAsFixed(1)} km away'),
                         const SizedBox(height: 8),
                         Row(
                           children: [

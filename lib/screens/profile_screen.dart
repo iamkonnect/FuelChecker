@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                // Implement logout functionality
+                Navigator.pushReplacementNamed(context, '/');
               },
               child: const Text('Logout'),
             ),
@@ -49,4 +49,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-</create_file>

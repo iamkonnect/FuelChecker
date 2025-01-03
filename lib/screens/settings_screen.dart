@@ -37,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Implement logout functionality
+                Navigator.of(context).pushReplacementNamed('/');
               },
               child: const Text('Logout'),
             ),

@@ -1,153 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-// Importing the SettingsMenu
-import 'favorite_screen.dart'; // Importing the FavoriteScreen
-import 'trends_button_screen.dart'; // Importing the TrendsButtonScreen
-import 'my_trip_button_screen.dart'; // Importing the MyTripButtonScreen
-import 'nearby_screen.dart'; // Importing the NearbyScreen
-import 'settings_screen.dart'; // Importing the SettingsScreen
-import 'welcome_screen.dart'; // Importing the WelcomeScreen
+import 'package:geolocator/geolocator.dart';
+import 'my_trip_screen.dart'; // Import the MyTripScreen
 
 class NavigationApp extends StatefulWidget {
-  const NavigationApp({Key? key}) : super(key: key);
+  const NavigationApp({super.key});
 
   @override
   State<NavigationApp> createState() => _NavigationAppState();
 }
 
 class _NavigationAppState extends State<NavigationApp> {
-  // Google Map Controller
+  int selectedIndex = 0;
   late GoogleMapController _mapController;
-
-  // User's current location
-  late LatLng _currentLocation;
-
-  // Destination fuel station
-  final LatLng _destination = const LatLng(33.9248, 18.4232); // Harare, Zimbabwe
-
-  // Map Markers
+  LatLng _currentLocation = const LatLng(0, 0);
   final Set<Marker> _markers = {};
 
-  // Location Permission and Data
-  final Location _location = Location();
-  bool _serviceEnabled = false;
-  PermissionStatus? _permissionGranted;
-  LocationData? _locationData;
-
-  // Set up the map and initialize location services
   @override
   void initState() {
     super.initState();
-    _initLocationService();
+    _getCurrentLocation();
   }
 
-  // Initialize location service
-  Future<void> _initLocationService() async {
-    _serviceEnabled = await _location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _locationData = await _location.getLocation();
+  Future<void> _getCurrentLocation() async {
+    final position = await Geolocator.getCurrentPosition();
     setState(() {
-      _currentLocation = LatLng(_locationData!.latitude!, _locationData!.longitude!);
-      _markers.add(
-        Marker(
-          markerId: const MarkerId('Current Location'),
-          position: _currentLocation,
-          infoWindow: const InfoWindow(title: 'Your Location'),
-        ),
-      );
-      _markers.add(
-        Marker(
-          markerId: const MarkerId('Destination'),
-          position: _destination,
-          infoWindow: const InfoWindow(title: 'Puma Petroleum, Harare'),
-        ),
-      );
+      _currentLocation = LatLng(position.latitude, position.longitude);
     });
   }
 
-  // Build the Google Map
+  void _goToCurrentLocation() {
+    _mapController.animateCamera(
+      CameraUpdate.newLatLng(_currentLocation),
+    );
+  }
+
+  void onItemTapped(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+    // Handle navigation based on the selected index
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/favorites');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/trends_screen');
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyTripScreen()),
+        );
+        break;
+      case 4:
+        Navigator.pushNamed(context, '/nearby');
+        break;
+      case 5:
+        Navigator.pushNamed(context, '/settings');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    int selectedIndex = 0;
-
-    void onItemTapped(int index) {
-      setState(() {
-        selectedIndex = index;
-      });
-      // Handle navigation based on the selected index
-      switch (index) {
-        case 0:
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const WelcomeScreen()), // Navigate to Home
-          );
-          break;
-        case 1:
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const FavoriteScreen()), // Navigate to Favorites
-          );
-          break;
-        case 2: 
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const TrendsButtonScreen()), // Navigate to Trends
-          );
-          break;
-        case 3:
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MyTripButtonScreen()), // Navigate to My Trips
-          );
-          break;
-        case 4:
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const NearbyScreen()), // Navigate to Nearby
-          );
-          break;
-        case 5:
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const SettingsScreen()), // Navigate to Settings
-          );
-          break;
-          // Navigate to Trends
-          break;
-        case 3:
-          // Navigate to My Trips
-          break;
-        case 4:
-          // Navigate to Nearby
-          break;
-        case 5:
-          // Navigate to Settings
-          break;
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Navigation App'),
       ),
       body: GoogleMap(
         onMapCreated: (GoogleMapController controller) {
-          _mapController = controller;
+          setState(() {
+            _mapController = controller;
+          });
         },
         initialCameraPosition: CameraPosition(
           target: _currentLocation,
@@ -157,48 +85,8 @@ class _NavigationAppState extends State<NavigationApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _goToCurrentLocation,
-        tooltip: 'Current Location',
         child: const Icon(Icons.my_location),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png')),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
-            label: 'Trends',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
-            label: 'My Trips',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/nearby.png')),
-            label: 'Nearby',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Settings.png')),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: selectedIndex,
-        selectedItemColor: const Color(0xFFDF2626), // Change selected color
-        unselectedItemColor: Colors.black, // Default color
-        onTap: onItemTapped,
-      ),
-    );
-  }
-
-  // Move the camera to the current location
-  Future<void> _goToCurrentLocation() async {
-    _mapController.animateCamera(
-      CameraUpdate.newLatLng(_currentLocation),
     );
   }
 }

@@ -4,10 +4,11 @@ class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
+  ForgotPasswordScreenState createState() => ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+// Remove the underscore to make this class public
+class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController emailController = TextEditingController();
 
   @override
@@ -44,12 +45,33 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ElevatedButton(
               onPressed: () async {
                 final email = emailController.text;
-                // Add logic to send password reset email
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Password reset email sent!')),
-                  );
-                  Navigator.pop(context);
+                
+                if (email.isEmpty) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please enter your email address')),
+                    );
+                  }
+                  return;
+                }
+
+                try {
+                  // TODO: Replace with actual email sending when SMTP credentials are available
+                  // For now, simulate email sending
+                  await Future.delayed(const Duration(seconds: 1));
+                  
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Password reset email sent to $email')),
+                    );
+                    Navigator.pop(context);
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to send password reset email. Please try again later.')),
+                    );
+                  }
                 }
               },
               style: ElevatedButton.styleFrom(

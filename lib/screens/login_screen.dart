@@ -42,16 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
         const SnackBar(content: Text('Password cannot be empty')),
       );
       return;
-    } else if (email == 'akwera@gmail.com' && password == '1234Abc!') {
-      // Navigate to the FuelTypeSelectionScreen on successful login
+    } else {
+      // TODO: Implement actual authentication logic here
+      // For now, navigate to FuelTypeSelectionScreen as a placeholder
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const FuelTypeSelectionScreen()), // Navigate to FuelTypeSelectionScreen
-      );
-    } else {
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Check your email or password')),
+        MaterialPageRoute(builder: (context) => const FuelTypeSelectionScreen()),
       );
     }
   }

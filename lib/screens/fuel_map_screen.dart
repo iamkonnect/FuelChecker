@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'dart:convert'; // Add this import for JSON decoding
-import 'package:http/http.dart' as http; // Add this import for HTTP requests
+import '../models/fuel_price.dart'; // Import FuelStation model
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -11,81 +10,73 @@ class FuelMapScreen extends StatefulWidget {
   const FuelMapScreen({super.key, required this.fuelType});
 
   @override
-  _FuelMapScreenState createState() => _FuelMapScreenState();
+  FuelMapScreenState createState() => FuelMapScreenState();
 }
 
-class _FuelMapScreenState extends State<FuelMapScreen> {
-  LatLng _currentLocation = const LatLng(0, 0); // Default location
-  final Set<Marker> _markers = {}; // Initialize markers
+class FuelMapScreenState extends State<FuelMapScreen> {
+  LatLng? _currentLocation;
+  List<FuelStation> _fuelStations = [];
+  List<FuelStation> _nearbyStations = [];
+  final Set<Marker> _markers = {};
   int _selectedIndex = 1; // Default to Fuel Map
 
-  Future<void> _fetchFuelStations() async {
-    const String apiUrl = 'https://api.here.com/v1/fuelstations'; // Replace with actual API endpoint
-    final response = await http.get(Uri.parse(apiUrl), headers: {
-      'Authorization': 'Bearer YOUR_API_KEY', // Replace with your API key
-    });
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      List<dynamic> stations = data['fuelStations']['fuelStation'];
-      for (var station in stations) {
-        double latitude = station['position']['latitude'];
-        double longitude = station['position']['longitude'];
-        String name = station['name'];
-        double price = station['fuelPrice'][0]['price']; // Assuming first price is the relevant one
-
-        _markers.add(
-          Marker(
-            point: LatLng(latitude, longitude),
-                child: Column(
-                    children: [
-                        const Icon(Icons.local_gas_station, size: 40, color: Colors.red),
-                        Text(name),
-                        Text('\$${price.toStringAsFixed(2)}'),
-                    ],
-            ),
-          ),
-        );
-      }
-    } else {
-      throw Exception('Failed to load fuel stations');
-    }
-  }
-
-  void _addFuelStationMarkers() async {
-    await _fetchFuelStations();
-    setState(() {});
-  }
-
   Future<void> _getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
     setState(() {
       _currentLocation = LatLng(position.latitude, position.longitude);
+      _nearbyStations = getNearbyStations(_fuelStations, position.latitude, position.longitude);
+      _addFuelStationMarkers();
     });
+  }
+
+  void _addFuelStationMarkers() {
+    _markers.clear();
+    for (final station in _nearbyStations) {
+      _markers.add(
+        Marker(
+          width: 80.0,
+          height: 80.0,
+          point: LatLng(station.latitude, station.longitude),
+          child: const Icon(Icons.local_gas_station, size: 40, color: Colors.red),
+        ),
+      );
+    }
   }
 
   @override
   void initState() {
     super.initState();
+    _fuelStations = [
+      FuelStation(
+        name: 'Puma Petroleum',
+        location: 'Ardbennie Harare',
+        latitude: -17.8419,
+        longitude: 31.0678,
+        blendESPrice: 1.39,
+        dieselPrice: 1.59,
+      ),
+      FuelStation(
+        name: 'Shell',
+        location: 'Avondale Harare',
+        latitude: -17.7936,
+        longitude: 31.0425,
+        blendESPrice: 1.36,
+        dieselPrice: 1.50,
+      ),
+      FuelStation(
+        name: 'Totalenergies',
+        location: 'Belgravia Harare',
+        latitude: -17.8056,
+        longitude: 31.0489,
+        blendESPrice: 1.27,
+        dieselPrice: 1.40,
+      ),
+    ];
     _getCurrentLocation();
-    _addFuelStationMarkers(); // Fetch and display markers
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushNamed(context, '/nearby');
-        break;
-      case 1: // Stay on Fuel Map
-      case 2:
-        Navigator.pushNamed(context, '/settings');
-        break;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,92 +93,81 @@ class _FuelMapScreenState extends State<FuelMapScreen> {
           ),
         ],
       ),
-      body: const Stack(
-        children: <Widget>[
-          Center(
-            child: Text('Map functionality has been removed.'),
-          ),
-          Positioned(
-            top: 100,
-            left: 100,
-            child: FuelStationMarker(
-              stationName: 'Totalenergies',
-              blendE5Price: '\$1.40',
-              dieselPrice: '\$1.25',
+      body: _currentLocation == null
+          ? const Center(child: CircularProgressIndicator())
+          : FlutterMap(
+              options: MapOptions(
+                initialCenter: _currentLocation!,
+                initialZoom: 13.0,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  subdomains: const ['a', 'b', 'c'],
+                ),
+                MarkerLayer(
+                  markers: _markers.toList(),
+                ),
+              ],
             ),
-          ),
-          Positioned(
-            top: 250,
-            left: 200,
-            child: FuelStationMarker(
-              stationName: 'Engen',
-              blendE5Price: '\$1.36',
-              dieselPrice: '\$1.50',
-            ),
-          ),
-          Positioned(
-            top: 350,
-            left: 400,
-            child: FuelStationMarker(
-              stationName: 'Puma',
-              blendE5Price: '\$1.36',
-              dieselPrice: '\$1.50',
-            ),
-          ),
-          Positioned(
-            top: 100,
-            right: 100,
-            child: FuelStationMarker(
-              stationName: 'Shell',
-              blendE5Price: '\$1.45',
-              dieselPrice: '\$1.30',
-            ),
-          ),
-        ],
-      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.near_me),
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png')),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
+            label: 'Trends',
+          ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
+            label: 'My Trips',
+          ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('lib/assets/images/nearby.png')),
             label: 'Nearby',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Fuel Map',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: ImageIcon(AssetImage('lib/assets/images/Settings.png')),
             label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        selectedItemColor: const Color(0xFFDF2626),
+        unselectedItemColor: Colors.black,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+
+          switch (index) {
+            case 0:
+              Navigator.pushNamed(context, '/home');
+              break;
+            case 1:
+              Navigator.pushNamed(context, '/favorites');
+              break;
+            case 2:
+              Navigator.pushNamed(context, '/trends');
+              break;
+            case 3:
+              Navigator.pushNamed(context, '/my-trips');
+              break;
+            case 4:
+              Navigator.pushNamed(context, '/nearby');
+              break;
+            case 5:
+              Navigator.pushNamed(context, '/settings');
+              break;
+          }
+        },
       ),
     );
   }
 }
 
-class FuelStationMarker extends StatelessWidget {
-  final String stationName;
-  final String blendE5Price;
-  final String dieselPrice;
-
-  const FuelStationMarker({
-    super.key,
-    required this.stationName,
-    required this.blendE5Price,
-    required this.dieselPrice,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        const Icon(Icons.local_gas_station, size: 40, color: Colors.red),
-        Text(stationName, style: const TextStyle(fontWeight: FontWeight.bold)),
-        Text('E5: $blendE5Price'),
-        Text('Diesel: $dieselPrice'),
-      ],
-    );
-  }
-}
