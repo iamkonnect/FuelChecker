@@ -14,6 +14,7 @@ import 'screens/my_trip_button_screen.dart'; // Importing the MyTripButtonScreen
 import 'screens/settings_screen.dart'; // Importing the SettingsScreen
 
 import 'screens/filter_screen.dart'; // Importing the FilterScreen
+import 'screens/profile_screen.dart'; // Importing the ProfileScreen
 
 void main() { 
   runApp(const MyApp());
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/trends_screen': (context) => TrendsScreen(),
         '/my_trips': (context) => const MyTripButtonScreen(),
         '/settings': (context) => const SettingsScreen(),
+        '/profile': (context) => const ProfileScreen(),
       },
     );
   }
