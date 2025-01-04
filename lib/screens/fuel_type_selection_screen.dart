@@ -88,60 +88,60 @@ class _FuelTypeSelectionScreenState extends State<FuelTypeSelectionScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png')),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
-            label: 'Trends',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
-            label: 'My Trips',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/nearby.png')),
-            label: 'Nearby',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Settings.png')),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: 0, // Set the current index based on your logic
-        selectedItemColor: const Color(0xFFDF2626), // Change selected color
-        unselectedItemColor: Colors.black, // Default color
-        onTap: (index) {
-          // Handle navigation based on the index
-          switch (index) {
-            case 0:
-              // Navigate to Home
-              break;
-            case 1:
-              // Navigate to Favorites
-              break;
-            case 2:
-              // Navigate to Trends
-              break;
-            case 3:
-              // Navigate to My Trips
-              break;
-            case 4:
-              // Navigate to Nearby
-              break;
-            case 5:
-              // Navigate to Settings
-              break;
-          }
-        },
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png')),
+      //       label: 'Favorites',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
+      //       label: 'Trends',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
+      //       label: 'My Trips',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: ImageIcon(AssetImage('lib/assets/images/nearby.png')),
+      //       label: 'Nearby',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: ImageIcon(AssetImage('lib/assets/images/Settings.png')),
+      //       label: 'Settings',
+      //     ),
+      //   ],
+      //   currentIndex: 0, // Set the current index based on your logic
+      //   selectedItemColor: const Color(0xFFDF2626), // Change selected color
+      //   unselectedItemColor: Colors.black, // Default color
+      //   onTap: (index) {
+      //     // Handle navigation based on the index
+      //     switch (index) {
+      //       case 0:
+      //         // Navigate to Home
+      //         break;
+      //       case 1:
+      //         // Navigate to Favorites
+      //         break;
+      //       case 2:
+      //         // Navigate to Trends
+      //         break;
+      //       case 3:
+      //         // Navigate to My Trips
+      //         break;
+      //       case 4:
+      //         // Navigate to Nearby
+      //         break;
+      //       case 5:
+      //         // Navigate to Settings
+      //         break;
+      //     }
+      //   },
+      // ),
     );
   }
 }
