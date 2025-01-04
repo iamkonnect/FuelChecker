@@ -77,10 +77,13 @@ class _FuelTypeSelectionScreenState extends State<FuelTypeSelectionScreen> {
                 textStyle: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white, // Change text color to white
+                  // Remove foregroundColor from textStyle
                 ),
               ),
-              child: const Text('Continue'),
+              child: const Text(
+                'Continue',
+                style: TextStyle(color: Colors.white), // Set text color to white
+              ),
             ),
           ],
         ),

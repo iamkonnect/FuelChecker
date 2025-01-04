@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/fuel_calculator.dart';
 
 class FilterScreen extends StatelessWidget {
   const FilterScreen({super.key});
@@ -9,9 +10,7 @@ class FilterScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Filter'),
       ),
-      body: const Center(
-        child: Text('Filter options will be here.'),
-      ),
+      body: const FuelCalculator(),
     );
   }
 }
