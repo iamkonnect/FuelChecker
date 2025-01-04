@@ -61,7 +61,6 @@ class _NearbyScreenState extends State<NearbyScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     // Show feedback prompt after displaying fuel stations
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && _nearbyStations.isNotEmpty) {
@@ -115,28 +114,62 @@ class _NearbyScreenState extends State<NearbyScreen> {
                       _currentPosition!.latitude,
                       _currentPosition!.longitude,
                     );
-                return Card(
-                  child: ListTile(
-                    leading: Image.asset('lib/assets/images/logo-full-color-150-x-1.png'),
-                    title: Text(fuelStation.name),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('${distance.toStringAsFixed(1)} km away'),
-                        const SizedBox(height: 8),
-                        Row(
+                    return Card(
+                      child: ListTile(
+                        leading: Image.asset('lib/assets/images/logo-full-color-150-x-1.png'),
+                        title: Text(fuelStation.name),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Blend ES: \$${fuelStation.blendESPrice.toStringAsFixed(2)}'),
-                            const SizedBox(width: 16),
-                            Text('Diesel: \$${fuelStation.dieselPrice.toStringAsFixed(2)}'),
+                            Text('${distance.toStringAsFixed(1)} km away'),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Text('Blend ES: \$${fuelStation.blendESPrice.toStringAsFixed(2)}'),
+                                const SizedBox(width: 16),
+                                Text('Diesel: \$${fuelStation.dieselPrice.toStringAsFixed(2)}'),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+                      ),
+                    );
+                  },
+                ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite, color: Colors.black), label: 'Favorites'),
+          BottomNavigationBarItem(icon: Icon(Icons.trending_up, color: Colors.black), label: 'Trends'),
+          BottomNavigationBarItem(icon: Icon(Icons.trip_origin, color: Colors.black), label: 'My Trips'),
+          BottomNavigationBarItem(icon: Icon(Icons.near_me, color: Colors.black), label: 'Nearby'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
+        ],
+        currentIndex: 4, // Set the current index for Nearby
+        onTap: (index) {
+          // Handle navigation based on the index
+          switch (index) {
+            case 0:
+              Navigator.pushNamed(context, '/'); // Navigate to Home
+              break;
+            case 1:
+              Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites
+              break;
+            case 2:
+              Navigator.pushNamed(context, '/trends_screen'); // Navigate to Trends
+              break;
+            case 3:
+              Navigator.pushNamed(context, '/my_trip'); // Navigate to My Trips
+              break;
+            case 4:
+              // Stay on Nearby
+              break;
+            case 5:
+              Navigator.pushNamed(context, '/settings'); // Navigate to Settings
+              break;
+          }
+        },
+      ),
     );
   }
 }

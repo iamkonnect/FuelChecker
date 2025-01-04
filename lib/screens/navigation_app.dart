@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'my_trip_screen.dart'; // Import the MyTripScreen
+import 'fuel_map_screen.dart'; // Import the FuelMapScreen
 
 class NavigationApp extends StatefulWidget {
   const NavigationApp({super.key});
@@ -42,7 +43,10 @@ class _NavigationAppState extends State<NavigationApp> {
     // Handle navigation based on the selected index
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const FuelMapScreen(fuelType: 'Petrol')), // Navigate to FuelMapScreen
+        );
         break;
       case 1:
         Navigator.pushNamed(context, '/favorites');
@@ -86,6 +90,18 @@ class _NavigationAppState extends State<NavigationApp> {
       floatingActionButton: FloatingActionButton(
         onPressed: _goToCurrentLocation,
         child: const Icon(Icons.my_location),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorites'),
+          BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: 'Trends'),
+          BottomNavigationBarItem(icon: Icon(Icons.trip_origin), label: 'My Trips'),
+          BottomNavigationBarItem(icon: Icon(Icons.near_me), label: 'Nearby'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        ],
+        currentIndex: selectedIndex,
+        onTap: onItemTapped,
       ),
     );
   }

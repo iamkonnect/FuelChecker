@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login_screen.dart'; // Importing the LoginScreen
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -161,13 +162,17 @@ class SettingsScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    backgroundColor: Colors.red, // Set background color to red
                   ),
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/');
+Navigator.of(context).pushAndRemoveUntil(
+  MaterialPageRoute(builder: (context) => const LoginScreen()),
+  (Route<dynamic> route) => false,
+);
                   },
                   child: const Text(
                     'Logout',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
               ),

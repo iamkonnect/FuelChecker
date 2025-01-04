@@ -60,44 +60,36 @@ class TrendsScreen extends StatelessWidget {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('assets/images/Favourites.png')),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('assets/images/Trends.png')),
-            label: 'Trends',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('assets/images/my trips.png')),
-            label: 'My Trips',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('assets/images/nearby.png')),
-            label: 'Nearby',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('assets/images/Settings.png')),
-            label: 'Settings',
-          ),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite, color: Colors.black), label: 'Favorites'),
+          BottomNavigationBarItem(icon: Icon(Icons.trending_up, color: Colors.black), label: 'Trends'),
+          BottomNavigationBarItem(icon: Icon(Icons.trip_origin, color: Colors.black), label: 'My Trips'),
+          BottomNavigationBarItem(icon: Icon(Icons.near_me, color: Colors.black), label: 'Nearby'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
         ],
-        currentIndex: 0, // Set the current index based on your logic
-        selectedItemColor: const Color(0xFFDF2626), // Change selected color
-        unselectedItemColor: Colors.black, // Default color
+        currentIndex: 2, // Set the current index based on your logic
         onTap: (index) {
           // Handle navigation based on the index
           switch (index) {
-            case 0: // Navigate to Home
-            case 1: // Navigate to Favorites
-            case 2: // Navigate to Trends
-            case 3: // Navigate to My Trips
-            case 4: // Navigate to Nearby
-            case 5: // Navigate to Settings
+            case 0:
+              Navigator.pushNamed(context, '/'); // Navigate to Home
+              break;
+            case 1:
+              Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites
+              break;
+            case 2:
+              // Stay on Trends
+              break;
+            case 3:
+              Navigator.pushNamed(context, '/my_trip'); // Navigate to My Trips
+              break;
+            case 4:
+              Navigator.pushNamed(context, '/nearby'); // Navigate to Nearby
+              break;
+            case 5:
+              Navigator.pushNamed(context, '/settings'); // Navigate to Settings
+              break;
           }
         },
       ),
