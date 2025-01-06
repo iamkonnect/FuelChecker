@@ -1,7 +1,7 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-import 'login_screen.dart';
+import 'login_screen.dart'; // Importing the LoginScreen
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -12,26 +12,30 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _bounceAnimation;
+  late final AnimationController _controller;
+  late final Animation<Color?> _colorAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    // Initialize animation controller
+    // Animation controller
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500), // Duration of the animation
-    )..repeat(reverse: true);
+      duration: const Duration(seconds: 2),
+    )..repeat();
 
-    // Define a bounce animation
-    _bounceAnimation = Tween<double>(begin: 0.0, end: -15.0)
-        .chain(CurveTween(curve: Curves.easeInOut))
-        .animate(_controller);
+    // Color transition animation for circles
+    _colorAnimation = ColorTween(
+      begin: Colors.black,
+      end: Colors.red,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
 
-    // Automatically navigate to the login screen after a delay
-    Timer(const Duration(seconds: 3), () {
+    // Navigate to LoginScreen after a delay
+    Future.delayed(const Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -59,45 +63,43 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo with animation
+              // Animated Logo
               AnimatedBuilder(
                 animation: _controller,
                 builder: (context, child) {
+                  double bounce = 10 * sin(_controller.value * 2 * pi);
                   return Transform.translate(
-                    offset: Offset(0, _bounceAnimation.value),
+                    offset: Offset(0, bounce),
                     child: child,
                   );
                 },
                 child: Image.asset(
                   'lib/assets/images/logo-full-color-150-x-1.png',
-                  height: 150, // Adjust logo size as needed
+                  height: 200, // Adjust logo size as needed
                 ),
               ),
-              const SizedBox(height: 20), // Space between logo and dots
-              // Animated loading dots
+              const SizedBox(height: 10), // Reduced spacing
+              // Horizontal row of animated circles
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(5, (index) {
                   return AnimatedBuilder(
                     animation: _controller,
                     builder: (context, child) {
-                      // Offset each dot's animation for a wave-like effect
-                      double offset =
-                          (index * 0.2) % 1.0; // Staggered delay for dots
-                      double bounce = Curves.easeInOut
-                          .transform(((_controller.value + offset) % 1.0));
+                      // Zigzag motion
+                      double offsetX = (index % 2 == 0 ? 1 : -1) *
+                          10 *
+                          sin(_controller.value * 2 * pi);
+                      double offsetY = 10 * cos(_controller.value * 2 * pi);
+
                       return Transform.translate(
-                        offset: Offset(0, -bounce * 10),
-                        child: child,
+                        offset: Offset(offsetX, offsetY),
+                        child: CircleAvatar(
+                          radius: 10,
+                          backgroundColor: _colorAnimation.value,
+                        ),
                       );
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5.0),
-                      child: CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.black,
-                      ),
-                    ),
                   );
                 }),
               ),
