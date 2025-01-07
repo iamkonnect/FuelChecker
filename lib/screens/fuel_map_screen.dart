@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import '../models/fuel_price.dart'; // Import FuelStation model
+import '../widgets/search_bar_with_filter_final.dart'; // Correct import path
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -93,23 +94,33 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           ),
         ],
       ),
-      body: _currentLocation == null
-          ? const Center(child: CircularProgressIndicator())
-          : FlutterMap(
-              options: MapOptions(
-                initialCenter: _currentLocation!,
-                initialZoom: 13.0,
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  subdomains: const ['a', 'b', 'c'],
+      body: Stack(
+        children: [
+          _currentLocation == null
+              ? const Center(child: CircularProgressIndicator())
+              : FlutterMap(
+                  options: MapOptions(
+                    initialCenter: _currentLocation!,
+                    initialZoom: 13.0,
+                  ),
+                  children: [
+                    TileLayer(
+                      urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      subdomains: const ['a', 'b', 'c'],
+                    ),
+                    MarkerLayer(
+                      markers: _markers.toList(),
+                    ),
+                  ],
                 ),
-                MarkerLayer(
-                  markers: _markers.toList(),
-                ),
-              ],
-            ),
+          Positioned(
+            top: 16.0,
+            left: 16.0,
+            right: 16.0,
+            child: SearchBarWithFilter(), // Floating SearchBarWithFilter
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

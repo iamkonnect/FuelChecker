@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/search_bar_with_filter.dart'; // Correct import path
 
 class RoutePlanningScreen extends StatelessWidget {
   const RoutePlanningScreen({super.key});
@@ -13,6 +14,7 @@ class RoutePlanningScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            SearchBarWithFilter(), // Adding the SearchBarWithFilter widget
             const TextField(
               decoration: InputDecoration(labelText: 'Starting Point'),
             ),
