@@ -47,7 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
       // For now, navigate to FuelTypeSelectionScreen as a placeholder
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const FuelTypeSelectionScreen()),
+        MaterialPageRoute(
+            builder: (context) => const FuelTypeSelectionScreen()),
       );
     }
   }
@@ -71,7 +72,10 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const Text(
                   'Log In',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
@@ -80,7 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                 ),
@@ -92,10 +97,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: _obscureText,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscureText ? Icons.visibility : Icons.visibility_off,
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                         onPressed: _togglePasswordVisibility,
                       ),
@@ -108,18 +116,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     const Text(
                       "Don't Have an account? ",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
                     ),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const SignUpScreenV7()), // Updated reference
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const SignUpScreenV7()), // Updated reference
                         );
                       },
                       child: const Text(
                         "Sign Up",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red),
                       ),
                     ),
                   ],
@@ -128,22 +144,31 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     minimumSize: const Size(328, 51), // Set the button size
                   ),
                   onPressed: _login,
-                  child: const Text('Login', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: const Text('Login',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordScreen()),
                     );
                   },
                   child: const Text(
                     "Forgot your password?",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
                   ),
                 ),
               ],
