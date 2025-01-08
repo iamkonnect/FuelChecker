@@ -19,7 +19,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   List<FuelStation> _fuelStations = [];
   List<FuelStation> _nearbyStations = [];
   final Set<Marker> _markers = {};
-  int _selectedIndex = 1; // Default to Fuel Map
+int _selectedIndex = 0; // Default to Home
 
   Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
