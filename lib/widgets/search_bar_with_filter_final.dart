@@ -9,7 +9,7 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
   final TextEditingController fromController = TextEditingController();
   final TextEditingController toController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
-  double _currentPrice = 250.0;
+  double _currentPrice = 1.0; // Updated to a value within the slider range
   String _selectedFilter = '500m';
 
   @override
@@ -86,7 +86,12 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
                     String to = toController.text;
                     String searchTerm = searchController.text;
 
+                    // Implement filtering logic here
+                    List<String> results = filterResults(from, to, searchTerm, _selectedFilter);
                     print('Searching from: $from to: $to with term: $searchTerm');
+                    // Implement a simple test for filtering logic
+                    List<String> testResults = filterResults('Location A', 'Location B', '', _selectedFilter);
+                    print('Test Filtered results: $testResults');
                   },
                   color: Colors.white,
                   padding: EdgeInsets.all(10),
@@ -142,7 +147,7 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
             Slider(
               value: _currentPrice,
               min: 0,
-              max: 1000,
+              max: 2,
               divisions: 100,
               label: _currentPrice.round().toString(),
               activeColor: Colors.red, // Set the slider color to red
@@ -156,5 +161,27 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
         ),
       ),
     );
+  }
+
+  // Add this method to handle filtering logic
+  List<String> filterResults(String from, String to, String searchTerm, String selectedFilter) {
+      // Example data source for filtering
+      List<String> allResults = [
+          'Location A',
+          'Location B',
+          'Location C',
+          'Location D',
+          'Location E',
+      ];
+
+      // Filter based on the input values
+      return allResults.where((location) {
+          bool matchesFrom = from.isEmpty || location.toLowerCase().contains(from.toLowerCase());
+          bool matchesTo = to.isEmpty || location.toLowerCase().contains(to.toLowerCase());
+          bool matchesSearchTerm = searchTerm.isEmpty || location.toLowerCase().contains(searchTerm.toLowerCase());
+          bool matchesFilter = true; // Implement filter logic based on selectedFilter if needed
+
+          return matchesFrom && matchesTo && matchesSearchTerm && matchesFilter;
+      }).toList();
   }
 }
