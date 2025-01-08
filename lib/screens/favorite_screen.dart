@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/favorite_provider.dart';
 
 class FavoriteScreen extends StatelessWidget {
@@ -33,8 +34,8 @@ class FavoriteScreen extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite, color: Colors.black), label: 'Favorites'),
-          BottomNavigationBarItem(icon: Icon(Icons.trending_up, color: Colors.black), label: 'Trends'),
+BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png'), color: Colors.black), label: 'Favorites'),
+BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Trends.png'), color: Colors.black), label: 'Trends'),
           BottomNavigationBarItem(icon: Icon(Icons.trip_origin, color: Colors.black), label: 'My Trips'),
           BottomNavigationBarItem(icon: Icon(Icons.near_me, color: Colors.black), label: 'Nearby'),
           BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
@@ -44,7 +45,7 @@ class FavoriteScreen extends StatelessWidget {
           // Handle navigation based on the index
           switch (index) {
             case 0:
-              Navigator.pushNamed(context, '/'); // Navigate to Home
+              Navigator.pushNamed(context, '/fuel_map'); // Navigate to Fuel Map
               break;
             case 1:
               // Stay on Favorites
