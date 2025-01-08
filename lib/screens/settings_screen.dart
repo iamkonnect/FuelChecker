@@ -126,7 +126,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.help,
                 title: 'Help',
                 onTap: () {
-                  Navigator.pushNamed(context, '/profile');
+                  Navigator.pushNamed(context, '/help');
                 },
               ),
               const SizedBox(height: 16),

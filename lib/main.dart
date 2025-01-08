@@ -16,6 +16,7 @@ import 'screens/my_trip_button_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/filter_screen.dart';
 import 'screens/profile_screen.dart';
+import 'screens/help_screen.dart';
 
 void main() {
   runApp(
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => const SettingsScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/about': (context) => const AboutScreen(),
+        '/help': (context) => const HelpScreen(),
       },
     );
   }
