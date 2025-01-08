@@ -103,6 +103,7 @@ class SettingsScreen extends StatelessWidget {
                 subtitle: 'Light',
                 onTap: () {
                   // Implement theme selection functionality
+                  Navigator.pushNamed(context, '/theme');
                 },
               ),
               const SizedBox(height: 16),
@@ -150,7 +151,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.remove_circle,
                 title: 'Deactivate Account',
                 onTap: () {
-                  // Implement account deactivation functionality
+                  Navigator.pushNamed(context, '/deactivate');
                 },
               ),
               const SizedBox(height: 24),
