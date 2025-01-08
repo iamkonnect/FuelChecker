@@ -142,7 +142,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.report,
                 title: 'Report an Issue',
                 onTap: () {
-                  Navigator.pushNamed(context, '/profile');
+                  Navigator.pushNamed(context, '/report');
                 },
               ),
               const SizedBox(height: 16),
