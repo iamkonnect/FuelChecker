@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import the provider package
 import 'providers/favorite_provider.dart'; // Import your FavoriteProvider
-
+import 'screens/about_screen.dart'; // Import the AboutScreen
 // Importing the SettingsMenu
 import 'screens/forgot_password_screen.dart';
 import 'screens/fuel_map_screen.dart';
@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
         '/my_trips': (context) => const MyTripButtonScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/profile': (context) => const ProfileScreen(),
+        '/about': (context) => const AboutScreen(),
       },
     );
   }

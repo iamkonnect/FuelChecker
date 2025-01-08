@@ -118,7 +118,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.info,
                 title: 'About',
                 onTap: () {
-                  // Implement about functionality
+                  Navigator.pushNamed(context, '/about');
                 },
               ),
               const SizedBox(height: 16),
@@ -126,7 +126,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.help,
                 title: 'Help',
                 onTap: () {
-                  // Implement help functionality
+                  Navigator.pushNamed(context, '/profile');
                 },
               ),
               const SizedBox(height: 16),
@@ -134,7 +134,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.feedback,
                 title: 'Feedback',
                 onTap: () {
-                  // Implement feedback functionality
+                  Navigator.pushNamed(context, '/profile');
                 },
               ),
               const SizedBox(height: 16),
@@ -142,7 +142,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.report,
                 title: 'Report an Issue',
                 onTap: () {
-                  // Implement issue reporting functionality
+                  Navigator.pushNamed(context, '/profile');
                 },
               ),
               const SizedBox(height: 16),
@@ -165,14 +165,18 @@ class SettingsScreen extends StatelessWidget {
                     backgroundColor: Colors.red, // Set background color to red
                   ),
                   onPressed: () {
-Navigator.of(context).pushAndRemoveUntil(
-  MaterialPageRoute(builder: (context) => const LoginScreen()),
-  (Route<dynamic> route) => false,
-);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
+                      (Route<dynamic> route) => false,
+                    );
                   },
                   child: const Text(
                     'Logout',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
               ),
