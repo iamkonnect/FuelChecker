@@ -17,6 +17,7 @@ import 'screens/settings_screen.dart';
 import 'screens/filter_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/help_screen.dart';
+import 'screens/feedback_screen.dart';
 
 void main() {
   runApp(
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const ProfileScreen(),
         '/about': (context) => const AboutScreen(),
         '/help': (context) => const HelpScreen(),
+        '/feedback': (context) => const FeedbackScreen(),
       },
     );
   }

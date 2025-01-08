@@ -134,7 +134,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.feedback,
                 title: 'Feedback',
                 onTap: () {
-                  Navigator.pushNamed(context, '/profile');
+                  Navigator.pushNamed(context, '/feedback');
                 },
               ),
               const SizedBox(height: 16),

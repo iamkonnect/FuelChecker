@@ -1,148 +1,148 @@
 import 'package:flutter/material.dart';
-
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: FeedbackScreen(),
-    );
-  }
-}
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class FeedbackScreen extends StatefulWidget {
-  const FeedbackScreen({super.key});
+  const FeedbackScreen({Key? key}) : super(key: key);
 
   @override
-  _FeedbackScreenState createState() => _FeedbackScreenState();
+  State<FeedbackScreen> createState() => _FeedbackScreenState();
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
-  bool? _isLiked;
-  final TextEditingController _commentsController = TextEditingController();
-  bool _isSubmitting = false;
+  double rating = 3.0;
+  final TextEditingController _commentController = TextEditingController();
 
-  void _submitFeedback() {
-    if (_commentsController.text.isNotEmpty) {
-      setState(() {
-        _isSubmitting = true;
-      });
-      // Simulate a network call
-      Future.delayed(const Duration(seconds: 2), () {
-        // Handle feedback submission logic here
-        setState(() {
-          _isSubmitting = false;
-        });
-        // Optionally clear the text field
-        _commentsController.clear();
-        // Show a success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Feedback submitted successfully!')),
-        );
-      });
-    } else {
-      // Show an error message if comments are empty
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter your comments.')),
-      );
-    }
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: const Text('Feedback'),
+        backgroundColor: Colors.red,
+        centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Text(
-              'Do you like Fuel Check?',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
+        padding: const EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'We value your feedback!',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
-            ),
-            const SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                ElevatedButton(
+              const SizedBox(height: 20.0),
+              const Text(
+                'Please rate your experience:',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 10.0),
+              RatingBar.builder(
+                initialRating: rating,
+                minRating: 1,
+                itemSize: 40.0,
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: Colors.red,
+                ),
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    this.rating = rating;
+                  });
+                },
+              ),
+              const SizedBox(height: 30.0),
+              const Text(
+                'Your Comments:',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 10.0),
+              TextField(
+                controller: _commentController,
+                maxLines: 5,
+                decoration: InputDecoration(
+                  hintText: 'Write your comments here...',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red.shade400),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red.shade700),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 16.0),
+                ),
+              ),
+              const SizedBox(height: 30.0),
+              Center(
+                child: ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      _isLiked = true;
-                    });
+                    _submitFeedback();
                   },
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
                     padding: const EdgeInsets.symmetric(
-                      vertical: 20.0,
-                      horizontal: 30.0,
+                        horizontal: 32.0, vertical: 14.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    backgroundColor: _isLiked == true ? Colors.black : Colors.red,
                   ),
-                  child: const Icon(
-                    Icons.thumb_up,
-                    size: 30.0,
+                  child: const Text(
+                    'Submit Feedback',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _isLiked = false;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 20.0,
-                      horizontal: 30.0,
-                    ),
-                    backgroundColor: _isLiked == false ? Colors.black : Colors.red,
-                  ),
-                  child: const Icon(
-                    Icons.thumb_down,
-                    size: 30.0,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20.0),
-            const Text(
-              'Share some comments about your experience with the app ',
-              style: TextStyle(
-                fontSize: 16.0,
               ),
-            ),
-            const SizedBox(height: 10.0),
-            TextField(
-              controller: _commentsController,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Your comments here...',
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: _isSubmitting ? null : _submitFeedback,
-              child: _isSubmitting
-                  ? const CircularProgressIndicator()
-                  : const Text('Submit'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _submitFeedback() {
+    // Handle the feedback submission (e.g., send data to the server)
+    final feedback = _commentController.text;
+    if (feedback.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Thank you for your feedback!'),
+          backgroundColor: Colors.green.shade600,
+        ),
+      );
+      // Reset the form after submission
+      _commentController.clear();
+      setState(() {
+        rating = 3.0;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              const Text('Please provide your comments before submitting.'),
+          backgroundColor: Colors.red.shade600,
+        ),
+      );
+    }
   }
 }
