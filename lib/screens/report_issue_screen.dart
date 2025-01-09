@@ -10,11 +10,21 @@ class ReportIssueScreen extends StatefulWidget {
 class _ReportIssueScreenState extends State<ReportIssueScreen> {
   final TextEditingController _issueController = TextEditingController();
   String? selectedIssue;
+  String? selectedPetrolStation;
+
   List<String> commonIssues = [
     'Fuel Station not listed',
     'Fuel Price Difference',
     'Fuel Type Unavailable',
     'App Not Working Properly',
+    'Other'
+  ];
+
+  List<String> petrolStations = [
+    'Station A',
+    'Station B',
+    'Station C',
+    'Station D',
     'Other'
   ];
 
@@ -68,6 +78,31 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                 onChanged: (value) {
                   setState(() {
                     selectedIssue = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16.0),
+              const Text(
+                'Select Petrol Station:',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              DropdownButton<String>(
+                value: selectedPetrolStation,
+                hint: const Text('Select a Petrol Station'),
+                isExpanded: true,
+                items: petrolStations.map((String station) {
+                  return DropdownMenuItem<String>(
+                    value: station,
+                    child: Text(station),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedPetrolStation = value;
                   });
                 },
               ),
@@ -130,22 +165,29 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   void _submitIssue() {
     final issueDetails = _issueController.text;
 
-    if (selectedIssue != null && issueDetails.isNotEmpty) {
+    if (selectedIssue != null &&
+        selectedPetrolStation != null &&
+        issueDetails.isNotEmpty) {
       // Handle the issue submission (e.g., send data to the server)
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Thank you for reporting the issue!'),
+          content: Text(
+            'Thank you for reporting the issue at $selectedPetrolStation!',
+          ),
           backgroundColor: Colors.green.shade600,
         ),
       );
       _issueController.clear();
       setState(() {
         selectedIssue = null;
+        selectedPetrolStation = null;
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please select an issue and provide details.'),
+          content: Text(
+            'Please select an issue, a petrol station, and provide details.',
+          ),
           backgroundColor: Colors.red.shade600,
         ),
       );
