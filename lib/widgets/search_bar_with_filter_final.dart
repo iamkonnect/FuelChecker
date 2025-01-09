@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart'; // Import LatLng type
+import '../screens/fuel_map_screen.dart'; // Import FuelMapScreen to access its state
 
 class SearchBarWithFilter extends StatefulWidget {
   @override
@@ -81,17 +83,22 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
                 ),
                 IconButton(
                   icon: Icon(Icons.search, color: Colors.red), // Change icon color to red
-                  onPressed: () {
+                  onPressed: () async {
                     String from = fromController.text;
                     String to = toController.text;
                     String searchTerm = searchController.text;
 
-                    // Implement filtering logic here
-                    List<String> results = filterResults(from, to, searchTerm, _selectedFilter);
+                    // Retrieve coordinates for From and To locations
+                    var fromCoordinates = await getCoordinates(from);
+                    var toCoordinates = await getCoordinates(to);
+
+                    // Call method in FuelMapScreen to update markers and directions
+                    if (fromCoordinates != null && toCoordinates != null) {
+                      FuelMapScreenState? fuelMapScreenState = context.findAncestorStateOfType<FuelMapScreenState>();
+                      fuelMapScreenState?.updateMarkers(fromCoordinates, toCoordinates);
+                      fuelMapScreenState?.calculateDirections(fromCoordinates, toCoordinates); // Call to calculate directions
+                    }
                     print('Searching from: $from to: $to with term: $searchTerm');
-                    // Implement a simple test for filtering logic
-                    List<String> testResults = filterResults('Location A', 'Location B', '', _selectedFilter);
-                    print('Test Filtered results: $testResults');
                   },
                   color: Colors.white,
                   padding: EdgeInsets.all(10),
@@ -161,6 +168,13 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
         ),
       ),
     );
+  }
+
+  Future<LatLng?> getCoordinates(String location) async {
+    // Placeholder for the logic to get coordinates based on the location name
+    // This could involve calling a geocoding API or service
+    // For now, return null or a default value
+    return null; // Replace with actual implementation
   }
 
   // Add this method to handle filtering logic

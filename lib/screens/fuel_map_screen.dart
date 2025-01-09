@@ -19,7 +19,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   List<FuelStation> _fuelStations = [];
   List<FuelStation> _nearbyStations = [];
   final Set<Marker> _markers = {};
-int _selectedIndex = 0; // Default to Home
+  int _selectedIndex = 0; // Default to Home
 
   Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
@@ -78,6 +78,35 @@ int _selectedIndex = 0; // Default to Home
     _getCurrentLocation();
   }
 
+  void updateMarkers(LatLng fromCoordinates, LatLng toCoordinates) {
+    _markers.clear();
+    _markers.add(
+      Marker(
+        width: 80.0,
+        height: 80.0,
+        point: _currentLocation!,
+        child: const Icon(Icons.location_on, size: 40, color: Colors.green), // Current location marker
+      ),
+    );
+    _markers.add(
+      Marker(
+        width: 80.0,
+        height: 80.0,
+        point: toCoordinates,
+        child: const Icon(Icons.location_on, size: 40, color: Colors.blue), // Destination marker
+      ),
+    );
+    setState(() {}); // Refresh the map with new markers
+
+    // Call the directions calculation method
+    calculateDirections(_currentLocation!, toCoordinates);
+  }
+
+  void calculateDirections(LatLng fromCoordinates, LatLng toCoordinates) {
+    // Placeholder for directions calculation logic
+    // This could involve calling a mapping API to get directions
+    print('Calculating directions from $fromCoordinates to $toCoordinates');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,4 +210,3 @@ int _selectedIndex = 0; // Default to Home
     );
   }
 }
-
