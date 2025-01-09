@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart'; // Importing the LoginScreen
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  double _brightness = 0.5; // Default brightness value
 
   Widget _buildSettingCard({
     required IconData icon,
@@ -54,6 +61,83 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  void _showThemeBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Select Theme',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                title: const Text('Light Theme'),
+                leading: Radio<String>(
+                  value: 'light',
+                  groupValue: 'theme', // Replace with actual state
+                  onChanged: (String? value) {
+                    Navigator.pop(context); // Close BottomSheet
+                    // Implement theme selection logic here
+                    print('Selected Theme: Light');
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Dark Theme'),
+                leading: Radio<String>(
+                  value: 'dark',
+                  groupValue: 'theme', // Replace with actual state
+                  onChanged: (String? value) {
+                    Navigator.pop(context); // Close BottomSheet
+                    // Implement theme selection logic here
+                    print('Selected Theme: Dark');
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Adjust Brightness',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Slider(
+                value: _brightness,
+                min: 0.0,
+                max: 1.0,
+                divisions: 10,
+                label: (_brightness * 100).toStringAsFixed(0) + '%',
+                onChanged: (double value) {
+                  setState(() {
+                    _brightness = value;
+                  });
+                },
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  'Brightness: ${(_brightness * 100).toStringAsFixed(0)}%',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,10 +185,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.color_lens,
                 title: 'Theme',
                 subtitle: 'Light',
-                onTap: () {
-                  // Implement theme selection functionality
-                  Navigator.pushNamed(context, '/theme');
-                },
+                onTap: () => _showThemeBottomSheet(context),
               ),
               const SizedBox(height: 16),
               _buildSettingCard(

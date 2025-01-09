@@ -105,9 +105,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 32.0, vertical: 12.0),
+                        horizontal: 38.0, vertical: 20.0),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(16.0),
                     ),
                   ),
                   child: const Text(
