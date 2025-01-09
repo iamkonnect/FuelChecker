@@ -20,7 +20,8 @@ import 'screens/help_screen.dart';
 import 'screens/feedback_screen.dart';
 import 'screens/report_issue_screen.dart';
 import 'screens/diactivate_account_screen.dart';
-import 'screens/theme_screen.dart'; // Import the new ThemeScreen
+import 'screens/theme_screen.dart';
+import 'screens/analytics_screen.dart';
 
 void main() {
   runApp(
@@ -64,7 +65,8 @@ class MyApp extends StatelessWidget {
         '/feedback': (context) => const FeedbackScreen(),
         '/report': (context) => const ReportIssueScreen(),
         '/deactivate': (context) => const DeactivateAccountScreen(),
-        '/theme': (context) => const ThemeScreen(), // Add the ThemeScreen here
+        '/theme': (context) => const ThemeScreen(),
+        '/analytics': (context) => const AnalyticsScreen(),
       },
     );
   }

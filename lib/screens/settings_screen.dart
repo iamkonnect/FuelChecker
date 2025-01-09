@@ -192,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon: Icons.analytics,
                 title: 'Analytics',
                 onTap: () {
-                  // Implement analytics functionality
+                  Navigator.pushNamed(context, '/analytics');
                 },
               ),
               const SizedBox(height: 16),
