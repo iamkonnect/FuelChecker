@@ -161,6 +161,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onChanged: (bool value) {
                     // Implement notification toggle functionality
                   },
+                  activeColor: Colors.red, // Toggle circle color when ON
+                  activeTrackColor: Colors
+                      .red.shade200, // Background color of the toggle track
                 ),
               ),
               const SizedBox(height: 16),
