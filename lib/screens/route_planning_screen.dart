@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import '../widgets/search_bar_with_filter_final.dart'; // Updated import path
+import 'package:latlong2/latlong.dart'; // Import LatLng type
 
 class RoutePlanningScreen extends StatelessWidget {
   const RoutePlanningScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController fromController = TextEditingController();
+    final TextEditingController toController = TextEditingController();
+    final String searchTerm = ''; // Initialize search term
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Route Planning'),
@@ -14,11 +19,21 @@ class RoutePlanningScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            SearchBarWithFilter(), // Adding the SearchBarWithFilter widget
-            const TextField(
+            SearchBarWithFilter(
+              getCoordinates: (String location) async {
+                // Implement your getCoordinates logic here
+                return null; // Replace with actual logic
+              },
+              from: fromController.text,
+              to: toController.text,
+              searchTerm: searchTerm,
+            ), // Adding the SearchBarWithFilter widget
+            TextField(
+              controller: fromController,
               decoration: InputDecoration(labelText: 'Starting Point'),
             ),
-            const TextField(
+            TextField(
+              controller: toController,
               decoration: InputDecoration(labelText: 'Destination'),
             ),
             const SizedBox(height: 20),
