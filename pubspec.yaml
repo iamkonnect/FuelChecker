@@ -1,12 +1,12 @@
 name: fuel_checker
 description: A new Flutter project.
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
-  sdk: '^3.5.0' # Updated SDK constraint
+  sdk: "^3.5.0" # Updated SDK constraint
 
 dependencies:
   flutter:
@@ -18,6 +18,8 @@ dependencies:
   flutter_map: ^7.0.2 # Updated to the latest version
   google_maps_flutter: ^2.0.0 # Add any other missing dependencies here
   location_web: ^5.0.4 # Updated to the latest version
+  flutter_rating_bar: ^4.0.0
+  fl_chart: 0.36.0
 
 dev_dependencies:
   flutter_test:

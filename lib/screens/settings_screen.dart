@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart'; // Importing the LoginScreen
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  double _brightness = 0.5; // Default brightness value
 
   Widget _buildSettingCard({
     required IconData icon,
@@ -54,6 +61,83 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  void _showThemeBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Select Theme',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                title: const Text('Light Theme'),
+                leading: Radio<String>(
+                  value: 'light',
+                  groupValue: 'theme', // Replace with actual state
+                  onChanged: (String? value) {
+                    Navigator.pop(context); // Close BottomSheet
+                    // Implement theme selection logic here
+                    print('Selected Theme: Light');
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Dark Theme'),
+                leading: Radio<String>(
+                  value: 'dark',
+                  groupValue: 'theme', // Replace with actual state
+                  onChanged: (String? value) {
+                    Navigator.pop(context); // Close BottomSheet
+                    // Implement theme selection logic here
+                    print('Selected Theme: Dark');
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Adjust Brightness',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Slider(
+                value: _brightness,
+                min: 0.0,
+                max: 1.0,
+                divisions: 10,
+                label: (_brightness * 100).toStringAsFixed(0) + '%',
+                onChanged: (double value) {
+                  setState(() {
+                    _brightness = value;
+                  });
+                },
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  'Brightness: ${(_brightness * 100).toStringAsFixed(0)}%',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,6 +161,9 @@ class SettingsScreen extends StatelessWidget {
                   onChanged: (bool value) {
                     // Implement notification toggle functionality
                   },
+                  activeColor: Colors.red, // Toggle circle color when ON
+                  activeTrackColor: Colors
+                      .red.shade200, // Background color of the toggle track
                 ),
               ),
               const SizedBox(height: 16),
@@ -101,16 +188,14 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.color_lens,
                 title: 'Theme',
                 subtitle: 'Light',
-                onTap: () {
-                  // Implement theme selection functionality
-                },
+                onTap: () => _showThemeBottomSheet(context),
               ),
               const SizedBox(height: 16),
               _buildSettingCard(
                 icon: Icons.analytics,
                 title: 'Analytics',
                 onTap: () {
-                  // Implement analytics functionality
+                  Navigator.pushNamed(context, '/analytics');
                 },
               ),
               const SizedBox(height: 16),
@@ -118,7 +203,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.info,
                 title: 'About',
                 onTap: () {
-                  // Implement about functionality
+                  Navigator.pushNamed(context, '/about');
                 },
               ),
               const SizedBox(height: 16),
@@ -126,7 +211,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.help,
                 title: 'Help',
                 onTap: () {
-                  // Implement help functionality
+                  Navigator.pushNamed(context, '/help');
                 },
               ),
               const SizedBox(height: 16),
@@ -134,7 +219,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.feedback,
                 title: 'Feedback',
                 onTap: () {
-                  // Implement feedback functionality
+                  Navigator.pushNamed(context, '/feedback');
                 },
               ),
               const SizedBox(height: 16),
@@ -142,7 +227,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.report,
                 title: 'Report an Issue',
                 onTap: () {
-                  // Implement issue reporting functionality
+                  Navigator.pushNamed(context, '/report');
                 },
               ),
               const SizedBox(height: 16),
@@ -150,7 +235,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.remove_circle,
                 title: 'Deactivate Account',
                 onTap: () {
-                  // Implement account deactivation functionality
+                  Navigator.pushNamed(context, '/deactivate');
                 },
               ),
               const SizedBox(height: 24),
@@ -165,14 +250,18 @@ class SettingsScreen extends StatelessWidget {
                     backgroundColor: Colors.red, // Set background color to red
                   ),
                   onPressed: () {
-Navigator.of(context).pushAndRemoveUntil(
-  MaterialPageRoute(builder: (context) => const LoginScreen()),
-  (Route<dynamic> route) => false,
-);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
+                      (Route<dynamic> route) => false,
+                    );
                   },
                   child: const Text(
                     'Logout',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
               ),
