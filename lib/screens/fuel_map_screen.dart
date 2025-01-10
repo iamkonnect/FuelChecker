@@ -1,8 +1,11 @@
+ngimport 'dart:math'; // Import for Random class
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:geocoding/geocoding.dart'; // Import geocoding package
 import '../models/fuel_price.dart'; // Import FuelStation model
+import '../services/fuel_station_data.dart'; // Import fuel station data
 import '../widgets/search_bar_with_filter_final.dart'; // Correct import path
 
 class FuelMapScreen extends StatefulWidget {
@@ -16,7 +19,14 @@ class FuelMapScreen extends StatefulWidget {
 
 class FuelMapScreenState extends State<FuelMapScreen> {
   LatLng? _currentLocation;
-  List<FuelStation> _fuelStations = [];
+  List<FuelStation> _fuelStations = fuelStations.map((data) => FuelStation(
+    name: data['name']!,
+    location: data['town']!,
+    latitude: (data['latitude'] as num).toDouble(), // Cast to double
+    longitude: (data['longitude'] as num).toDouble(), // Cast to double
+    blendESPrice: 0.0, // Placeholder for price
+    dieselPrice: 0.0, // Placeholder for price
+  )).toList();
   List<FuelStation> _nearbyStations = [];
   final Set<Marker> _markers = {};
   int _selectedIndex = 0; // Default to Home
@@ -30,6 +40,19 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       _nearbyStations = getNearbyStations(_fuelStations, position.latitude, position.longitude);
       _addFuelStationMarkers();
     });
+  }
+
+  // Method to get coordinates from location name
+  Future<LatLng?> getCoordinates(String location) async {
+    try {
+      List<Location> locations = await locationFromAddress(location);
+      if (locations.isNotEmpty) {
+        return LatLng(locations.first.latitude, locations.first.longitude);
+      }
+    } catch (e) {
+      print('Error getting coordinates: $e');
+    }
+    return null; // Return null if no coordinates found
   }
 
   void _addFuelStationMarkers() {
@@ -74,6 +97,30 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         blendESPrice: 1.27,
         dieselPrice: 1.40,
       ),
+      FuelStation(
+        name: 'Engen',
+        location: 'Mikocheni A',
+        latitude: -6.7656832, // Updated latitude for Engen
+        longitude: 39.1769131, // Updated longitude for Engen
+        blendESPrice: (1.20 + (0.10 * (Random().nextInt(10)))), // Random price for blend ES
+        dieselPrice: (1.30 + (0.10 * (Random().nextInt(10)))), // Random price for diesel
+      ),
+      FuelStation(
+        name: 'Puma',
+        location: 'Masaki',
+        latitude: -6.7689603, // Updated latitude for Puma
+        longitude: 39.2472892, // Updated longitude for Puma
+        blendESPrice: 1.19, // Dummy price
+        dieselPrice: 1.40, // Dummy price
+      ),
+      FuelStation(
+        name: 'Lake Oil',
+        location: 'Sinza',
+        latitude: -6.7950, // Dummy latitude for Lake Oil
+        longitude: 39.2278, // Dummy longitude for Lake Oil
+        blendESPrice: 1.46, // Dummy price
+        dieselPrice: 1.24, // Dummy price
+      ),
     ];
     _getCurrentLocation();
   }
@@ -106,6 +153,29 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     // Placeholder for directions calculation logic
     // This could involve calling a mapping API to get directions
     print('Calculating directions from $fromCoordinates to $toCoordinates');
+  }
+
+  // Method to filter fuel stations based on search term
+  List<FuelStation> filterFuelStations(String searchTerm) {
+    return _fuelStations.where((station) {
+      return station.name.toLowerCase().contains(searchTerm.toLowerCase());
+    }).toList();
+  }
+
+  // Method to update markers with filtered stations
+  void updateMarkersWithFilteredStations(List<FuelStation> filteredStations) {
+    _markers.clear();
+    for (final station in filteredStations) {
+      _markers.add(
+        Marker(
+          width: 80.0,
+          height: 80.0,
+          point: LatLng(station.latitude, station.longitude),
+          child: const Icon(Icons.local_gas_station, size: 40, color: Colors.red),
+        ),
+      );
+    }
+    setState(() {}); // Refresh the map with new markers
   }
 
   @override
@@ -146,7 +216,12 @@ class FuelMapScreenState extends State<FuelMapScreen> {
             top: 16.0,
             left: 16.0,
             right: 16.0,
-            child: SearchBarWithFilter(), // Floating SearchBarWithFilter
+            child: SearchBarWithFilter(
+              getCoordinates: getCoordinates, // Pass the getCoordinates method
+              from: 'Your From Location', // Replace with actual variable or state
+              to: 'Your To Location', // Replace with actual variable or state
+              searchTerm: 'Your Search Term', // Replace with actual variable or state
+            ), // Floating SearchBarWithFilter
           ),
         ],
       ),
