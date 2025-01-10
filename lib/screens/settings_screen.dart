@@ -112,17 +112,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Slider(
-                value: _brightness,
-                min: 0.0,
-                max: 1.0,
-                divisions: 10,
-                label: (_brightness * 100).toStringAsFixed(0) + '%',
-                onChanged: (double value) {
-                  setState(() {
-                    _brightness = value;
-                  });
-                },
+              SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor:
+                      Colors.red, // The active portion of the slider track
+                  inactiveTrackColor: Colors.red.withOpacity(
+                      0.3), // The inactive portion of the slider track
+                  thumbColor: Colors.red, // The slider thumb color
+                  overlayColor: Colors.red
+                      .withOpacity(0.2), // Overlay color when interacting
+                  trackHeight: 4.0, // Height of the track
+                  thumbShape: const RoundSliderThumbShape(
+                      enabledThumbRadius: 10.0), // Thumb size
+                  overlayShape: const RoundSliderOverlayShape(
+                      overlayRadius: 20.0), // Overlay size
+                ),
+                child: Slider(
+                  value: _brightness,
+                  min: 0.0,
+                  max: 1.0,
+                  divisions: 10,
+                  label: '${(_brightness * 100).toStringAsFixed(0)}%',
+                  onChanged: (double value) {
+                    setState(() {
+                      _brightness = value;
+                    });
+                  },
+                ),
               ),
               Align(
                 alignment: Alignment.centerRight,
