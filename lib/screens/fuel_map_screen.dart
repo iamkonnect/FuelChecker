@@ -1,4 +1,4 @@
-ngimport 'dart:math'; // Import for Random class
+import 'dart:math'; // Import for Random class
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart'; // Import geocoding package
 import '../models/fuel_price.dart'; // Import FuelStation model
 import '../services/fuel_station_data.dart'; // Import fuel station data
-import '../widgets/search_bar_with_filter_final.dart'; // Correct import path
+import '../widgets/search_bar_with_filter_final.dart' as searchBar; // Correct import path with alias
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -63,7 +63,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           width: 80.0,
           height: 80.0,
           point: LatLng(station.latitude, station.longitude),
-          child: const Icon(Icons.local_gas_station, size: 40, color: Colors.red),
+          child: Icon(Icons.local_gas_station, size: 40, color: Colors.red),
         ),
       );
     }
@@ -132,7 +132,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         width: 80.0,
         height: 80.0,
         point: _currentLocation!,
-        child: const Icon(Icons.location_on, size: 40, color: Colors.green), // Current location marker
+        child: Icon(Icons.location_on, size: 40, color: Colors.green), // Current location marker
       ),
     );
     _markers.add(
@@ -140,7 +140,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         width: 80.0,
         height: 80.0,
         point: toCoordinates,
-        child: const Icon(Icons.location_on, size: 40, color: Colors.blue), // Destination marker
+        child: Icon(Icons.location_on, size: 40, color: Colors.blue), // Destination marker
       ),
     );
     setState(() {}); // Refresh the map with new markers
@@ -171,7 +171,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           width: 80.0,
           height: 80.0,
           point: LatLng(station.latitude, station.longitude),
-          child: const Icon(Icons.local_gas_station, size: 40, color: Colors.red),
+          child: Icon(Icons.local_gas_station, size: 40, color: Colors.red),
         ),
       );
     }
@@ -216,7 +216,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
             top: 16.0,
             left: 16.0,
             right: 16.0,
-            child: SearchBarWithFilter(
+            child: searchBar.SearchBarWithFilter(
               getCoordinates: getCoordinates, // Pass the getCoordinates method
               from: 'Your From Location', // Replace with actual variable or state
               to: 'Your To Location', // Replace with actual variable or state
