@@ -114,21 +114,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: Colors
-                      .red, // The color of the active portion of the slider track
-                  thumbColor: Colors.red, // The color of the slider thumb
-                  overlayColor: Colors.red.withOpacity(
-                      0.2), // The color of the slider thumb when focused or hovered
+                  activeTrackColor:
+                      Colors.red, // The active portion of the slider track
                   inactiveTrackColor: Colors.red.withOpacity(
-                      0.3), // The color of the inactive portion of the slider track
-                  trackHeight: 4.0, // Optional: Customize track height
+                      0.3), // The inactive portion of the slider track
+                  thumbColor: Colors.red, // The slider thumb color
+                  overlayColor: Colors.red
+                      .withOpacity(0.2), // Overlay color when interacting
+                  trackHeight: 4.0, // Height of the track
+                  thumbShape: const RoundSliderThumbShape(
+                      enabledThumbRadius: 10.0), // Thumb size
+                  overlayShape: const RoundSliderOverlayShape(
+                      overlayRadius: 20.0), // Overlay size
                 ),
                 child: Slider(
                   value: _brightness,
                   min: 0.0,
                   max: 1.0,
                   divisions: 10,
-                  label: (_brightness * 100).toStringAsFixed(0) + '%',
+                  label: '${(_brightness * 100).toStringAsFixed(0)}%',
                   onChanged: (double value) {
                     setState(() {
                       _brightness = value;
