@@ -3,18 +3,18 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
 class EmailService {
-  // Placeholder for SMTP server configuration
+  // SMTP server configuration
   static final SmtpServer _smtpServer = SmtpServer(
-    'smtp.example.com',
-    port: 587,
-    username: 'noreply@example.com',
-    password: 'password',
+    'mail.fuelcheck.co.zw',
+    port: 26,
+    username: 'noreply@fuelcheck.co.zw',
+    password: 'ZWEfuelcheck1',
   );
 
   /// Sends a password reset email
   static Future<void> sendPasswordResetEmail(String email) async {
     final message = Message()
-      ..from = const Address('noreply@example.com', 'FuelChecker')
+      ..from = const Address('noreply@fuelcheck.co.zw', 'FuelChecker')
       ..recipients.add(email)
       ..subject = 'Password Reset Request'
       ..text = 'You requested a password reset. Please follow the link to reset your password.';
@@ -24,10 +24,9 @@ class EmailService {
       final sendReport = await send(message, _smtpServer);
       developer.log('Email sent successfully', name: 'EmailService');
     } on MailerException catch (e) {
-      developer.log('Error sending email', 
+      developer.log('Error sending email: ${e.toString()}', 
           name: 'EmailService', 
-          error: e,
-          level: developer.Level.SEVERE.value);
+          error: e);
       rethrow;
     }
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart'; // Import geocoding package
-import '../screens/fuel_map_screen.dart'; // Import FuelMapScreen
+// Import geocoding package
+// Import FuelMapScreen
 
 class SearchBarWithFilter extends StatefulWidget {
   final Function getCoordinates;

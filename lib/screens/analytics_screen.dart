@@ -137,31 +137,34 @@ class AnalyticsScreen extends StatelessWidget {
                 LineChartData(
                   gridData: FlGridData(show: false),
                   titlesData: FlTitlesData(
-                    leftTitles: SideTitles(showTitles: true),
-                    bottomTitles: SideTitles(
-                      showTitles: true,
-                      getTitles: (value) {
-                        const months = [
-                          'Jan',
-                          'Feb',
-                          'Mar',
-                          'Apr',
-                          'May',
-                          'Jun',
-                          'Jul',
-                          'Aug',
-                          'Sep',
-                          'Oct',
-                          'Nov',
-                          'Dec'
-                        ];
-                        if (value.toInt() < 0 ||
-                            value.toInt() >= months.length) {
-                          return '';
-                        }
-                        return months[value.toInt()];
-                      },
-                      reservedSize: 22,
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 22,
+                        getTitlesWidget: (value, meta) {
+                          const months = [
+                            'Jan',
+                            'Feb',
+                            'Mar',
+                            'Apr',
+                            'May',
+                            'Jun',
+                            'Jul',
+                            'Aug',
+                            'Sep',
+                            'Oct',
+                            'Nov',
+                            'Dec'
+                          ];
+                          if (value.toInt() < 0 || value.toInt() >= months.length) {
+                            return const SizedBox();
+                          }
+                          return Text(months[value.toInt()]);
+                        },
+                      ),
                     ),
                   ),
                   borderData: FlBorderData(
@@ -185,7 +188,7 @@ class AnalyticsScreen extends StatelessWidget {
                         FlSpot(11, 100),
                       ],
                       isCurved: true,
-                      colors: [Colors.blue],
+                      color: Colors.blue,
                       barWidth: 4,
                       dotData: FlDotData(show: false),
                       belowBarData: BarAreaData(show: false),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/email_service.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -7,7 +8,6 @@ class ForgotPasswordScreen extends StatefulWidget {
   ForgotPasswordScreenState createState() => ForgotPasswordScreenState();
 }
 
-// Remove the underscore to make this class public
 class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController emailController = TextEditingController();
 
@@ -24,7 +24,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           children: [
             Image.asset(
               'lib/assets/images/logo-full-color-150-x-1.png',
-              height: 300, // Adjust height as needed
+              height: 300,
             ),
             const SizedBox(height: 20.0),
             const Text(
@@ -45,7 +45,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ElevatedButton(
               onPressed: () async {
                 final email = emailController.text;
-                
+
                 if (email.isEmpty) {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -56,10 +56,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 }
 
                 try {
-                  // TODO: Replace with actual email sending when SMTP credentials are available
-                  // For now, simulate email sending
-                  await Future.delayed(const Duration(seconds: 1));
-                  
+                  await EmailService.sendPasswordResetEmail(email);
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Password reset email sent to $email')),
@@ -78,14 +75,17 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                minimumSize: const Size(328, 51), // Set the button size
+                minimumSize: const Size(328, 51),
               ),
-              child: const Text('Send Reset Email'),
+              child: const Text('Send Reset Email',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
             ),
           ],
         ),
       ),
-      // Removed BottomNavigationBar for account recovery focus
     );
   }
 }
