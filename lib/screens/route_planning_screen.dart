@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/search_bar_with_filter_final.dart'; // Updated import path
-import 'package:latlong2/latlong.dart'; // Import LatLng type
+// Import LatLng type
 
 class RoutePlanningScreen extends StatelessWidget {
   const RoutePlanningScreen({super.key});

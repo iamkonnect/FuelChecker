@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/email_service.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -7,7 +8,6 @@ class ForgotPasswordScreen extends StatefulWidget {
   ForgotPasswordScreenState createState() => ForgotPasswordScreenState();
 }
 
-// Remove the underscore to make this class public
 class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController emailController = TextEditingController();
 
@@ -24,7 +24,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           children: [
             Image.asset(
               'lib/assets/images/logo-full-color-150-x-1.png',
-              height: 300, // Adjust height as needed
+              height: 300,
             ),
             const SizedBox(height: 20.0),
             const Text(
@@ -45,7 +45,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ElevatedButton(
               onPressed: () async {
                 final email = emailController.text;
-                
+
                 if (email.isEmpty) {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -56,10 +56,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 }
 
                 try {
-                  // TODO: Replace with actual email sending when SMTP credentials are available
-                  // For now, simulate email sending
-                  await Future.delayed(const Duration(seconds: 1));
-                  
+                  await EmailService.sendPasswordResetEmail(email);
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Password reset email sent to $email')),
@@ -75,69 +72,19 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDF2626),
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                elevation: 5,
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                minimumSize: const Size(328, 51),
               ),
-              child: const Text('Send Reset Email'),
+              child: const Text('Send Reset Email',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png')),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
-            label: 'Trends',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
-            label: 'My Trips',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/nearby.png')),
-            label: 'Nearby',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Settings.png')),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: 0, // Set the current index based on your logic
-        selectedItemColor: const Color(0xFFDF2626), // Change selected color
-        unselectedItemColor: Colors.black, // Default color
-        onTap: (index) {
-          // Handle navigation based on the index
-          switch (index) {
-            case 0:
-              // Navigate to Home
-              break;
-            case 1:
-              // Navigate to Favorites
-              break;
-            case 2:
-              // Navigate to Trends
-              break;
-            case 3:
-              // Navigate to My Trips
-              break;
-            case 4:
-              // Navigate to Nearby
-              break;
-            case 5:
-              // Navigate to Settings
-              break;
-          }
-        },
       ),
     );
   }

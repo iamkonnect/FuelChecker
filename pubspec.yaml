@@ -6,7 +6,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: "^3.5.0" # Updated SDK constraint
+  sdk: "^3.6.0" # Updated SDK constraint
 
 dependencies:
   flutter:
@@ -20,7 +20,9 @@ dependencies:
   google_maps_flutter: ^2.0.0 # Add any other missing dependencies here
   location_web: ^5.0.4 # Updated to the latest version
   flutter_rating_bar: ^4.0.0
-  fl_chart: 0.36.0
+  fl_chart: ^0.70.1
+  firebase_core: ^3.10.0
+  firebase_auth: ^5.4.0
 
 dev_dependencies:
   flutter_test:
