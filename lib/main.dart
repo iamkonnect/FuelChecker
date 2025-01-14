@@ -30,7 +30,7 @@ void main() {
         ChangeNotifierProvider(
             create: (context) => FavoriteProvider()), // Add your provider here
       ],
-      child: const MyApp(),
+      child: MyApp(), // Removed const keyword
     ),
   );
 }
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         '/forgot_password': (context) => const ForgotPasswordScreen(),
         '/navigation': (context) => const NavigationApp(),
         '/filter_screen': (context) => const FilterScreen(),
-        '/nearby': (context) => const NearbyScreen(),
+        '/nearby': (context) => NearbyScreen(), // Removed const keyword
         '/fuel_map': (context) => const FuelMapScreen(fuelType: 'Blend E5'),
         '/favorites': (context) => const FavoriteScreen(),
         '/trends_screen': (context) => TrendsScreen(),
