@@ -5,12 +5,52 @@ class MyTripScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Dummy data for trips
+    final List<Map<String, dynamic>> trips = [
+      {
+        'fuelStation': 'Shell',
+        'date': '2023-10-01',
+        'destination': 'Paris, France',
+        'distance': '15 km',
+        'arrivalTime': '10:30 AM',
+      },
+      {
+        'fuelStation': 'BP',
+        'date': '2023-11-15',
+        'destination': 'Miami, USA',
+        'distance': '20 km',
+        'arrivalTime': '2:00 PM',
+      },
+      {
+        'fuelStation': 'Exxon',
+        'date': '2023-12-20',
+        'destination': 'Rocky Mountains',
+        'distance': '30 km',
+        'arrivalTime': '5:00 PM',
+      },
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Trip'),
       ),
-      body: const Center(
-        child: Text('My Trip Screen'),
+      body: ListView.builder(
+        itemCount: trips.length,
+        itemBuilder: (context, index) {
+          return Card(
+            margin: const EdgeInsets.all(8.0),
+            child: ListTile(
+              title: Text(trips[index]['fuelStation']!),
+              subtitle: Text('${trips[index]['date']} - ${trips[index]['destination']}'),
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Handle add trip action
+        },
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -24,6 +64,10 @@ class MyTripScreen extends StatelessWidget {
         currentIndex: 3, // Set the current index for My Trips
         onTap: (index) {
           // Handle navigation based on the index
+          if (index == 3) {
+            // Stay on My Trips
+            return;
+          }
           switch (index) {
             case 0:
               Navigator.pushNamed(context, '/'); // Navigate to Home
@@ -33,9 +77,6 @@ class MyTripScreen extends StatelessWidget {
               break;
             case 2:
               Navigator.pushNamed(context, '/trends_screen'); // Navigate to Trends
-              break;
-            case 3:
-              // Stay on My Trips
               break;
             case 4:
               Navigator.pushNamed(context, '/nearby'); // Navigate to Nearby

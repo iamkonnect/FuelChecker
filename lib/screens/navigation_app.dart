@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'my_trip_screen.dart'; // Import the MyTripScreen
+// Import the MyTripScreen
 import 'fuel_map_screen.dart'; // Import the FuelMapScreen
 
 class NavigationApp extends StatefulWidget {
@@ -55,10 +55,7 @@ class _NavigationAppState extends State<NavigationApp> {
         Navigator.pushNamed(context, '/trends_screen');
         break;
       case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const MyTripScreen()),
-        );
+        Navigator.pushNamed(context, '/my_trips'); // Updated to use named route
         break;
       case 4:
         Navigator.pushNamed(context, '/nearby');
