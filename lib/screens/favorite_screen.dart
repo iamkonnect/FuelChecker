@@ -25,7 +25,29 @@ class FavoriteScreen extends StatelessWidget {
               final station = favoriteProvider.favorites[index];
               return ListTile(
                 title: Text(station.name),
-                subtitle: Text(station.location),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(station.location),
+                    const SizedBox(height: 4),
+                    const Text(
+                      '\$3.00 per gallon', // Dummy fuel price
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Fuel Type: Unleaded', // Dummy fuel type
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Description: This is a popular fuel station with great service.', // Dummy description
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                  ],
+                ),
+
+
               );
             },
           );

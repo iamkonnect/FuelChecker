@@ -12,7 +12,7 @@ import 'screens/nearby_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/favorite_screen.dart';
 import 'screens/trends_screen.dart';
-import 'screens/my_trip_button_screen.dart';
+import 'screens/my_trip_screen.dart'; // Import MyTripScreen
 import 'screens/settings_screen.dart';
 import 'screens/filter_screen.dart';
 import 'screens/profile_screen.dart';
@@ -28,9 +28,10 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (context) => FavoriteProvider()), // Add your provider here
+          create: (context) => FavoriteProvider()..populateDummyFavorites(), // Add dummy favorites
+        ),
       ],
-      child: const MyApp(),
+      child: MyApp(), // Removed const keyword
     ),
   );
 }
@@ -53,11 +54,11 @@ class MyApp extends StatelessWidget {
         '/forgot_password': (context) => const ForgotPasswordScreen(),
         '/navigation': (context) => const NavigationApp(),
         '/filter_screen': (context) => const FilterScreen(),
-        '/nearby': (context) => const NearbyScreen(),
+        '/nearby': (context) => NearbyScreen(), // Removed const keyword
         '/fuel_map': (context) => const FuelMapScreen(fuelType: 'Blend E5'),
         '/favorites': (context) => const FavoriteScreen(),
         '/trends_screen': (context) => TrendsScreen(),
-        '/my_trips': (context) => const MyTripButtonScreen(),
+        '/my_trip': (context) => const MyTripScreen(), // Updated route
         '/settings': (context) => const SettingsScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/about': (context) => const AboutScreen(),
