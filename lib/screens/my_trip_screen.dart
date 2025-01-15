@@ -5,28 +5,25 @@ class MyTripScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Dummy data for trips
-    final List<Map<String, dynamic>> trips = [
+    // Dummy data for fuel stations
+    final List<Map<String, String>> fuelStations = [
       {
-        'fuelStation': 'Shell',
-        'date': '2023-10-01',
-        'destination': 'Paris, France',
-        'distance': '15 km',
-        'arrivalTime': '10:30 AM',
+        'name': 'Station A',
+        'fuelType': 'Diesel',
+        'price': '\$3.50',
+        'location': '123 Main St, City A'
       },
       {
-        'fuelStation': 'BP',
-        'date': '2023-11-15',
-        'destination': 'Miami, USA',
-        'distance': '20 km',
-        'arrivalTime': '2:00 PM',
+        'name': 'Station B',
+        'fuelType': 'Diesel',
+        'price': '\$3.60',
+        'location': '456 Elm St, City B'
       },
       {
-        'fuelStation': 'Exxon',
-        'date': '2023-12-20',
-        'destination': 'Rocky Mountains',
-        'distance': '30 km',
-        'arrivalTime': '5:00 PM',
+        'name': 'Station C',
+        'fuelType': 'Diesel',
+        'price': '\$3.55',
+        'location': '789 Oak St, City C'
       },
     ];
 
@@ -35,14 +32,13 @@ class MyTripScreen extends StatelessWidget {
         title: const Text('My Trip'),
       ),
       body: ListView.builder(
-        itemCount: trips.length,
+        itemCount: fuelStations.length,
         itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text(trips[index]['fuelStation']!),
-              subtitle: Text('${trips[index]['date']} - ${trips[index]['destination']}'),
-            ),
+          final station = fuelStations[index];
+          return ListTile(
+            title: Text(station['name']!),
+            subtitle: Text('${station['fuelType']} - ${station['price']}'),
+            trailing: Text(station['location']!),
           );
         },
       ),

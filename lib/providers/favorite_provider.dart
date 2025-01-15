@@ -15,4 +15,13 @@ class FavoriteProvider with ChangeNotifier {
     _favorites.remove(station);
     notifyListeners();
   }
+
+  void populateDummyFavorites() {
+    _favorites.addAll([
+      FuelStation(name: 'Station A', location: '123 Main St'),
+      FuelStation(name: 'Station B', location: '456 Elm St'),
+      FuelStation(name: 'Station C', location: '789 Oak St'),
+    ]);
+    notifyListeners();
+  }
 }

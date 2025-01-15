@@ -28,7 +28,8 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (context) => FavoriteProvider()), // Add your provider here
+          create: (context) => FavoriteProvider()..populateDummyFavorites(), // Add dummy favorites
+        ),
       ],
       child: MyApp(), // Removed const keyword
     ),
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
         '/fuel_map': (context) => const FuelMapScreen(fuelType: 'Blend E5'),
         '/favorites': (context) => const FavoriteScreen(),
         '/trends_screen': (context) => TrendsScreen(),
-        '/my_trips': (context) => const MyTripScreen(), // Updated route
+        '/my_trip': (context) => const MyTripScreen(), // Updated route
         '/settings': (context) => const SettingsScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/about': (context) => const AboutScreen(),
