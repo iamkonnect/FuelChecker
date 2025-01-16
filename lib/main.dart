@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import the provider package
 import 'providers/favorite_provider.dart'; // Import your FavoriteProvider
+import 'providers/theme_provider.dart'; // Import the ThemeProvider
 import 'screens/about_screen.dart'; // Import the AboutScreen
 // Importing the SettingsMenu
 import 'screens/forgot_password_screen.dart';
@@ -30,6 +31,9 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => FavoriteProvider()..populateDummyFavorites(), // Add dummy favorites
         ),
+        ChangeNotifierProvider(
+          create: (context) => ThemeProvider(), // Add ThemeProvider
+        ),
       ],
       child: MyApp(), // Removed const keyword
     ),
@@ -43,9 +47,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fuel Checker',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
+      theme: Provider.of<ThemeProvider>(context).currentTheme, // Use the current theme from ThemeProvider
       initialRoute: '/',
       routes: {
         '/': (context) => WelcomeScreen(),

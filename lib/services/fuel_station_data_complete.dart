@@ -202,4 +202,6 @@ List<Map<String, dynamic>> fuelStations = [
   {"name": "ENGEN MASVINGO ROAD", "town": "CHIVHU", "latitude": -18.0000, "longitude": 29.0000},
   {"name": "ENGEN MUROMBEDZI", "town": "ZVIMBA", "latitude": -18.0000, "longitude": 29.0000},
   {"name": "ENGEN MARKET", "town": "EASTLEA HARARE", "latitude": -17.8000, "longitude": 31.0500},
-  {"name": "PUMA TYNWALD", "town": "TYNWALD HARARE", "latitude": -17.800
+  {"name": "PUMA TYNWALD", "town": "TYNWALD HARARE", "latitude": -17.8000, "longitude": 31.0500},
+  {"name": "NEW STATION", "town": "NEW TOWN", "latitude": -17.0000, "longitude": 30.0000} // Example of a new station
+];

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/widgets/fuel_calculator.dart';
+import 'package:fuel_checker/widgets/fuel_calculator.dart'; // Updated package name
 
 void main() {
   group('FuelCalculator Widget', () {
@@ -79,6 +79,10 @@ void main() {
       await tester.enterText(find.byType(TextField).last, '9999999.99');
       await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
+
+      // Debug output
+      print('Entered price: 9999999.99');
+      print('Entered liters: 9999999.99');
 
       expect(find.text('Total: \$99999999980000.00'), findsOneWidget);
     });

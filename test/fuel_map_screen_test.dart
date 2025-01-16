@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/screens/fuel_map_screen.dart';
+import 'package:fuel_checker/screens/fuel_map_screen.dart'; // Updated package name
 
 void main() {
   testWidgets('Fuel Map Screen has a title', (WidgetTester tester) async {

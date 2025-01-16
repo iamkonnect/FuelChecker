@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/fuel_price.dart';
 
 class FuelCalculator extends StatefulWidget {
@@ -14,13 +15,18 @@ class _FuelCalculatorState extends State<FuelCalculator> {
   double _total = 0.0;
 
   void _calculateTotal() {
-    final price = double.tryParse(_priceController.text) ?? 0;
-    final liters = double.tryParse(_litersController.text) ?? 0;
-    
+    final price = double.tryParse(_priceController.text) ?? 0.0;
+    final liters = double.tryParse(_litersController.text) ?? 0.0;
+
     final calculator = FuelPrice(pricePerLiter: price, liters: liters);
     setState(() {
       _total = calculator.calculateTotal();
     });
+
+    // Debug statements
+    print('Price per liter: $price');
+    print('Liters: $liters');
+    print('Calculated total: $_total');
   }
 
   @override
@@ -46,6 +52,9 @@ class _FuelCalculatorState extends State<FuelCalculator> {
               child: const Text('Calculate'),
             ),
             Text('Total: \$${_total.toStringAsFixed(2)}',
+
+
+
                 style: Theme.of(context).textTheme.headlineSmall),
           ],
         ),
