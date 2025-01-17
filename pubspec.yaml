@@ -6,23 +6,26 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: "^3.6.0" # Updated SDK constraint
+  sdk: "^3.6.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.0 # Added provider dependency
-  geolocator: ^13.0.2 # Updated to the latest version
-  geocoding: ^3.0.0 # Added geocoding dependency
-  email_validator: ^3.0.0 # Updated to the latest version
-  mailer: ^6.3.0 # Updated to the latest version
-  flutter_map: ^7.0.2 # Updated to the latest version
-  google_maps_flutter: ^2.0.0 # Add any other missing dependencies here
-  location_web: ^5.0.4 # Updated to the latest version
-  flutter_rating_bar: ^4.0.0
-  fl_chart: ^0.70.1
-  firebase_core: ^3.10.0
+  cloud_firestore: ^5.6.1
   firebase_auth: ^5.4.0
+  firebase_storage: ^12.4.0
+  flutter_map_directions: ^0.0.8
+  fl_chart: ^0.70.2
+  flutter_map: ^7.0.2
+  geolocator: ^13.0.2
+  latlong2: ^0.9.1
+  geocoding: ^3.0.0
+  email_validator: ^3.0.0
+  mailer: ^6.4.1  # Downgrade to a compatible version
+  flutter_rating_bar: ^4.0.0
+  google_maps_flutter: ^2.0.0
+  firebase_data_connect: ^0.1.1
+  provider: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -31,13 +34,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - lib/assets/images/map_background.png
     - lib/assets/images/logo-full-color-150-x-1.png
+    - lib/assets/images/map_background.png
     - lib/assets/images/Favourites.png
     - lib/assets/images/Trends.png
-    - lib/assets/images/nearby.png
     - lib/assets/images/my trips.png
     - lib/assets/images/Settings.png
-    - lib/assets/images/apple icon logo.png
-    - lib/assets/images/Black Google Icon.png
-    - lib/assets/images/Facebook Icon.png
+
+    - lib/assets/images/nearby.png

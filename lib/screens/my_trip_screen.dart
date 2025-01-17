@@ -50,29 +50,30 @@ class MyTripScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorites'),
-          BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: 'Trends'),
-          BottomNavigationBarItem(icon: Icon(Icons.trip_origin), label: 'My Trips'),
-          BottomNavigationBarItem(icon: Icon(Icons.near_me), label: 'Nearby'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
+          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png'), color: Colors.black), label: 'Favorites'),
+          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Trends.png'), color: Colors.black), label: 'Trends'),
+          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/my trips.png'), color: Colors.black), label: 'My Trips'),
+          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/nearby.png'), color: Colors.black), label: 'Nearby'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
         ],
         currentIndex: 3, // Set the current index for My Trips
+        selectedItemColor: const Color(0xFFDF2626), // Highlight color for selected item
+
         onTap: (index) {
           // Handle navigation based on the index
-          if (index == 3) {
-            // Stay on My Trips
-            return;
-          }
           switch (index) {
             case 0:
-              Navigator.pushNamed(context, '/'); // Navigate to Home
+              Navigator.pushNamed(context, '/fuel_map'); // Navigate to Fuel Map
               break;
             case 1:
               Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites
               break;
             case 2:
               Navigator.pushNamed(context, '/trends_screen'); // Navigate to Trends
+              break;
+            case 3:
+              // Stay on My Trips
               break;
             case 4:
               Navigator.pushNamed(context, '/nearby'); // Navigate to Nearby

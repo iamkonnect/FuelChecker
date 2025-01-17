@@ -19,6 +19,33 @@ class NearbyScreen extends StatelessWidget {
           BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/nearby.png'), color: Colors.black), label: 'Nearby'),
           BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
         ],
+        currentIndex: 4, // Set the current index for Nearby
+        selectedItemColor: const Color(0xFFDF2626), // Highlight color for selected item
+
+        onTap: (index) {
+          // Handle navigation based on the index
+          switch (index) {
+            case 0:
+              Navigator.pushNamed(context, '/fuel_map'); // Navigate to Fuel Map
+              break;
+            case 1:
+              Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites
+              break;
+            case 2:
+              Navigator.pushNamed(context, '/trends_screen'); // Navigate to Trends
+              break;
+            case 3:
+              Navigator.pushNamed(context, '/my_trip'); // Navigate to My Trips
+              break;
+            case 4:
+              // Stay on Nearby
+              break;
+            case 5:
+              Navigator.pushNamed(context, '/settings'); // Navigate to Settings
+              break;
+          }
+        },
+
       ),
     );
   }

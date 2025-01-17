@@ -73,7 +73,8 @@ class TrendsScreen extends StatelessWidget {
           // Handle navigation based on the index
           switch (index) {
             case 0:
-              Navigator.pushNamed(context, '/'); // Navigate to Home
+              Navigator.pushNamed(context, '/fuel_map'); // Navigate to Fuel Map
+
               break;
             case 1:
               Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites

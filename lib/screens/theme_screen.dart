@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 
 class ThemeScreen extends StatefulWidget {
   const ThemeScreen({Key? key}) : super(key: key);
@@ -8,14 +10,6 @@ class ThemeScreen extends StatefulWidget {
 }
 
 class _ThemeScreenState extends State<ThemeScreen> {
-  double _sliderValue = 0.5; // Default value for slider
-
-  // If you need to implement the theme selection logic
-  void _selectTheme(String selectedTheme) {
-    // Implement your theme selection logic here
-    print("Selected theme: $selectedTheme");
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,8 +22,7 @@ class _ThemeScreenState extends State<ThemeScreen> {
           onPressed: () {
             showModalBottomSheet(
               context: context,
-              isScrollControlled:
-                  true, // Allows the bottom sheet to be half-screen
+              isScrollControlled: true,
               builder: (BuildContext context) {
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -50,10 +43,9 @@ class _ThemeScreenState extends State<ThemeScreen> {
                         title: const Text('Light Theme'),
                         leading: Radio<String>(
                           value: 'light',
-                          groupValue:
-                              'theme', // Replace with actual selected theme state
+                          groupValue: Provider.of<ThemeProvider>(context).currentTheme == ThemeData.light() ? 'light' : 'dark',
                           onChanged: (value) {
-                            _selectTheme(value!);
+                            Provider.of<ThemeProvider>(context, listen: false).setTheme(value!);
                             Navigator.pop(context);
                           },
                         ),
@@ -62,10 +54,9 @@ class _ThemeScreenState extends State<ThemeScreen> {
                         title: const Text('Dark Theme'),
                         leading: Radio<String>(
                           value: 'dark',
-                          groupValue:
-                              'theme', // Replace with actual selected theme state
+                          groupValue: Provider.of<ThemeProvider>(context).currentTheme == ThemeData.dark() ? 'dark' : 'light',
                           onChanged: (value) {
-                            _selectTheme(value!);
+                            Provider.of<ThemeProvider>(context, listen: false).setTheme(value!);
                             Navigator.pop(context);
                           },
                         ),
@@ -73,18 +64,13 @@ class _ThemeScreenState extends State<ThemeScreen> {
                       const SizedBox(height: 20),
                       const Text('Or use the slider to adjust brightness:'),
                       Slider(
-                        value: _sliderValue,
+                        value: 0.5,
                         min: 0.0,
                         max: 1.0,
                         divisions: 10,
-                        activeColor: Colors
-                            .red, // Set the color of the active part of the slider
-                        thumbColor:
-                            Colors.red, // Set the color of the slider thumb
+                        activeColor: Colors.red,
+                        thumbColor: Colors.red,
                         onChanged: (double value) {
-                          setState(() {
-                            _sliderValue = value;
-                          });
                           // Implement your slider behavior to adjust theme brightness or other logic
                         },
                       ),

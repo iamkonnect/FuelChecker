@@ -1,98 +1,70 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="FuelChecker">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <title>FuelChecker</title>
-  <link rel="manifest" href="manifest.json">
-</head>
-<body>
-  <script>
-    var serviceWorkerVersion = '{{flutter_service_worker_version}}';
-    var scriptLoaded = false;
-    function loadMainDartJs() {
-      if (scriptLoaded) {
-        return;
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta name="description" content="A new Flutter project." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="FuelChecker" />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <title>FuelChecker</title>
+    <link rel="manifest" href="manifest.json" />
+  </head>
+  <body>
+    <script>
+      // Replace this with a build-time version or hardcode for debugging
+      var serviceWorkerVersion = "1.0.0";
+      var scriptLoaded = false;
+      function loadMainDartJs() {
+        if (scriptLoaded) {
+          return;
+        }
+        scriptLoaded = true;
+        var scriptTag = document.createElement("script");
+        scriptTag.src = "main.dart.js";
+        scriptTag.type = "application/javascript";
+        document.body.append(scriptTag);
       }
-      scriptLoaded = true;
-      var scriptTag = document.createElement('script');
-      scriptTag.src = 'main.dart.js';
-      scriptTag.type = 'application/javascript';
-      document.body.append(scriptTag);
-    }
 
-    if ('serviceWorker' in navigator) {
-      // Service workers are supported. Use them.
-      window.addEventListener('load', function () {
-        // Wait for registration to finish before dropping the <script> tag.
-        // Otherwise, the browser will load the script multiple times,
-        // potentially different versions.
-        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
-        navigator.serviceWorker.register(serviceWorkerUrl)
-          .then((reg) => {
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          var serviceWorkerUrl =
+            "flutter_service_worker.js?v=" + serviceWorkerVersion;
+          navigator.serviceWorker.register(serviceWorkerUrl).then((reg) => {
             function waitForActivation(serviceWorker) {
-              serviceWorker.addEventListener('statechange', () => {
-                if (serviceWorker.state == 'activated') {
-                  console.log('ServiceWorker activated, loading main.dart.js');
-                  if (serviceWorkerVersion !== null) {
-                    // If serviceWorkerVersion is not null, we have activated a
-                    // versioned service worker. This means the app was updated
-                    // and a new service worker was installed. To ensure all
-                    // old caches are cleaned up, we wait for the updated
-                    // service worker to activate, then remove the <script>
-                    // tag, which triggers app restart.
-                    document.querySelector('script[src="main.dart.js"]').remove();
-                  }
+              serviceWorker.addEventListener("statechange", () => {
+                if (serviceWorker.state == "activated") {
+                  console.log("ServiceWorker activated, loading main.dart.js");
                   loadMainDartJs();
                 }
               });
             }
-            if (reg.active && reg.active.state == 'activated') {
-              // The service worker is already activated. Load the app.
-              console.log('ServiceWorker already active, loading main.dart.js');
+            if (reg.active && reg.active.state == "activated") {
+              console.log("ServiceWorker already active, loading main.dart.js");
               loadMainDartJs();
             } else if (reg.installing) {
-              // The service worker is installing. Wait for it to activate.
-              console.log('ServiceWorker installing, waiting for activation');
+              console.log("ServiceWorker installing, waiting for activation");
               waitForActivation(reg.installing);
             } else if (reg.waiting) {
-              // The service worker is installed but waiting for activation.
-              // This can happen if multiple clients are open and each has
-              // a different service worker.
-              console.log('ServiceWorker installed, waiting for activation');
+              console.log("ServiceWorker installed, waiting for activation");
               waitForActivation(reg.waiting);
             }
           });
-
-        // If serviceWorkerVersion is set, register the service worker
-        // and wait for it to be activated. This will cause an app restart.
-        // If the service worker is updated, this will also cause an app
-        // restart. This ensures that all clients are updated.
-        if (serviceWorkerVersion !== null) {
-          navigator.serviceWorker.register(serviceWorkerUrl);
-        }
-      });
-    } else {
-      // Service workers are not supported. Just drop the <script> tag.
-      loadMainDartJs();
-    }
-  </script>
-  <script>
-    window.FlutterLoader.load({
-      entrypoint: 'main.dart.js',
-      serviceWorker: {
-        serviceWorkerVersion: {{flutter_service_worker_version}}
+        });
+      } else {
+        loadMainDartJs();
       }
-    });
-  </script>
-</body>
+    </script>
+    <script>
+      window.FlutterLoader.load({
+        entrypoint: "main.dart.js",
+        serviceWorker: {
+          serviceWorkerVersion: "1.0.0",
+        },
+      });
+    </script>
+  </body>
 </html>

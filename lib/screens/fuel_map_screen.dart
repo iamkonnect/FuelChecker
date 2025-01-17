@@ -268,10 +268,10 @@ class FuelMapScreenState extends State<FuelMapScreen> {
               Navigator.pushNamed(context, '/favorites');
               break;
             case 2:
-              Navigator.pushNamed(context, '/trends');
+              Navigator.pushNamed(context, '/trends_screen'); // Updated to correct route
               break;
             case 3:
-              Navigator.pushNamed(context, '/my-trips');
+              Navigator.pushNamed(context, '/my_trip'); // Updated to correct route
               break;
             case 4:
               Navigator.pushNamed(context, '/nearby');
