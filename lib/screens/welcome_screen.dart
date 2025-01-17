@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-
 import 'login_screen.dart'; // Importing the LoginScreen
 
 class WelcomeScreen extends StatefulWidget {
@@ -25,7 +24,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       duration: const Duration(seconds: 2),
     )..repeat();
 
-    // Color transition animation for circles
     _colorAnimation = ColorTween(
       begin: Colors.black,
       end: Colors.red,
@@ -34,12 +32,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       curve: Curves.easeInOut,
     ));
 
-    // Navigate to LoginScreen after a delay
-    Future.delayed(const Duration(seconds: 4), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
+    // Ensure navigation happens after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      });
     });
   }
 
