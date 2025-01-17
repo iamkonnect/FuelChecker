@@ -43,7 +43,18 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     } else {
-      // TODO: Implement actual authentication logic here
+      // Example authentication logic
+      if (email == 'test@example.com' && password == 'password123') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const FuelTypeSelectionScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid email or password')),
+        );
+      }
       // For now, navigate to FuelTypeSelectionScreen as a placeholder
       Navigator.pushReplacement(
         context,

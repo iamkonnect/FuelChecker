@@ -33,7 +33,10 @@ class FuelMapScreenState extends State<FuelMapScreen> {
 
   Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      ),
     );
     setState(() {
       _currentLocation = LatLng(position.latitude, position.longitude);

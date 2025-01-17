@@ -39,7 +39,7 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withAlpha((0.1 * 255).toInt()),
             blurRadius: 10,
             spreadRadius: 2,
             offset: Offset(0, 4), // Shadow position
@@ -102,6 +102,7 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
                               from, to, searchTerm, _selectedFilter);
                           print(
                               'Searching from: $from to: $to with term: $searchTerm');
+                          print('Results: $results');
                         },
                       ),
                       labelText: 'Search (optional)...',
