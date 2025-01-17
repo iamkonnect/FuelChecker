@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class MyTripScreen extends StatelessWidget {
   const MyTripScreen({super.key});
 
@@ -59,11 +58,13 @@ class MyTripScreen extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
         ],
         currentIndex: 3, // Set the current index for My Trips
+        selectedItemColor: const Color(0xFFDF2626), // Highlight color for selected item
+
         onTap: (index) {
           // Handle navigation based on the index
           switch (index) {
             case 0:
-              Navigator.pushNamed(context, '/'); // Navigate to Home
+              Navigator.pushNamed(context, '/fuel_map'); // Navigate to Fuel Map
               break;
             case 1:
               Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites
