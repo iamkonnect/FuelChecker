@@ -29,7 +29,6 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
   Color _passwordStrengthColor = Colors.black;
   String _passwordStrength = '';
   bool _rememberMe = false; // Changed to bool for state management
-  String? _selectedCountryCode;
 
   String evaluatePasswordStrength(String password) {
     if (password.length < 4) {

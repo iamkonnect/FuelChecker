@@ -116,11 +116,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 data: SliderTheme.of(context).copyWith(
                   activeTrackColor:
                       Colors.red, // The active portion of the slider track
-                  inactiveTrackColor: Colors.red.withOpacity(
-                      0.3), // The inactive portion of the slider track
+                  inactiveTrackColor: Colors.red.withAlpha(
+                      (0.3 * 255).toInt()), // The inactive portion of the slider track
                   thumbColor: Colors.red, // The slider thumb color
-                  overlayColor: Colors.red
-                      .withOpacity(0.2), // Overlay color when interacting
+                  overlayColor: Colors.red.withAlpha((0.2 * 255).toInt()), // Overlay color when interacting
                   trackHeight: 4.0, // Height of the track
                   thumbShape: const RoundSliderThumbShape(
                       enabledThumbRadius: 10.0), // Thumb size

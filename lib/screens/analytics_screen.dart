@@ -28,7 +28,7 @@ class AnalyticsScreen extends StatelessWidget {
                     value: percentage / 100,
                     strokeWidth: 8,
                     color: color,
-                    backgroundColor: color.withOpacity(0.2),
+                    backgroundColor: color.withAlpha((0.2 * 255).toInt()),
                   ),
                 ),
                 Column(
@@ -189,7 +189,7 @@ class AnalyticsScreen extends StatelessWidget {
                       ],
                       isCurved: true,
                       color: Colors.blue,
-                      barWidth: 4,
+                      barWidth: 4.0,
                       dotData: FlDotData(show: false),
                       belowBarData: BarAreaData(show: false),
                     ),

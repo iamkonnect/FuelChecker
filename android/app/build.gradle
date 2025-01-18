@@ -41,7 +41,8 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.yourdomain.fuelcheckerapp"
+        applicationId "com.fuelcheck.app"
+
         minSdkVersion 23
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

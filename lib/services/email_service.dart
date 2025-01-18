@@ -21,7 +21,7 @@ class EmailService {
 
     try {
       // Send the email
-      final sendReport = await send(message, _smtpServer);
+      await send(message, _smtpServer);
       developer.log('Email sent successfully', name: 'EmailService');
     } on MailerException catch (e) {
       developer.log('Error sending email: ${e.toString()}', 

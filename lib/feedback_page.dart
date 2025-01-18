@@ -37,7 +37,6 @@ void submitFeedback(BuildContext context) {
     return;
   }
 
-  const sun = 'support@fuelcheckerzw.com';
 
   // Here you can implement email sending logic or any other feedback handling logic.
   // For example, you could call an API to send the feedback to the email address.

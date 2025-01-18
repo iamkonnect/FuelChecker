@@ -4,6 +4,32 @@ A new Flutter project.
 
 ## Getting Started
 
+### Building the APK
+To build the APK for the Fuel Checker app, follow these steps:
+
+1. Ensure you have Flutter installed on your machine. You can check this by running:
+   ```bash
+   flutter --version
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd path/to/your/project/FuelChecker
+   ```
+
+3. Install the dependencies:
+   ```bash
+   flutter pub get
+   ```
+
+4. Build the APK:
+   ```bash
+   flutter build apk
+   ```
+
+5. The generated APK can be found in the `build/app/outputs/flutter-apk/` directory.
+
+
 ## Firebase Setup
 
 This project is configured to use Firebase services, including:

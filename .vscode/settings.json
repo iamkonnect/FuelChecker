@@ -1,10 +1,12 @@
 {
-    "cmake.sourceDirectory": "C:/Users/infin/Desktop/FuelChecker/linux",
+    "cmake.sourceDirectory": "C:/Users/infin/FuelChecker/linux",
     "yaml.schemas": {
         "https://json.schemastore.org/pubspec.json": "file:///c%3A/Users/infin/Desktop/FuelChecker/FuelChecker/pubspec.yaml"
     },
     "cmake.options.statusBarVisibility": "hidden",
     "cSpell.words": [
         "buildscript"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.import.gradle.enabled": true
 }
