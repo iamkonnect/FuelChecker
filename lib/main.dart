@@ -14,6 +14,7 @@ import 'screens/welcome_screen.dart';
 import 'screens/feedback_screen.dart'; // Added import
 import 'screens/report_issue_screen.dart'; // Added import
 import 'screens/help_screen.dart'; // Added import
+import 'screens/profile_screen.dart'; // Added import for ProfileScreen
 
 void main() {
   runApp(const MyApp()); // Removed 'const' keyword
@@ -34,16 +35,14 @@ class MyApp extends StatelessWidget {
         '/': (context) => const WelcomeScreen(), // Removed 'const' keyword
         '/login': (context) => const LoginScreen(), // Removed 'const' keyword
         '/fuel_type': (context) => const FuelTypeSelectionScreen(), // Removed 'const' keyword
-'/fuel_map': (context) {
-  final args = ModalRoute.of(context)!.settings.arguments as String?;
-  if (args == null) {
-    // Handle the null case, e.g., provide a default value or show an error
-    return FuelMapScreen(fuelType: 'defaultFuelType'); // Provide a default value
-  }
-
+        '/fuel_map': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as String?;
+          if (args == null) {
+            // Handle the null case, e.g., provide a default value or show an error
+            return FuelMapScreen(fuelType: 'defaultFuelType'); // Provide a default value
+          }
           return FuelMapScreen(fuelType: args); // Pass fuelType argument
         },
-
         '/favorites': (context) => const FavoriteScreen(), // Removed 'const' keyword
         '/trends_screen': (context) => TrendsScreen(), // Removed 'const' keyword
         '/my_trip': (context) => const MyTripScreen(), // Removed 'const' keyword
@@ -55,6 +54,7 @@ class MyApp extends StatelessWidget {
         '/deactivate': (context) => const DeactivateAccountScreen(), // Removed 'const' keyword
         '/analytics': (context) => const AnalyticsScreen(), // Removed 'const' keyword
         '/help': (context) => const HelpScreen(), // Removed 'const' keyword
+        '/profile': (context) => const ProfileScreen(), // Added route for ProfileScreen
       },
     );
   }
