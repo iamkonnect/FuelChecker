@@ -9,7 +9,7 @@ class RoutePlanningScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController fromController = TextEditingController();
     final TextEditingController toController = TextEditingController();
-    final String searchTerm = ''; // Initialize search term
+    const String searchTerm = ''; // Initialize search term
 
     return Scaffold(
       appBar: AppBar(
@@ -30,11 +30,11 @@ class RoutePlanningScreen extends StatelessWidget {
             ), // Adding the SearchBarWithFilter widget
             TextField(
               controller: fromController,
-              decoration: InputDecoration(labelText: 'Starting Point'),
+              decoration: const InputDecoration(labelText: 'Starting Point'),
             ),
             TextField(
               controller: toController,
-              decoration: InputDecoration(labelText: 'Destination'),
+              decoration: const InputDecoration(labelText: 'Destination'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(

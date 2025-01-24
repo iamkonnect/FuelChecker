@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ReportIssueScreen extends StatefulWidget {
-  const ReportIssueScreen({Key? key}) : super(key: key);
+  const ReportIssueScreen({super.key});
 
   @override
   State<ReportIssueScreen> createState() => _ReportIssueScreenState();
@@ -185,7 +185,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
+          content: const Text(
             'Please select an issue, a petrol station, and provide details.',
           ),
           backgroundColor: Colors.red.shade600,

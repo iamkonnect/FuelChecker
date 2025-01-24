@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class NearbyScreen extends StatelessWidget {
+  const NearbyScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nearby'),
+        title: const Text('Nearby'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Nearby Screen Content'),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -45,7 +47,6 @@ class NearbyScreen extends StatelessWidget {
               break;
           }
         },
-
       ),
     );
   }

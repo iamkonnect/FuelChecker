@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart'; // Importing email validator package
-// Import the WelcomeScreen
 import 'fuel_type_selection_screen.dart'; // Import the FuelTypeSelectionScreen
 import 'signup_screen_v7.dart'; // Import for the SignUpScreenV7
 import 'forgot_password_screen.dart'; // Import the ForgotPasswordScreen
@@ -20,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _togglePasswordVisibility() {
     setState(() {
       _obscureText = !_obscureText;
+      print("Password visibility toggled: $_obscureText"); // Debugging statement
     });
   }
 
@@ -44,23 +44,19 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     } else {
       // Example authentication logic
-      if (email == 'test@example.com' && password == 'password123') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const FuelTypeSelectionScreen()),
-        );
+      if (email == 'akwera@gmail.com' && password == '1234Abc') {
+        if (mounted) { // Check if the widget is still mounted
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const FuelTypeSelectionScreen()),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid email or password')),
         );
       }
-      // For now, navigate to FuelTypeSelectionScreen as a placeholder
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const FuelTypeSelectionScreen()),
-      );
     }
   }
 
@@ -69,12 +65,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/assets/images/map_background.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -113,8 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscureText
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                              ? Icons.visibility // Updated to use Google Icons equivalent
+                              : Icons.visibility_off, // Updated to use Google Icons equivalent
                         ),
                         onPressed: _togglePasswordVisibility,
                       ),
@@ -137,8 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  const SignUpScreenV7()), // Updated reference
+                              builder: (context) => const SignUpScreenV7()), // Updated reference without const
                         );
                       },
                       child: const Text(
@@ -171,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ForgotPasswordScreen()),
+                          builder: (context) => ForgotPasswordScreen()),
                     );
                   },
                   child: const Text(

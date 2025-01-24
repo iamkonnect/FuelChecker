@@ -17,7 +17,7 @@ class _FuelTypeSelectionScreenState extends State<FuelTypeSelectionScreen> {
       appBar: AppBar(
         title: const Text(''),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back), // Updated to use Google Icons equivalent
           onPressed: () {
             Navigator.pop(context);
           },
@@ -31,7 +31,8 @@ class _FuelTypeSelectionScreenState extends State<FuelTypeSelectionScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('lib/assets/images/logo-full-color-150-x-1.png', height: 300),
+            Image.asset('lib/assets/images/Fuelcheck logo 150by1.png', height: 300), // Updated path
+
             const SizedBox(height: 32.0),
             const Text(
               'Please select your Fuel Type',

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-// Import the MyTripScreen
 import 'fuel_map_screen.dart'; // Import the FuelMapScreen
 
 class NavigationApp extends StatefulWidget {
@@ -45,7 +44,7 @@ class _NavigationAppState extends State<NavigationApp> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const FuelMapScreen(fuelType: 'Petrol')), // Navigate to FuelMapScreen
+          MaterialPageRoute(builder: (context) => const FuelMapScreen(fuelType: 'default')), // Pass fuelType
         );
         break;
       case 1:
@@ -86,16 +85,52 @@ class _NavigationAppState extends State<NavigationApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _goToCurrentLocation,
-        child: const Icon(Icons.my_location),
+        child: const Icon(Icons.gps_fixed), // Updated to use Google Icons equivalent
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorites'),
-          BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: 'Trends'),
-          BottomNavigationBarItem(icon: Icon(Icons.trip_origin), label: 'My Trips'),
-          BottomNavigationBarItem(icon: Icon(Icons.near_me), label: 'Nearby'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'lib/assets/images/home-icon-silhouette.png',
+              color: selectedIndex == 0 ? Colors.red : Colors.black,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'lib/assets/images/Favourites.png',
+              color: selectedIndex == 1 ? Colors.red : Colors.black,
+            ),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'lib/assets/images/Trends.png',
+              color: selectedIndex == 2 ? Colors.red : Colors.black,
+            ),
+            label: 'Trends',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'lib/assets/images/my trips.png',
+              color: selectedIndex == 3 ? Colors.red : Colors.black,
+            ),
+            label: 'My Trips',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'lib/assets/images/Settings.png',
+              color: selectedIndex == 4 ? Colors.red : Colors.black,
+            ),
+            label: 'Settings',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'lib/assets/images/nearby.png',
+              color: selectedIndex == 5 ? Colors.red : Colors.black,
+            ),
+            label: 'Nearby',
+          ),
         ],
         currentIndex: selectedIndex,
         onTap: onItemTapped,

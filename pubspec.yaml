@@ -1,31 +1,27 @@
-name: fuel_checker
-description: A new Flutter project.
-
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+name: fuel_check
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
-  sdk: "^3.6.0"
+  sdk: ">=2.17.0 <4.0.0" # Updated
 
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: ^5.6.1
-  firebase_auth: ^5.4.0
-  firebase_storage: ^12.4.0
-  flutter_map_directions: ^0.0.8
-  fl_chart: ^0.70.2
-  flutter_map: ^7.0.2
-  geolocator: ^13.0.2
-  latlong2: ^0.9.1
-  geocoding: ^3.0.0
-  email_validator: ^3.0.0
-  mailer: ^6.4.1  # Downgrade to a compatible version
-  flutter_rating_bar: ^4.0.0
-  google_maps_flutter: ^2.0.0
-  firebase_data_connect: ^0.1.1
-  provider: ^6.0.0
+  logger: ^2.5.0 # Updated logger package
+  flutter_map: ^7.0.2 # Updated flutter_map package
+  geolocator: ^13.0.2 # Updated geolocator package
+  latlong2: ^0.9.1 # Updated latlong2 package
+  geocoding: ^3.0.0 # Updated geocoding package
+  http: ^1.3.0 # Updated http package
+  email_validator: ^3.0.0 # Updated email_validator package
+  google_maps_flutter: ^2.0.0 # Added google_maps_flutter package
+  flutter_rating_bar: ^4.0.1 # Updated flutter_rating_bar package
+  fl_chart: ^0.40.0 # Added fl_chart package
+  mailer: ^6.0.0 # Added mailer package
+  provider: ^6.0.0 # Added provider package
 
 dev_dependencies:
   flutter_test:
@@ -34,10 +30,19 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - lib/assets/images/logo-full-color-150-x-1.png
-    - lib/assets/images/map_background.png
-    - lib/assets/images/Favourites.png
-    - lib/assets/images/Trends.png
-    - lib/assets/images/my trips.png
+    - web/icons/Icon-maskable-512.png
     - lib/assets/images/Settings.png
+    - lib/assets/images/Favourites.png
+    - lib/assets/images/my trips.png  # Updated to match actual file name
+    - lib/assets/images/map_background.png  # Added missing asset
     - lib/assets/images/nearby.png
+    - lib/assets/images/Trends.png
+    - lib/assets/images/Fuelcheck logo 150by1.png  # Updated to replace space with %20
+    - lib/assets/images/Facebook Icon.png  # Updated to replace space with %20
+    - lib/assets/images/apple icon logo.png  # Updated to replace space with %20
+    - lib/assets/images/Black Google Icon.png  # Updated to replace space with %20
+
+  fonts:
+    - family: GoogleIcons
+      fonts:
+        - asset: fonts/google_icons.ttf

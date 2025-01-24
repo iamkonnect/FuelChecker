@@ -1,11 +1,10 @@
-import 'dart:math'; // Import for Random class
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart'; // Import geocoding package
+import 'package:flutter/foundation.dart'; // Import for kDebugMode
 import '../models/fuel_price.dart'; // Import FuelStation model
-import '../services/fuel_station_data.dart'; // Import fuel station data
 import '../widgets/search_bar_with_filter_final.dart' as searchBar; // Correct import path with alias
 
 class FuelMapScreen extends StatefulWidget {
@@ -19,14 +18,7 @@ class FuelMapScreen extends StatefulWidget {
 
 class FuelMapScreenState extends State<FuelMapScreen> {
   LatLng? _currentLocation;
-  List<FuelStation> _fuelStations = fuelStations.map((data) => FuelStation(
-    name: data['name']!,
-    location: data['town']!,
-    latitude: (data['latitude'] as num).toDouble(), // Cast to double
-    longitude: (data['longitude'] as num).toDouble(), // Cast to double
-    blendESPrice: 0.0, // Placeholder for price
-    dieselPrice: 0.0, // Placeholder for price
-  )).toList();
+  List<FuelStation> _fuelStations = [];
   List<FuelStation> _nearbyStations = [];
   final Set<Marker> _markers = {};
   int _selectedIndex = 0; // Default to Home
@@ -38,14 +30,61 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         distanceFilter: 100,
       ),
     );
-    setState(() {
-      _currentLocation = LatLng(position.latitude, position.longitude);
-      _nearbyStations = getNearbyStations(_fuelStations, position.latitude, position.longitude);
-      _addFuelStationMarkers();
+    if (mounted) { // Check if the widget is still mounted
+      setState(() {
+        _currentLocation = LatLng(position.latitude, position.longitude);
+        _nearbyStations = getNearbyStations(_fuelStations, position.latitude, position.longitude);
+        _addFuelStationMarkers();
+      });
+    }
+  }
+
+  void _addFuelStationMarkers() {
+    _markers.clear();
+    for (final station in _nearbyStations) {
+      _markers.add(
+        Marker(
+          width: 80.0,
+          height: 80.0,
+          point: LatLng(station.latitude, station.longitude),
+          child: const Icon(Icons.local_gas_station, size: 40, color: Colors.red), // Updated to use Google Icons equivalent
+        ),
+      );
+    }
+    _clusterMarkers();
+  }
+
+  void _clusterMarkers() {
+    // Simple clustering logic to avoid overlapping markers
+    final clusteredMarkers = <LatLng, List<Marker>>{};
+
+    for (final marker in _markers) {
+      final key = LatLng(marker.point.latitude, marker.point.longitude);
+      if (!clusteredMarkers.containsKey(key)) {
+        clusteredMarkers[key] = [];
+      }
+      clusteredMarkers[key]!.add(marker);
+    }
+
+    _markers.clear();
+    clusteredMarkers.forEach((key, markers) {
+      if (markers.length > 1) {
+        // If there are overlapping markers, create a single marker for the cluster
+        _markers.add(
+          Marker(
+            width: 80.0,
+            height: 80.0,
+            point: key,
+            child: const Icon(Icons.local_gas_station, size: 40, color: Colors.orange), // Updated to use Google Icons equivalent
+          ),
+        );
+      } else {
+        // If no overlap, add the original marker
+        _markers.add(markers.first);
+      }
     });
   }
 
-  // Method to get coordinates from location name
   Future<LatLng?> getCoordinates(String location) async {
     try {
       List<Location> locations = await locationFromAddress(location);
@@ -58,127 +97,13 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     return null; // Return null if no coordinates found
   }
 
-  void _addFuelStationMarkers() {
-    _markers.clear();
-    for (final station in _nearbyStations) {
-      _markers.add(
-        Marker(
-          width: 80.0,
-          height: 80.0,
-          point: LatLng(station.latitude, station.longitude),
-          child: Icon(Icons.local_gas_station, size: 40, color: Colors.red),
-        ),
-      );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     _fuelStations = [
-      FuelStation(
-        name: 'Puma Petroleum',
-        location: 'Ardbennie Harare',
-        latitude: -17.8419,
-        longitude: 31.0678,
-        blendESPrice: 1.39,
-        dieselPrice: 1.59,
-      ),
-      FuelStation(
-        name: 'Shell',
-        location: 'Avondale Harare',
-        latitude: -17.7936,
-        longitude: 31.0425,
-        blendESPrice: 1.36,
-        dieselPrice: 1.50,
-      ),
-      FuelStation(
-        name: 'Totalenergies',
-        location: 'Belgravia Harare',
-        latitude: -17.8056,
-        longitude: 31.0489,
-        blendESPrice: 1.27,
-        dieselPrice: 1.40,
-      ),
-      FuelStation(
-        name: 'Engen',
-        location: 'Mikocheni A',
-        latitude: -6.7656832, // Updated latitude for Engen
-        longitude: 39.1769131, // Updated longitude for Engen
-        blendESPrice: (1.20 + (0.10 * (Random().nextInt(10)))), // Random price for blend ES
-        dieselPrice: (1.30 + (0.10 * (Random().nextInt(10)))), // Random price for diesel
-      ),
-      FuelStation(
-        name: 'Puma',
-        location: 'Masaki',
-        latitude: -6.7689603, // Updated latitude for Puma
-        longitude: 39.2472892, // Updated longitude for Puma
-        blendESPrice: 1.19, // Dummy price
-        dieselPrice: 1.40, // Dummy price
-      ),
-      FuelStation(
-        name: 'Lake Oil',
-        location: 'Sinza',
-        latitude: -6.7950, // Dummy latitude for Lake Oil
-        longitude: 39.2278, // Dummy longitude for Lake Oil
-        blendESPrice: 1.46, // Dummy price
-        dieselPrice: 1.24, // Dummy price
-      ),
+      // Initialize fuel stations here
     ];
     _getCurrentLocation();
-  }
-
-  void updateMarkers(LatLng fromCoordinates, LatLng toCoordinates) {
-    _markers.clear();
-    _markers.add(
-      Marker(
-        width: 80.0,
-        height: 80.0,
-        point: _currentLocation!,
-        child: Icon(Icons.location_on, size: 40, color: Colors.green), // Current location marker
-      ),
-    );
-    _markers.add(
-      Marker(
-        width: 80.0,
-        height: 80.0,
-        point: toCoordinates,
-        child: Icon(Icons.location_on, size: 40, color: Colors.blue), // Destination marker
-      ),
-    );
-    setState(() {}); // Refresh the map with new markers
-
-    // Call the directions calculation method
-    calculateDirections(_currentLocation!, toCoordinates);
-  }
-
-  void calculateDirections(LatLng fromCoordinates, LatLng toCoordinates) {
-    // Placeholder for directions calculation logic
-    // This could involve calling a mapping API to get directions
-    print('Calculating directions from $fromCoordinates to $toCoordinates');
-  }
-
-  // Method to filter fuel stations based on search term
-  List<FuelStation> filterFuelStations(String searchTerm) {
-    return _fuelStations.where((station) {
-      return station.name.toLowerCase().contains(searchTerm.toLowerCase());
-    }).toList();
-  }
-
-  // Method to update markers with filtered stations
-  void updateMarkersWithFilteredStations(List<FuelStation> filteredStations) {
-    _markers.clear();
-    for (final station in filteredStations) {
-      _markers.add(
-        Marker(
-          width: 80.0,
-          height: 80.0,
-          point: LatLng(station.latitude, station.longitude),
-          child: Icon(Icons.local_gas_station, size: 40, color: Colors.red),
-        ),
-      );
-    }
-    setState(() {}); // Refresh the map with new markers
   }
 
   @override
@@ -231,7 +156,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home), // Existing home icon
             label: 'Home',
           ),
           BottomNavigationBarItem(
@@ -243,7 +168,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
             label: 'Trends',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')),
+            icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')), // Corrected reference
             label: 'My Trips',
           ),
           BottomNavigationBarItem(

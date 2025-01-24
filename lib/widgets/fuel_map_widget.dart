@@ -8,7 +8,7 @@ class CustomMarker extends StatelessWidget {
   final String name;
   final String logoUrl;
 
-  const CustomMarker({Key? key, required this.name, required this.logoUrl}) : super(key: key);
+  const CustomMarker({super.key, required this.name, required this.logoUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +22,17 @@ class CustomMarker extends StatelessWidget {
 }
 
 class FuelMapWidget extends StatefulWidget {
+  const FuelMapWidget({super.key});
+
   @override
   _FuelMapWidgetState createState() => _FuelMapWidgetState();
 }
 
 class _FuelMapWidgetState extends State<FuelMapWidget> {
-  MapController _mapController = MapController();
+  final MapController _mapController = MapController();
   Position? _currentPosition;
   List<FuelStation> _fuelStations = [];
-  List<LatLng> _routePoints = []; // To store route points
+  final List<LatLng> _routePoints = []; // To store route points
 
   @override
   void initState() {
@@ -66,9 +68,9 @@ class _FuelMapWidgetState extends State<FuelMapWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Fuel Map')),
+      appBar: AppBar(title: const Text('Fuel Map')),
       body: _currentPosition == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : FlutterMap(
               mapController: _mapController,
               options: MapOptions(
@@ -78,7 +80,7 @@ class _FuelMapWidgetState extends State<FuelMapWidget> {
               children: [
                 TileLayer(
                   urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                  subdomains: ['a', 'b', 'c'],
+                  subdomains: const ['a', 'b', 'c'],
                 ),
                 MarkerLayer(
                   markers: _fuelStations.map((station) {

@@ -80,7 +80,7 @@ class FavoriteButtonScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SummaryScreen()), // Navigate to SummaryScreen
+                  MaterialPageRoute(builder: (context) => SummaryScreen()), // Navigate to SummaryScreen
                 );
               },
               style: ElevatedButton.styleFrom(
