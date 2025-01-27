@@ -97,39 +97,36 @@ class _NavigationAppState extends State<NavigationApp> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              'lib/assets/images/Favourites.png',
+            icon: Icon(
+              Icons.star, // Using Material Symbols icon for Favorites
               color: selectedIndex == 1 ? Colors.red : Colors.black,
+              size: 24, // Adjust size as needed
             ),
             label: 'Favorites',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              'lib/assets/images/Trends.png',
+            icon: Icon(
+              Icons.grid_view, // Using Material Symbols icon for Trends
               color: selectedIndex == 2 ? Colors.red : Colors.black,
+              size: 24, // Adjust size as needed
             ),
             label: 'Trends',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              'lib/assets/images/my trips.png',
+            icon: Icon(
+              Icons.location_on, // Using Material Symbols icon for Nearby
               color: selectedIndex == 3 ? Colors.red : Colors.black,
-            ),
-            label: 'My Trips',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'lib/assets/images/Settings.png',
-              color: selectedIndex == 4 ? Colors.red : Colors.black,
-            ),
-            label: 'Settings',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'lib/assets/images/nearby.png',
-              color: selectedIndex == 5 ? Colors.red : Colors.black,
+              size: 24, // Adjust size as needed
             ),
             label: 'Nearby',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.settings, // Using Material Symbols icon for Settings
+              color: selectedIndex == 4 ? Colors.red : Colors.black,
+              size: 24, // Adjust size as needed
+            ),
+            label: 'Settings',
           ),
         ],
         currentIndex: selectedIndex,

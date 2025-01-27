@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart'; // Importing the LoginScreen
+import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -26,7 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         borderRadius: BorderRadius.circular(12),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(17.0),
           child: Row(
             children: [
               Icon(icon, size: 28, color: Colors.red.shade700),
@@ -284,19 +285,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png'), color: Colors.black), label: 'Favorites'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Trends.png'), color: Colors.black), label: 'Trends'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/my trips.png'), color: Colors.black), label: 'My Trips'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/nearby.png'), color: Colors.black), label: 'Nearby'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
-        ],
-        currentIndex: 5, // Set the current index for Settings
-        selectedItemColor: const Color(0xFFDF2626), // Highlight color for selected item
-
-        onTap: (index) {
+      bottomNavigationBar: CustomBottomNavigationBar(
+        selectedIndex: 4, // Set the current index for Settings to a valid value
+        onItemTapped: (index) {
           // Handle navigation based on the index
           switch (index) {
             case 0:

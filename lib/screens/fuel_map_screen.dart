@@ -3,9 +3,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart'; // Import geocoding package
-// Import for kDebugMode
 import '../models/fuel_price.dart'; // Import FuelStation model
 import '../widgets/search_bar_with_filter_final.dart' as searchBar; // Correct import path with alias
+import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -153,37 +153,9 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home), // Existing home icon
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png')),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Trends.png')),
-            label: 'Trends',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/my trips.png')), // Corrected reference
-            label: 'My Trips',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/nearby.png')),
-            label: 'Nearby',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('lib/assets/images/Settings.png')),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xFFDF2626),
-        unselectedItemColor: Colors.black,
-        onTap: (index) {
+      bottomNavigationBar: CustomBottomNavigationBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: (index) {
           setState(() {
             _selectedIndex = index;
           });
@@ -205,7 +177,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
               Navigator.pushNamed(context, '/nearby');
               break;
             case 5:
-              Navigator.pushNamed(context, '/settings');
+              Navigator.pushNamed(context, '/settings'); // Navigate to Settings
               break;
           }
         },

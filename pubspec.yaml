@@ -31,13 +31,14 @@ flutter:
   uses-material-design: true
   assets:
     - web/icons/Icon-maskable-512.png
+    - web/favicon.png
     - lib/assets/images/Settings.png
     - lib/assets/images/Favourites.png  # Updated to match actual file name
     - lib/assets/images/my trips.png  # Updated to match actual file name
     - lib/assets/images/map_background.png  # Added missing asset
     - lib/assets/images/nearby.png
     - lib/assets/images/Trends.png
-    - lib/assets/images/Fuelcheck logo 150by1.png # Updated to replace space with %20
+    - lib/assets/images/Fuelcheck logo 150by1.png # Updated to correct asset path
     - lib/assets/images/Facebook Icon.png # Updated to replace space with %20
     - lib/assets/images/apple icon logo.png # Updated to replace space with %20
     - lib/assets/images/Black Google Icon.png # Updated to replace space with %20

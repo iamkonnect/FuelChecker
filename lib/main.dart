@@ -16,12 +16,22 @@ import 'screens/report_issue_screen.dart'; // Added import
 import 'screens/help_screen.dart'; // Added import
 import 'screens/profile_screen.dart'; // Added import for ProfileScreen
 
+import 'package:provider/provider.dart';
+import 'providers/favorite_provider.dart';
+
 void main() {
-  runApp(const MyApp()); // Removed 'const' keyword
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => FavoriteProvider()..populateDummyFavorites(),
+      child: const MyApp(),
+    ),
+  );
+
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key});  
+
 
   @override
   Widget build(BuildContext context) {

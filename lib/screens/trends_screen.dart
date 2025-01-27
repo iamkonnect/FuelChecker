@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/trend.dart'; // Import the Trend model
+import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 
 class TrendsScreen extends StatelessWidget {
   TrendsScreen({super.key}); // Remove const keyword
@@ -59,22 +60,13 @@ class TrendsScreen extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png'), color: Colors.black), label: 'Favorites'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Trends.png'), color: Colors.black), label: 'Trends'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/my trips.png'), color: Colors.black), label: 'My Trips'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/nearby.png'), color: Colors.black), label: 'Nearby'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
-        ],
-        currentIndex: 2, // Set the current index based on your logic
-        onTap: (index) {
+      bottomNavigationBar: CustomBottomNavigationBar(
+        selectedIndex: 2, // Set the current index based on your logic
+        onItemTapped: (index) {
           // Handle navigation based on the index
           switch (index) {
             case 0:
               Navigator.pushNamed(context, '/fuel_map'); // Navigate to Fuel Map
-
               break;
             case 1:
               Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites

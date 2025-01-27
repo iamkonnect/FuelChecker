@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 
 class NearbyScreen extends StatelessWidget {
   const NearbyScreen({super.key});
@@ -12,19 +13,9 @@ class NearbyScreen extends StatelessWidget {
       body: const Center(
         child: Text('Nearby Screen Content'),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png'), color: Colors.black), label: 'Favorites'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Trends.png'), color: Colors.black), label: 'Trends'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/my trips.png'), color: Colors.black), label: 'My Trips'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/nearby.png'), color: Colors.black), label: 'Nearby'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
-        ],
-        currentIndex: 4, // Set the current index for Nearby
-        selectedItemColor: const Color(0xFFDF2626), // Highlight color for selected item
-
-        onTap: (index) {
+      bottomNavigationBar: CustomBottomNavigationBar(
+        selectedIndex: 4, // Set the current index for Nearby
+        onItemTapped: (index) {
           // Handle navigation based on the index
           switch (index) {
             case 0:
@@ -43,7 +34,7 @@ class NearbyScreen extends StatelessWidget {
               // Stay on Nearby
               break;
             case 5:
-              Navigator.pushNamed(context, '/settings'); // Navigate to Settings
+              Navigator.pushNamed(context, '/settings_screen'); // Navigate to Settings
               break;
           }
         },
