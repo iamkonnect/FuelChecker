@@ -122,51 +122,48 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
               children: [
                 Row(
                   children: [
-                    // "Detour" text
-                    Text(
-                      'Detour',
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                    SizedBox(width: 8),
-                    // Filter icon with PopupMenuButton for options
-                    PopupMenuButton<String>(
-                      // icon: Icon(Icons.filter_alt, color: Colors.black),
-                      icon: Icon(Icons.tune, color: Colors.red),
-                      onSelected: (String selectedValue) {
-                        setState(() {
-                          _selectedFilter = selectedValue;
-                        });
-                      },
-                      itemBuilder: (BuildContext context) {
-                        return <String>['500m', '1km', '2km', '5km', '10km']
-                            .map((String value) {
-                          return PopupMenuItem<String>(
+                    Text('Detour',
+                        style: TextStyle(color: Colors.black, fontSize: 16)),
+                    Container(
+                      width: 100,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: const Color.fromARGB(255, 132, 133, 134)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: DropdownButton<String>(
+                        value: _selectedFilter,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedFilter = newValue!;
+                          });
+                        },
+                        items: <String>['500m', '1km', '2km', '5km', '10km']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(color: Colors.black),
-                            ),
+                            child: Text(value,
+                                style: TextStyle(color: Colors.black)),
                           );
-                        }).toList();
-                      },
+                        }).toList(),
+                        dropdownColor: Colors.white,
+                        isExpanded: true,
+                      ),
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    Text(
-                      '\$${_currentPrice.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+                    Text('\$${_currentPrice.toStringAsFixed(2)}',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
                     SizedBox(width: 10),
-                    Text(
-                      'Price Estimation:',
-                      style: TextStyle(color: Colors.black),
-                    ),
+                    Text('Price Estimation:',
+                        style: TextStyle(color: Colors.black)),
                   ],
                 ),
               ],
