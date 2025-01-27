@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart'; // Import geocoding package
+import 'package:geocoding/geocoding.dart'; // Geocoding package
 import '../models/fuel_price.dart'; // Import FuelStation model
 import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 import '../widgets/search_bar_with_filter_final.dart'; // Import the search bar with filter
@@ -9,7 +9,7 @@ import '../widgets/search_bar_with_filter_final.dart'; // Import the search bar 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
 
-  const FuelMapScreen({super.key, required this.fuelType});
+  const FuelMapScreen({Key? key, required this.fuelType}) : super(key: key);
 
   @override
   FuelMapScreenState createState() => FuelMapScreenState();
@@ -20,16 +20,16 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   List<FuelStation> _fuelStations = [];
   List<FuelStation> _nearbyStations = [];
   final Set<Marker> _markers = {};
-  int _selectedIndex = 0; // Default to Home
+  int _selectedIndex = 0; // Default to Home (Index 0)
   String _searchTerm = ''; // Variable to hold the search term
 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
-        // Permissions are denied, handle accordingly
-        return;
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        return; // Permissions denied, handle accordingly
       }
     }
 
@@ -40,7 +40,6 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       ),
     );
     if (mounted) {
-      // Check if the widget is still mounted
       setState(() {
         _currentLocation = LatLng(position.latitude, position.longitude);
         _nearbyStations = getNearbyStations(
@@ -53,12 +52,14 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   void _addFuelStationMarkers() {
     _markers.clear();
     for (final station in _nearbyStations) {
-      if (_searchTerm.isEmpty || station.name.toLowerCase().contains(_searchTerm.toLowerCase())) {
+      if (_searchTerm.isEmpty ||
+          station.name.toLowerCase().contains(_searchTerm.toLowerCase())) {
         _markers.add(
           Marker(
-            markerId: MarkerId(station.name), // Use name as the marker ID
+            markerId: MarkerId(station.name),
             position: LatLng(station.latitude, station.longitude),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed), // Updated to use Google Maps marker
+            icon:
+                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           ),
         );
       }
@@ -74,7 +75,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     } catch (e) {
       print('Error getting coordinates: $e');
     }
-    return null; // Return null if no coordinates found
+    return null;
   }
 
   @override
@@ -86,11 +87,49 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     _getCurrentLocation();
   }
 
+  /// Navigates to the respective screen based on the index.
+  void _onNavigationItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0: // Home Screen
+        Navigator.pushReplacementNamed(context, '/home');
+        break;
+      case 1: // Favorites Screen
+        Navigator.pushNamed(context, '/favorites');
+        break;
+      case 2: // Trends Screen
+        Navigator.pushNamed(context, '/trends_screen');
+        break;
+      case 3: // My Trip Screen
+        Navigator.pushNamed(context, '/my_trip');
+        break;
+      case 4: // Nearby Screen
+        Navigator.pushNamed(context, '/nearby');
+        break;
+      case 5: // Settings Screen
+        Navigator.pushNamed(context, '/settings');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fuel Map'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            setState(() {
+              _selectedIndex = 0; // Set Home as active
+            });
+            Navigator.pushReplacementNamed(
+                context, '/fuel_type'); // Navigate to fuel type selection
+          },
+        ), // No back button on the Home screen
         actions: [
           IconButton(
             icon: const Icon(Icons.near_me),
@@ -127,34 +166,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _selectedIndex,
-        onItemTapped: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-
-          switch (index) {
-            case 0:
-              Navigator.pushNamed(context, '/home');
-              break;
-            case 1:
-              Navigator.pushNamed(context, '/favorites');
-              break;
-            case 2:
-              Navigator.pushNamed(
-                  context, '/trends_screen'); // Updated to correct route
-              break;
-            case 3:
-              Navigator.pushNamed(
-                  context, '/my_trip'); // Updated to correct route
-              break;
-            case 4:
-              Navigator.pushNamed(context, '/nearby');
-              break;
-            case 5:
-              Navigator.pushNamed(context, '/settings'); // Navigate to Settings
-              break;
-          }
-        },
+        onItemTapped: _onNavigationItemTapped,
       ),
     );
   }

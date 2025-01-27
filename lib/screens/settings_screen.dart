@@ -3,7 +3,7 @@ import 'login_screen.dart'; // Importing the LoginScreen
 import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({Key? key}) : super(key: key);
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -11,6 +11,8 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   double _brightness = 0.5; // Default brightness value
+  bool _notificationsEnabled = true; // Default notification toggle state
+  String _selectedTheme = 'light'; // Default theme selection
 
   Widget _buildSettingCard({
     required IconData icon,
@@ -85,10 +87,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: const Text('Light Theme'),
                 leading: Radio<String>(
                   value: 'light',
-                  groupValue: 'theme', // Replace with actual state
+                  groupValue: _selectedTheme,
                   onChanged: (String? value) {
-                    Navigator.pop(context); // Close BottomSheet
-                    // Implement theme selection logic here
+                    setState(() {
+                      _selectedTheme = value!;
+                    });
+                    Navigator.pop(context);
                     print('Selected Theme: Light');
                   },
                 ),
@@ -97,10 +101,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: const Text('Dark Theme'),
                 leading: Radio<String>(
                   value: 'dark',
-                  groupValue: 'theme', // Replace with actual state
+                  groupValue: _selectedTheme,
                   onChanged: (String? value) {
-                    Navigator.pop(context); // Close BottomSheet
-                    // Implement theme selection logic here
+                    setState(() {
+                      _selectedTheme = value!;
+                    });
+                    Navigator.pop(context);
                     print('Selected Theme: Dark');
                   },
                 ),
@@ -115,17 +121,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
-                  activeTrackColor:
-                      Colors.red, // The active portion of the slider track
-                  inactiveTrackColor: Colors.red.withAlpha(
-                      (0.3 * 255).toInt()), // The inactive portion of the slider track
-                  thumbColor: Colors.red, // The slider thumb color
-                  overlayColor: Colors.red.withAlpha((0.2 * 255).toInt()), // Overlay color when interacting
-                  trackHeight: 4.0, // Height of the track
-                  thumbShape: const RoundSliderThumbShape(
-                      enabledThumbRadius: 10.0), // Thumb size
-                  overlayShape: const RoundSliderOverlayShape(
-                      overlayRadius: 20.0), // Overlay size
+                  activeTrackColor: Colors.red,
+                  inactiveTrackColor: Colors.red.withAlpha(75),
+                  thumbColor: Colors.red,
+                  overlayColor: Colors.red.withAlpha(50),
+                  trackHeight: 4.0,
+                  thumbShape:
+                      const RoundSliderThumbShape(enabledThumbRadius: 10.0),
+                  overlayShape:
+                      const RoundSliderOverlayShape(overlayRadius: 20.0),
                 ),
                 child: Slider(
                   value: _brightness,
@@ -173,13 +177,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 child: SwitchListTile(
                   title: const Text('Notifications'),
-                  value: true,
+                  value: _notificationsEnabled,
                   onChanged: (bool value) {
-                    // Implement notification toggle functionality
+                    setState(() {
+                      _notificationsEnabled = value;
+                    });
                   },
-                  activeColor: Colors.red, // Toggle circle color when ON
-                  activeTrackColor: Colors
-                      .red.shade200, // Background color of the toggle track
+                  activeColor: Colors.red,
+                  activeTrackColor: Colors.red.shade200,
                 ),
               ),
               const SizedBox(height: 16),
@@ -254,56 +259,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pushNamed(context, '/deactivate');
                 },
               ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              const SizedBox(height: 16),
+              _buildSettingCard(
+                icon: Icons.logout,
+                title: 'Log Out',
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
                     ),
-                    backgroundColor: Colors.red, // Set background color to red
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen()),
-                      (Route<dynamic> route) => false,
-                    );
-                  },
-                  child: const Text(
-                    'Logout',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
+                  );
+                },
               ),
             ],
           ),
         ),
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
-        selectedIndex: 4, // Set the current index for Settings to a valid value
+        selectedIndex: 5,
         onItemTapped: (index) {
-          // Handle navigation based on the index
           switch (index) {
             case 0:
-              Navigator.pushNamed(context, '/fuel_map'); // Navigate to Fuel Map
+              Navigator.pushReplacementNamed(context, '/fuel_map');
               break;
             case 1:
-              Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites
+              Navigator.pushReplacementNamed(context, '/favorites');
               break;
             case 2:
-              Navigator.pushNamed(context, '/trends_screen'); // Navigate to Trends
+              Navigator.pushReplacementNamed(context, '/trends_screen');
               break;
             case 3:
-              Navigator.pushNamed(context, '/my_trip'); // Navigate to My Trips
+              Navigator.pushReplacementNamed(context, '/my_trip');
               break;
             case 4:
-              Navigator.pushNamed(context, '/nearby'); // Navigate to Nearby
+              Navigator.pushReplacementNamed(context, '/nearby');
               break;
             case 5:
               // Stay on Settings

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
+/// Custom widget for BottomNavigationBar with active and inactive states.
 class CustomBottomNavigationBar extends StatelessWidget {
+  /// The currently selected index of the navigation bar.
   final int selectedIndex;
+
+  /// Callback function to handle item tap events.
   final Function(int) onItemTapped;
 
+  /// Constructor to initialize the required parameters.
   const CustomBottomNavigationBar({
     Key? key,
     required this.selectedIndex,
@@ -13,36 +18,50 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home), // Home icon
+      items: [
+        _buildNavigationBarItem(
+          icon: Icons.home,
           label: 'Home',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.star), // Favorites icon
+        _buildNavigationBarItem(
+          icon: Icons.star,
           label: 'Favorites',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.grid_view), // Trends icon
+        _buildNavigationBarItem(
+          icon: Icons.grid_view,
           label: 'Trends',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.location_on), // My Trip icon
+        _buildNavigationBarItem(
+          icon: Icons.location_on,
           label: 'My Trip',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.map), // Nearby icon
+        _buildNavigationBarItem(
+          icon: Icons.map,
           label: 'Nearby',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings), // Settings icon
+        _buildNavigationBarItem(
+          icon: Icons.settings,
           label: 'Settings',
         ),
       ],
-      currentIndex: selectedIndex,
-      selectedItemColor: Colors.red, // Active state color
-      unselectedItemColor: Colors.black, // Inactive state color
-      onTap: onItemTapped, // Passes the tapped index to the parent
+      currentIndex: selectedIndex, // Indicates the currently active tab.
+      selectedItemColor: Colors.red, // Active state color for icon and label.
+      unselectedItemColor:
+          Colors.black, // Inactive state color for icon and label.
+      showUnselectedLabels: true, // Ensures labels are visible for all items.
+      type: BottomNavigationBarType.fixed, // Ensures all items are visible.
+      onTap: onItemTapped, // Handles item tap events.
+    );
+  }
+
+  /// Helper method to build a BottomNavigationBarItem.
+  BottomNavigationBarItem _buildNavigationBarItem({
+    required IconData icon,
+    required String label,
+  }) {
+    return BottomNavigationBarItem(
+      icon: Icon(icon),
+      label: label,
     );
   }
 }
