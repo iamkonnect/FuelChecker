@@ -10,15 +10,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_maps_flutter: ^2.1.1
   logger: ^2.5.0 # Updated logger package
-  flutter_map: ^7.0.2 # Updated flutter_map package
   geolocator: ^13.0.2 # Updated geolocator package
-  latlong2: ^0.9.1 # Updated latlong2 package
   geocoding: ^3.0.0 # Updated geocoding package
-  http: ^1.3.0 # Updated http package
-  email_validator: ^3.0.0 # Updated email_validator package
-  google_maps_flutter: ^2.0.0 # Added google_maps_flutter package
-  flutter_rating_bar: ^4.0.1 # Updated flutter_rating_bar package
+  http: ^0.13.6 # Downgraded http package for compatibility
+  google_maps_webservice: ^0.0.19 # Updated for Places API
+  flutter_polyline_points: ^1.0.0 # Added for route optimization
+  email_validator: ^3.0.0 # Re-added email validator package
+  flutter_rating_bar: ^4.0.1 # Re-added flutter rating bar package
+
   fl_chart: ^0.70.2
   mailer: ^6.0.0 # Added mailer package
   provider: ^6.0.0 # Added provider package

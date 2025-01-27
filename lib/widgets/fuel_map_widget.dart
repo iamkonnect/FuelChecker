@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
 import '../services/fuel_station_service.dart'; // Ensure this path is correct
 
 class CustomMarker extends StatelessWidget {
@@ -29,7 +28,7 @@ class FuelMapWidget extends StatefulWidget {
 }
 
 class _FuelMapWidgetState extends State<FuelMapWidget> {
-  final MapController _mapController = MapController();
+  GoogleMapController? _mapController;
   Position? _currentPosition;
   List<FuelStation> _fuelStations = [];
   final List<LatLng> _routePoints = []; // To store route points
@@ -41,18 +40,17 @@ class _FuelMapWidgetState extends State<FuelMapWidget> {
   }
 
   Future<void> _getCurrentLocation() async {
-    _currentPosition = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 100,
-      ),
-    );
-    _mapController.move(
-      LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-      13,
-    );
-    await _fetchFuelStations();
-    setState(() {});
+    try {
+      _currentPosition = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 100,
+        ),
+      );
+      setState(() {});
+    } catch (e) {
+      print('Error fetching location: $e');
+    }
   }
 
   Future<void> _fetchFuelStations() async {
@@ -71,40 +69,37 @@ class _FuelMapWidgetState extends State<FuelMapWidget> {
       appBar: AppBar(title: const Text('Fuel Map')),
       body: _currentPosition == null
           ? const Center(child: CircularProgressIndicator())
-          : FlutterMap(
-              mapController: _mapController,
-              options: MapOptions(
-                initialCenter: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-                crs: const Epsg3857(), // Updated CRS
+          : GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+                zoom: 13,
               ),
-              children: [
-                TileLayer(
-                  urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                  subdomains: const ['a', 'b', 'c'],
+              markers: Set<Marker>.of(_fuelStations.map((station) {
+                return Marker(
+                  markerId: MarkerId(station.name),
+                  position: LatLng(station.latitude, station.longitude),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+                  infoWindow: InfoWindow(title: station.name),
+                );
+              })),
+              polylines: {
+                Polyline(
+                  polylineId: PolylineId('route'),
+                  points: _routePoints,
+                  color: Colors.blue,
+                  width: 4,
                 ),
-                MarkerLayer(
-                  markers: _fuelStations.map((station) {
-                    return Marker(
-                      width: 80.0,
-                      height: 80.0,
-                      point: LatLng(station.latitude, station.longitude),
-                      child: CustomMarker(
-                        name: station.name,
-                        logoUrl: station.logoUrl,
-                      ),
-                    );
-                  }).toList(),
-                ),
-                PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: _routePoints,
-                      strokeWidth: 4.0,
-                      color: Colors.blue,
+              },
+              onMapCreated: (GoogleMapController controller) {
+                _mapController = controller;
+                if (_currentPosition != null) {
+                  _mapController!.moveCamera(
+                    CameraUpdate.newLatLng(
+                      LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
                     ),
-                  ],
-                ),
-              ],
+                  );
+                }
+              },
             ),
     );
   }

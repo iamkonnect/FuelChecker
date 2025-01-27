@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart'; // Import geocoding package
 import '../models/fuel_price.dart'; // Import FuelStation model
-import '../widgets/search_bar_with_filter_final.dart'
-    as searchBar; // Correct import path with alias
 import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
+import '../widgets/search_bar_with_filter_final.dart'; // Import the search bar with filter
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -23,8 +21,18 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   List<FuelStation> _nearbyStations = [];
   final Set<Marker> _markers = {};
   int _selectedIndex = 0; // Default to Home
+  String _searchTerm = ''; // Variable to hold the search term
 
   Future<void> _getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+        // Permissions are denied, handle accordingly
+        return;
+      }
+    }
+
     Position position = await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
@@ -45,51 +53,16 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   void _addFuelStationMarkers() {
     _markers.clear();
     for (final station in _nearbyStations) {
-      _markers.add(
-        Marker(
-          width: 80.0,
-          height: 80.0,
-          point: LatLng(station.latitude, station.longitude),
-          child: const Icon(Icons.local_gas_station,
-              size: 40,
-              color: Colors.red), // Updated to use Google Icons equivalent
-        ),
-      );
-    }
-    _clusterMarkers();
-  }
-
-  void _clusterMarkers() {
-    // Simple clustering logic to avoid overlapping markers
-    final clusteredMarkers = <LatLng, List<Marker>>{};
-
-    for (final marker in _markers) {
-      final key = LatLng(marker.point.latitude, marker.point.longitude);
-      if (!clusteredMarkers.containsKey(key)) {
-        clusteredMarkers[key] = [];
-      }
-      clusteredMarkers[key]!.add(marker);
-    }
-
-    _markers.clear();
-    clusteredMarkers.forEach((key, markers) {
-      if (markers.length > 1) {
-        // If there are overlapping markers, create a single marker for the cluster
+      if (_searchTerm.isEmpty || station.name.toLowerCase().contains(_searchTerm.toLowerCase())) {
         _markers.add(
           Marker(
-            width: 80.0,
-            height: 80.0,
-            point: key,
-            child: const Icon(Icons.local_gas_station,
-                size: 40,
-                color: Colors.orange), // Updated to use Google Icons equivalent
+            markerId: MarkerId(station.name), // Use name as the marker ID
+            position: LatLng(station.latitude, station.longitude),
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed), // Updated to use Google Maps marker
           ),
         );
-      } else {
-        // If no overlap, add the original marker
-        _markers.add(markers.first);
       }
-    });
+    }
   }
 
   Future<LatLng?> getCoordinates(String location) async {
@@ -128,38 +101,27 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           ),
         ],
       ),
-      body: Stack(
+      body: Column(
         children: [
-          _currentLocation == null
-              ? const Center(child: CircularProgressIndicator())
-              : FlutterMap(
-                  options: MapOptions(
-                    initialCenter: _currentLocation!,
-                    initialZoom: 13.0,
+          SearchBarWithFilter(
+            getCoordinates: getCoordinates,
+            from: '', // Pass any required parameters
+            to: '', // Pass any required parameters
+            searchTerm: _searchTerm,
+          ),
+          Expanded(
+            child: _currentLocation == null
+                ? const Center(child: CircularProgressIndicator())
+                : GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: _currentLocation!,
+                      zoom: 13.0,
+                    ),
+                    markers: _markers,
+                    onMapCreated: (GoogleMapController controller) {
+                      // Additional setup if needed
+                    },
                   ),
-                  children: [
-                    TileLayer(
-                      urlTemplate:
-                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      subdomains: const ['a', 'b', 'c'],
-                    ),
-                    MarkerLayer(
-                      markers: _markers.toList(),
-                    ),
-                  ],
-                ),
-          Positioned(
-            top: 16.0,
-            left: 16.0,
-            right: 16.0,
-            child: searchBar.SearchBarWithFilter(
-              getCoordinates: getCoordinates, // Pass the getCoordinates method
-              from:
-                  'Your From Location', // Replace with actual variable or state
-              to: 'Your To Location', // Replace with actual variable or state
-              searchTerm:
-                  'Your Search Term', // Replace with actual variable or state
-            ), // Floating SearchBarWithFilter
           ),
         ],
       ),
