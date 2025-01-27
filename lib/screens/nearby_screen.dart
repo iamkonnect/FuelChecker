@@ -22,10 +22,12 @@ class NearbyScreen extends StatelessWidget {
               Navigator.pushNamed(context, '/fuel_map'); // Navigate to Fuel Map
               break;
             case 1:
-              Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites
+              Navigator.pushNamed(
+                  context, '/favorites'); // Navigate to Favorites
               break;
             case 2:
-              Navigator.pushNamed(context, '/trends_screen'); // Navigate to Trends
+              Navigator.pushNamed(
+                  context, '/trends_screen'); // Navigate to Trends
               break;
             case 3:
               Navigator.pushNamed(context, '/my_trip'); // Navigate to My Trips
@@ -34,7 +36,7 @@ class NearbyScreen extends StatelessWidget {
               // Stay on Nearby
               break;
             case 5:
-              Navigator.pushNamed(context, '/settings_screen'); // Navigate to Settings
+              Navigator.pushNamed(context, '/settings'); // Navigate to Settings
               break;
           }
         },

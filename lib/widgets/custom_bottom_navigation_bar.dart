@@ -13,80 +13,36 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      items: [
+      items: const [
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.home, // Home icon
-            color: selectedIndex == 0 ? Colors.red : Colors.black,
-            size: 24,
-          ),
+          icon: Icon(Icons.home), // Home icon
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.star, // Favorites icon
-            color: selectedIndex == 1 ? Colors.red : Colors.black,
-            size: 24,
-          ),
+          icon: Icon(Icons.star), // Favorites icon
           label: 'Favorites',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.grid_view, // Trends icon
-            color: selectedIndex == 2 ? Colors.red : Colors.black,
-            size: 24,
-          ),
+          icon: Icon(Icons.grid_view), // Trends icon
           label: 'Trends',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.location_on, // My Trip icon
-            color: selectedIndex == 3 ? Colors.red : Colors.black,
-            size: 24,
-          ),
+          icon: Icon(Icons.location_on), // My Trip icon
           label: 'My Trip',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.map, // Nearby icon
-            color: selectedIndex == 4 ? Colors.red : Colors.black,
-            size: 24,
-          ),
+          icon: Icon(Icons.map), // Nearby icon
           label: 'Nearby',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.settings, // Settings icon
-            color: selectedIndex == 5 ? Colors.red : Colors.black,
-            size: 24,
-          ),
+          icon: Icon(Icons.settings), // Settings icon
           label: 'Settings',
         ),
       ],
       currentIndex: selectedIndex,
-      selectedItemColor: Colors.red,
-      onTap: (index) {
-        switch (index) {
-          case 0:
-            Navigator.pushNamed(context, '/fuel_map');
-            break;
-          case 1:
-            Navigator.pushNamed(context, '/favorites');
-            break;
-          case 2:
-            Navigator.pushNamed(context, '/trends_screen');
-            break;
-          case 3:
-            Navigator.pushNamed(context, '/my_trip');
-            break;
-          case 4:
-            Navigator.pushNamed(context, '/nearby');
-            break;
-          case 5:
-            Navigator.pushNamed(context, '/settings');
-            break;
-        }
-      },
+      selectedItemColor: Colors.red, // Active state color
+      unselectedItemColor: Colors.black, // Inactive state color
+      onTap: onItemTapped, // Passes the tapped index to the parent
     );
   }
 }

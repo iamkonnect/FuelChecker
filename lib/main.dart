@@ -26,12 +26,10 @@ void main() {
       child: const MyApp(),
     ),
   );
-
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});  
-
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,27 +42,38 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const WelcomeScreen(), // Removed 'const' keyword
         '/login': (context) => const LoginScreen(), // Removed 'const' keyword
-        '/fuel_type': (context) => const FuelTypeSelectionScreen(), // Removed 'const' keyword
+        '/fuel_type': (context) =>
+            const FuelTypeSelectionScreen(), // Removed 'const' keyword
         '/fuel_map': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as String?;
           if (args == null) {
             // Handle the null case, e.g., provide a default value or show an error
-            return FuelMapScreen(fuelType: 'defaultFuelType'); // Provide a default value
+            return FuelMapScreen(
+                fuelType: 'defaultFuelType'); // Provide a default value
           }
           return FuelMapScreen(fuelType: args); // Pass fuelType argument
         },
-        '/favorites': (context) => const FavoriteScreen(), // Removed 'const' keyword
-        '/trends_screen': (context) => TrendsScreen(), // Removed 'const' keyword
-        '/my_trip': (context) => const MyTripScreen(), // Removed 'const' keyword
+        '/favorites': (context) =>
+            const FavoriteScreen(), // Removed 'const' keyword
+        '/trends_screen': (context) =>
+            TrendsScreen(), // Removed 'const' keyword
+        '/my_trip': (context) =>
+            const MyTripScreen(), // Removed 'const' keyword
         '/nearby': (context) => const NearbyScreen(), // Removed 'const' keyword
-        '/settings': (context) => const SettingsScreen(), // Removed 'const' keyword
+        '/settings': (context) =>
+            const SettingsScreen(), // Removed 'const' keyword
         '/about': (context) => const AboutScreen(), // Removed 'const' keyword
-        '/feedback': (context) => const FeedbackScreen(), // Removed 'const' keyword
-        '/report': (context) => const ReportIssueScreen(), // Removed 'const' keyword
-        '/deactivate': (context) => const DeactivateAccountScreen(), // Removed 'const' keyword
-        '/analytics': (context) => const AnalyticsScreen(), // Removed 'const' keyword
+        '/feedback': (context) =>
+            const FeedbackScreen(), // Removed 'const' keyword
+        '/report': (context) =>
+            const ReportIssueScreen(), // Removed 'const' keyword
+        '/deactivate': (context) =>
+            const DeactivateAccountScreen(), // Removed 'const' keyword
+        '/analytics': (context) =>
+            const AnalyticsScreen(), // Removed 'const' keyword
         '/help': (context) => const HelpScreen(), // Removed 'const' keyword
-        '/profile': (context) => const ProfileScreen(), // Added route for ProfileScreen
+        '/profile': (context) =>
+            const ProfileScreen(), // Added route for ProfileScreen
       },
     );
   }

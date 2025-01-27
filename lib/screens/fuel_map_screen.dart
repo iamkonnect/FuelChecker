@@ -4,7 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart'; // Import geocoding package
 import '../models/fuel_price.dart'; // Import FuelStation model
-import '../widgets/search_bar_with_filter_final.dart' as searchBar; // Correct import path with alias
+import '../widgets/search_bar_with_filter_final.dart'
+    as searchBar; // Correct import path with alias
 import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 
 class FuelMapScreen extends StatefulWidget {
@@ -30,10 +31,12 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         distanceFilter: 100,
       ),
     );
-    if (mounted) { // Check if the widget is still mounted
+    if (mounted) {
+      // Check if the widget is still mounted
       setState(() {
         _currentLocation = LatLng(position.latitude, position.longitude);
-        _nearbyStations = getNearbyStations(_fuelStations, position.latitude, position.longitude);
+        _nearbyStations = getNearbyStations(
+            _fuelStations, position.latitude, position.longitude);
         _addFuelStationMarkers();
       });
     }
@@ -47,7 +50,9 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           width: 80.0,
           height: 80.0,
           point: LatLng(station.latitude, station.longitude),
-          child: const Icon(Icons.local_gas_station, size: 40, color: Colors.red), // Updated to use Google Icons equivalent
+          child: const Icon(Icons.local_gas_station,
+              size: 40,
+              color: Colors.red), // Updated to use Google Icons equivalent
         ),
       );
     }
@@ -75,7 +80,9 @@ class FuelMapScreenState extends State<FuelMapScreen> {
             width: 80.0,
             height: 80.0,
             point: key,
-            child: const Icon(Icons.local_gas_station, size: 40, color: Colors.orange), // Updated to use Google Icons equivalent
+            child: const Icon(Icons.local_gas_station,
+                size: 40,
+                color: Colors.orange), // Updated to use Google Icons equivalent
           ),
         );
       } else {
@@ -132,7 +139,8 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                   ),
                   children: [
                     TileLayer(
-                      urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      urlTemplate:
+                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                       subdomains: const ['a', 'b', 'c'],
                     ),
                     MarkerLayer(
@@ -146,9 +154,11 @@ class FuelMapScreenState extends State<FuelMapScreen> {
             right: 16.0,
             child: searchBar.SearchBarWithFilter(
               getCoordinates: getCoordinates, // Pass the getCoordinates method
-              from: 'Your From Location', // Replace with actual variable or state
+              from:
+                  'Your From Location', // Replace with actual variable or state
               to: 'Your To Location', // Replace with actual variable or state
-              searchTerm: 'Your Search Term', // Replace with actual variable or state
+              searchTerm:
+                  'Your Search Term', // Replace with actual variable or state
             ), // Floating SearchBarWithFilter
           ),
         ],
@@ -168,10 +178,12 @@ class FuelMapScreenState extends State<FuelMapScreen> {
               Navigator.pushNamed(context, '/favorites');
               break;
             case 2:
-              Navigator.pushNamed(context, '/trends_screen'); // Updated to correct route
+              Navigator.pushNamed(
+                  context, '/trends_screen'); // Updated to correct route
               break;
             case 3:
-              Navigator.pushNamed(context, '/my_trip'); // Updated to correct route
+              Navigator.pushNamed(
+                  context, '/my_trip'); // Updated to correct route
               break;
             case 4:
               Navigator.pushNamed(context, '/nearby');
