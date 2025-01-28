@@ -71,8 +71,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            OtpVerificationScreenV4(phoneNumber: _phoneController.text),
+        builder: (context) => OtpVerificationScreen(),
       ),
     );
   }
@@ -133,8 +132,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       ),
                       child: Image.asset(
                         'lib/assets/images/Facebook Icon.png',
-                        width: 20,
-                        height: 20,
+                        width: 24, // Set a consistent width
+                        height: 24, // Set a consistent height
                       ),
                     ),
                     Container(
@@ -145,8 +144,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       ),
                       child: Image.asset(
                         'lib/assets/images/apple icon logo.png',
-                        width: 20,
-                        height: 20,
+                        width: 24, // Set a consistent width
+                        height: 24, // Set a consistent height
                       ),
                     ),
                     Container(
@@ -157,8 +156,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       ),
                       child: Image.asset(
                         'lib/assets/images/Black Google Icon.png',
-                        width: 20,
-                        height: 20,
+                        width: 24, // Set a consistent width
+                        height: 24, // Set a consistent height
                       ),
                     ),
                   ],

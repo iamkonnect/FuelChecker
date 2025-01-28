@@ -1,51 +1,85 @@
 import 'package:flutter/material.dart';
+import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 
-class NearbyScreen extends StatelessWidget {
+class NearbyScreen extends StatefulWidget {
+  const NearbyScreen({Key? key}) : super(key: key);
+
+  @override
+  State<NearbyScreen> createState() => _NearbyScreenState();
+}
+
+class _NearbyScreenState extends State<NearbyScreen> {
+  int _selectedIndex = 4; // Set the default index for Nearby
+
+  /// Handles navigation based on the tapped index.
+  void _onNavigationItemTapped(int index) {
+    if (_selectedIndex == index)
+      return; // Avoid unnecessary navigation for the current screen
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(
+            context, '/fuel_map'); // Navigate to Fuel Map
+        break;
+      case 1:
+        Navigator.pushReplacementNamed(
+            context, '/favorites'); // Navigate to Favorites
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(
+            context, '/trends_screen'); // Navigate to Trends
+        break;
+      case 3:
+        Navigator.pushReplacementNamed(
+            context, '/my_trip'); // Navigate to My Trips
+        break;
+      case 4:
+        // Stay on Nearby
+        break;
+      case 5:
+        Navigator.pushReplacementNamed(
+            context, '/settings'); // Navigate to Settings
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Nearby'),
-      ),
-      body: Center(
-        child: Text('Nearby Screen Content'),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png'), color: Colors.black), label: 'Favorites'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Trends.png'), color: Colors.black), label: 'Trends'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/my trips.png'), color: Colors.black), label: 'My Trips'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/nearby.png'), color: Colors.black), label: 'Nearby'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
-        ],
-        currentIndex: 4, // Set the current index for Nearby
-        selectedItemColor: const Color(0xFFDF2626), // Highlight color for selected item
-
-        onTap: (index) {
-          // Handle navigation based on the index
-          switch (index) {
-            case 0:
-              Navigator.pushNamed(context, '/fuel_map'); // Navigate to Fuel Map
-              break;
-            case 1:
-              Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites
-              break;
-            case 2:
-              Navigator.pushNamed(context, '/trends_screen'); // Navigate to Trends
-              break;
-            case 3:
-              Navigator.pushNamed(context, '/my_trip'); // Navigate to My Trips
-              break;
-            case 4:
-              // Stay on Nearby
-              break;
-            case 5:
-              Navigator.pushNamed(context, '/settings'); // Navigate to Settings
-              break;
-          }
-        },
-
+    return WillPopScope(
+      onWillPop: () async {
+        // Handle back button press
+        setState(() {
+          _selectedIndex = 0; // Set Home as active
+        });
+        Navigator.pushReplacementNamed(
+            context, '/fuel_map'); // Navigate to Home
+        return false; // Prevent default back behavior
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Nearby'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              setState(() {
+                _selectedIndex = 0; // Set Home as active
+              });
+              Navigator.pushReplacementNamed(
+                  context, '/fuel_map'); // Navigate to Home
+            },
+          ),
+        ),
+        body: const Center(
+          child: Text('Nearby Screen Content'),
+        ),
+        bottomNavigationBar: CustomBottomNavigationBar(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onNavigationItemTapped,
+        ),
       ),
     );
   }

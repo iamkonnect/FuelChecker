@@ -35,10 +35,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     // Ensure navigation happens after build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-        );
+        if (mounted) { // Check if the widget is still mounted
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
+        }
       });
     });
   }
@@ -55,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/assets/images/map_background.png'),
+            image: AssetImage('lib/assets/images/map_background.png'), // Updated map background image
             fit: BoxFit.cover,
           ),
         ),
@@ -74,7 +76,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   );
                 },
                 child: Image.asset(
-                  'lib/assets/images/logo-full-color-150-x-1.png',
+                  'lib/assets/images/Fuelcheck logo 150by1.png', // Updated path
                   height: 200, // Adjust logo size as needed
                 ),
               ),
@@ -95,7 +97,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       return Transform.translate(
                         offset: Offset(offsetX, offsetY),
                         child: CircleAvatar(
-                          radius: 10,
+                          radius: 12, // Increased radius to reduce overlap
                           backgroundColor: _colorAnimation.value,
                         ),
                       );

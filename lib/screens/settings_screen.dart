@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart'; // Importing the LoginScreen
+import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({Key? key}) : super(key: key);
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -10,7 +11,56 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   double _brightness = 0.5; // Default brightness value
+  bool _notificationsEnabled = true; // Default notification toggle state
+  String _selectedTheme = 'light'; // Default theme selection
+  int _selectedIndex = 5; // Index for Settings
 
+  /// Handles navigation based on the tapped index.
+  void _onNavigationItemTapped(int index) {
+    if (_selectedIndex == index)
+      return; // Avoid unnecessary rebuilds for the current screen
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(
+            context, '/fuel_map'); // Navigate to Home
+        break;
+      case 1:
+        Navigator.pushReplacementNamed(
+            context, '/favorites'); // Navigate to Favorites
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(
+            context, '/trends_screen'); // Navigate to Trends
+        break;
+      case 3:
+        Navigator.pushReplacementNamed(
+            context, '/my_trip'); // Navigate to My Trips
+        break;
+      case 4:
+        Navigator.pushReplacementNamed(
+            context, '/nearby'); // Navigate to Nearby
+        break;
+      case 5:
+        // Stay on Settings
+        break;
+    }
+  }
+
+  /// Ensures proper navigation and updates `_selectedIndex` on back press.
+  Future<bool> _onWillPop() async {
+    setState(() {
+      _selectedIndex = 0; // Update index to Home
+    });
+    Navigator.pushReplacementNamed(context, '/fuel_map'); // Navigate to Home
+    return false; // Prevents default back button behavior
+  }
+
+  /// Builds a custom setting card.
   Widget _buildSettingCard({
     required IconData icon,
     required String title,
@@ -26,7 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         borderRadius: BorderRadius.circular(12),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(17.0),
           child: Row(
             children: [
               Icon(icon, size: 28, color: Colors.red.shade700),
@@ -84,11 +134,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: const Text('Light Theme'),
                 leading: Radio<String>(
                   value: 'light',
-                  groupValue: 'theme', // Replace with actual state
+                  groupValue: _selectedTheme,
                   onChanged: (String? value) {
-                    Navigator.pop(context); // Close BottomSheet
-                    // Implement theme selection logic here
-                    print('Selected Theme: Light');
+                    setState(() {
+                      _selectedTheme = value!;
+                    });
+                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -96,11 +147,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: const Text('Dark Theme'),
                 leading: Radio<String>(
                   value: 'dark',
-                  groupValue: 'theme', // Replace with actual state
+                  groupValue: _selectedTheme,
                   onChanged: (String? value) {
-                    Navigator.pop(context); // Close BottomSheet
-                    // Implement theme selection logic here
-                    print('Selected Theme: Dark');
+                    setState(() {
+                      _selectedTheme = value!;
+                    });
+                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -114,17 +166,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
-                  activeTrackColor:
-                      Colors.red, // The active portion of the slider track
-                  inactiveTrackColor: Colors.red.withAlpha(
-                      (0.3 * 255).toInt()), // The inactive portion of the slider track
-                  thumbColor: Colors.red, // The slider thumb color
-                  overlayColor: Colors.red.withAlpha((0.2 * 255).toInt()), // Overlay color when interacting
-                  trackHeight: 4.0, // Height of the track
-                  thumbShape: const RoundSliderThumbShape(
-                      enabledThumbRadius: 10.0), // Thumb size
-                  overlayShape: const RoundSliderOverlayShape(
-                      overlayRadius: 20.0), // Overlay size
+                  activeTrackColor: Colors.red,
+                  inactiveTrackColor: Colors.red.withAlpha(75),
+                  thumbColor: Colors.red,
+                  overlayColor: Colors.red.withAlpha(50),
+                  trackHeight: 4.0,
+                  thumbShape:
+                      const RoundSliderThumbShape(enabledThumbRadius: 10.0),
+                  overlayShape:
+                      const RoundSliderOverlayShape(overlayRadius: 20.0),
                 ),
                 child: Slider(
                   value: _brightness,
@@ -155,133 +205,125 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: SwitchListTile(
-                  title: const Text('Notifications'),
-                  value: true,
-                  onChanged: (bool value) {
-                    // Implement notification toggle functionality
-                  },
-                  activeColor: Colors.red, // Toggle circle color when ON
-                  activeTrackColor: Colors
-                      .red.shade200, // Background color of the toggle track
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildSettingCard(
-                icon: Icons.person,
-                title: 'Profile Details',
-                onTap: () {
-                  Navigator.pushNamed(context, '/profile');
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildSettingCard(
-                icon: Icons.language,
-                title: 'Language',
-                subtitle: 'English',
-                onTap: () {
-                  // Implement language selection functionality
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildSettingCard(
-                icon: Icons.color_lens,
-                title: 'Theme',
-                subtitle: 'Light',
-                onTap: () => _showThemeBottomSheet(context),
-              ),
-              const SizedBox(height: 16),
-              _buildSettingCard(
-                icon: Icons.analytics,
-                title: 'Analytics',
-                onTap: () {
-                  Navigator.pushNamed(context, '/analytics');
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildSettingCard(
-                icon: Icons.info,
-                title: 'About',
-                onTap: () {
-                  Navigator.pushNamed(context, '/about');
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildSettingCard(
-                icon: Icons.help,
-                title: 'Help',
-                onTap: () {
-                  Navigator.pushNamed(context, '/help');
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildSettingCard(
-                icon: Icons.feedback,
-                title: 'Feedback',
-                onTap: () {
-                  Navigator.pushNamed(context, '/feedback');
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildSettingCard(
-                icon: Icons.report,
-                title: 'Report an Issue',
-                onTap: () {
-                  Navigator.pushNamed(context, '/report');
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildSettingCard(
-                icon: Icons.remove_circle,
-                title: 'Deactivate Account',
-                onTap: () {
-                  Navigator.pushNamed(context, '/deactivate');
-                },
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: Colors.red, // Set background color to red
+    return WillPopScope(
+      onWillPop: _onWillPop, // Handle back button behavior
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Settings'),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
+                  child: SwitchListTile(
+                    title: const Text('Notifications'),
+                    value: _notificationsEnabled,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _notificationsEnabled = value;
+                      });
+                    },
+                    activeColor: Colors.red,
+                    activeTrackColor: Colors.red.shade200,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  icon: Icons.person,
+                  title: 'Profile Details',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/profile');
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  icon: Icons.language,
+                  title: 'Language Settings',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/language');
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  icon: Icons.brightness_6,
+                  title: 'Theme & Display',
+                  onTap: () => _showThemeBottomSheet(context),
+                ),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  icon: Icons.analytics,
+                  title: 'Analytics',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/analytics');
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  icon: Icons.info,
+                  title: 'About',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/about');
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  icon: Icons.help,
+                  title: 'Help',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/help');
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  icon: Icons.feedback,
+                  title: 'Feedback',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/feedback');
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  icon: Icons.report,
+                  title: 'Report an Issue',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/report');
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  icon: Icons.remove_circle,
+                  title: 'Deactivate Account',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/deactivate');
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  icon: Icons.logout,
+                  title: 'Log Out',
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
                       MaterialPageRoute(
-                          builder: (context) => const LoginScreen()),
-                      (Route<dynamic> route) => false,
+                        builder: (context) => const LoginScreen(),
+                      ),
                     );
                   },
-                  child: const Text(
-                    'Logout',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+        ),
+        bottomNavigationBar: CustomBottomNavigationBar(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onNavigationItemTapped,
         ),
       ),
     );

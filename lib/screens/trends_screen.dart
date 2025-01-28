@@ -1,8 +1,52 @@
 import 'package:flutter/material.dart';
 import '../models/trend.dart'; // Import the Trend model
+import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 
-class TrendsScreen extends StatelessWidget {
-  TrendsScreen({super.key}); // Remove const keyword
+class TrendsScreen extends StatefulWidget {
+  const TrendsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<TrendsScreen> createState() => _TrendsScreenState();
+}
+
+class _TrendsScreenState extends State<TrendsScreen> {
+  int _selectedIndex = 2; // Set the default index for Trends
+
+  /// Handles navigation based on the tapped index.
+  void _onNavigationItemTapped(int index) {
+    if (_selectedIndex == index)
+      return; // Avoid unnecessary rebuilds for the current screen
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(
+            context, '/fuel_map'); // Navigate to Fuel Map
+        break;
+      case 1:
+        Navigator.pushReplacementNamed(
+            context, '/favorites'); // Navigate to Favorites
+        break;
+      case 2:
+        // Stay on Trends
+        break;
+      case 3:
+        Navigator.pushReplacementNamed(
+            context, '/my_trip'); // Navigate to My Trips
+        break;
+      case 4:
+        Navigator.pushReplacementNamed(
+            context, '/nearby'); // Navigate to Nearby
+        break;
+      case 5:
+        Navigator.pushReplacementNamed(
+            context, '/settings'); // Navigate to Settings
+        break;
+    }
+  }
 
   final List<Trend> trends = [
     Trend(
@@ -27,72 +71,63 @@ class TrendsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Trends'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.near_me),
+    return WillPopScope(
+      onWillPop: () async {
+        // Handle back button press
+        setState(() {
+          _selectedIndex = 0; // Set Home as active
+        });
+        Navigator.pushReplacementNamed(
+            context, '/fuel_map'); // Navigate to Home
+        return false; // Prevent default back behavior
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Trends'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pushNamed(context, '/nearby');
+              setState(() {
+                _selectedIndex = 0; // Set Home as active
+              });
+              Navigator.pushReplacementNamed(
+                  context, '/fuel_map'); // Navigate to Home
             },
-            tooltip: 'Nearby',
           ),
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: trends.length,
-        itemBuilder: (context, index) {
-          final trend = trends[index];
-          return Card(
-            child: ListTile(
-              title: Text(trend.title),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(trend.description),
-                  Text('Cheapest Fill Day: ${trend.cheapestFillDay}'),
-                  Text('Price Range: ${trend.priceRange}'),
-                ],
-              ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.near_me),
+              onPressed: () {
+                Navigator.pushReplacementNamed(
+                    context, '/nearby'); // Navigate to Nearby
+              },
+              tooltip: 'Nearby',
             ),
-          );
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Favourites.png'), color: Colors.black), label: 'Favorites'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/Trends.png'), color: Colors.black), label: 'Trends'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/my trips.png'), color: Colors.black), label: 'My Trips'),
-          BottomNavigationBarItem(icon: ImageIcon(AssetImage('lib/assets/images/nearby.png'), color: Colors.black), label: 'Nearby'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.black), label: 'Settings'),
-        ],
-        currentIndex: 2, // Set the current index based on your logic
-        onTap: (index) {
-          // Handle navigation based on the index
-          switch (index) {
-            case 0:
-              Navigator.pushNamed(context, '/fuel_map'); // Navigate to Fuel Map
-
-              break;
-            case 1:
-              Navigator.pushNamed(context, '/favorites'); // Navigate to Favorites
-              break;
-            case 2:
-              // Stay on Trends
-              break;
-            case 3:
-              Navigator.pushNamed(context, '/my_trip'); // Navigate to My Trips
-              break;
-            case 4:
-              Navigator.pushNamed(context, '/nearby'); // Navigate to Nearby
-              break;
-            case 5:
-              Navigator.pushNamed(context, '/settings'); // Navigate to Settings
-              break;
-          }
-        },
+          ],
+        ),
+        body: ListView.builder(
+          itemCount: trends.length,
+          itemBuilder: (context, index) {
+            final trend = trends[index];
+            return Card(
+              child: ListTile(
+                title: Text(trend.title),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(trend.description),
+                    Text('Cheapest Fill Day: ${trend.cheapestFillDay}'),
+                    Text('Price Range: ${trend.priceRange}'),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+        bottomNavigationBar: CustomBottomNavigationBar(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onNavigationItemTapped,
+        ),
       ),
     );
   }

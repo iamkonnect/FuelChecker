@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'terms_and_conditions_screen.dart'; // Importing the TermsAndConditionsScreen
-// Importing the FuelTypeSelectionScreen
 
 class SummaryScreen extends StatelessWidget {
   const SummaryScreen({super.key});
@@ -8,62 +6,28 @@ class SummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Summary'),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset('lib/assets/images/logo-full-color-150-x-1.png'), // Updated path
+          children: [
+            Image.asset('lib/assets/images/logo-full-color-150-x-1.png', height: 200), // Updated path
             const SizedBox(height: 32),
-            const Text(
-              'Welcome to Fuel Check. An app dedicated for your convenience!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'We aim to provide you live information and daily trends & analytics about the best or cheapest fuel prices in your local area.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 64),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TermsAndConditionsScreen()), // Navigate to TermsAndConditionsScreen
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(327, 48), // Set the size of the button
-                backgroundColor: Colors.red, // Set button color to red
-                textStyle: const TextStyle(
-                  color: Colors.white, // Change text color to white
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('lib/assets/images/mapbackground.png'), // Updated path
+                  fit: BoxFit.cover,
                 ),
               ),
-              child: const Text('Next'),
+              child: const Center(
+                child: Text('Summary Content Here'),
+              ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class NextScreen extends StatelessWidget {
-  const NextScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Next Screen'),
-      ),
-      body: const Center(
-        child: Text('This is the next screen.'),
       ),
     );
   }

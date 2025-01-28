@@ -159,7 +159,8 @@ class AnalyticsScreen extends StatelessWidget {
                             'Nov',
                             'Dec'
                           ];
-                          if (value.toInt() < 0 || value.toInt() >= months.length) {
+                          if (value.toInt() < 0 ||
+                              value.toInt() >= months.length) {
                             return const SizedBox();
                           }
                           return Text(months[value.toInt()]);

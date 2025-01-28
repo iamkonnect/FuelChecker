@@ -1,41 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import the provider package
-import 'providers/favorite_provider.dart'; // Import your FavoriteProvider
-import 'providers/theme_provider.dart'; // Import the ThemeProvider
-import 'screens/about_screen.dart'; // Import the AboutScreen
-// Importing the SettingsMenu
-import 'screens/forgot_password_screen.dart';
+import 'screens/about_screen.dart';
+import 'screens/analytics_screen.dart';
+import 'screens/deactivate_account_screen.dart';
+import 'screens/favorite_screen.dart';
 import 'screens/fuel_map_screen.dart';
 import 'screens/fuel_type_selection_screen.dart';
 import 'screens/login_screen.dart';
-import 'screens/navigation_app.dart';
+import 'screens/my_trip_screen.dart';
 import 'screens/nearby_screen.dart';
-import 'screens/welcome_screen.dart';
-import 'screens/favorite_screen.dart';
-import 'screens/trends_screen.dart';
-import 'screens/my_trip_screen.dart'; // Import MyTripScreen
 import 'screens/settings_screen.dart';
-import 'screens/filter_screen.dart';
-import 'screens/profile_screen.dart';
-import 'screens/help_screen.dart';
-import 'screens/feedback_screen.dart';
-import 'screens/report_issue_screen.dart';
-import 'screens/diactivate_account_screen.dart';
-import 'screens/theme_screen.dart';
-import 'screens/analytics_screen.dart';
+import 'screens/trends_screen.dart';
+import 'screens/welcome_screen.dart';
+import 'screens/feedback_screen.dart'; // Added import
+import 'screens/report_issue_screen.dart'; // Added import
+import 'screens/help_screen.dart'; // Added import
+import 'screens/profile_screen.dart'; // Added import for ProfileScreen
+
+import 'package:provider/provider.dart';
+import 'providers/favorite_provider.dart';
 
 void main() {
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => FavoriteProvider()..populateDummyFavorites(), // Add dummy favorites
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ThemeProvider(), // Add ThemeProvider
-        ),
-      ],
-      child: MyApp(), // Removed const keyword
+    ChangeNotifierProvider(
+      create: (context) => FavoriteProvider()..populateDummyFavorites(),
+      child: const MyApp(),
     ),
   );
 }
@@ -46,30 +34,46 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fuel Checker',
-      theme: Provider.of<ThemeProvider>(context).currentTheme, // Use the current theme from ThemeProvider
+      title: 'Fuel Check',
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
       initialRoute: '/',
       routes: {
-        '/': (context) => WelcomeScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/fuel_type_selection': (context) => const FuelTypeSelectionScreen(),
-        '/forgot_password': (context) => const ForgotPasswordScreen(),
-        '/navigation': (context) => const NavigationApp(),
-        '/filter_screen': (context) => const FilterScreen(),
-        '/nearby': (context) => NearbyScreen(), // Removed const keyword
-        '/fuel_map': (context) => const FuelMapScreen(fuelType: 'Blend E5'),
-        '/favorites': (context) => const FavoriteScreen(),
-        '/trends_screen': (context) => TrendsScreen(),
-        '/my_trip': (context) => const MyTripScreen(), // Updated route
-        '/settings': (context) => const SettingsScreen(),
-        '/profile': (context) => const ProfileScreen(),
-        '/about': (context) => const AboutScreen(),
-        '/help': (context) => const HelpScreen(),
-        '/feedback': (context) => const FeedbackScreen(),
-        '/report': (context) => const ReportIssueScreen(),
-        '/deactivate': (context) => const DeactivateAccountScreen(),
-        '/theme': (context) => const ThemeScreen(),
-        '/analytics': (context) => const AnalyticsScreen(),
+        '/': (context) => const WelcomeScreen(), // Removed 'const' keyword
+        '/login': (context) => const LoginScreen(), // Removed 'const' keyword
+        '/fuel_type': (context) =>
+            const FuelTypeSelectionScreen(), // Removed 'const' keyword
+        '/fuel_map': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as String?;
+          if (args == null) {
+            // Handle the null case, e.g., provide a default value or show an error
+            return FuelMapScreen(
+                fuelType: 'defaultFuelType'); // Provide a default value
+          }
+          return FuelMapScreen(fuelType: args); // Pass fuelType argument
+        },
+        '/favorites': (context) =>
+            const FavoriteScreen(), // Removed 'const' keyword
+        '/trends_screen': (context) =>
+            TrendsScreen(), // Removed 'const' keyword
+        '/my_trip': (context) =>
+            const MyTripScreen(), // Removed 'const' keyword
+        '/nearby': (context) => const NearbyScreen(), // Removed 'const' keyword
+        '/settings': (context) =>
+            const SettingsScreen(), // Removed 'const' keyword
+        '/about': (context) => const AboutScreen(), // Removed 'const' keyword
+        '/feedback': (context) =>
+            const FeedbackScreen(), // Removed 'const' keyword
+        '/report': (context) =>
+            const ReportIssueScreen(), // Removed 'const' keyword
+        '/deactivate': (context) =>
+            const DeactivateAccountScreen(), // Removed 'const' keyword
+        '/analytics': (context) =>
+            const AnalyticsScreen(), // Removed 'const' keyword
+        '/help': (context) => const HelpScreen(), // Removed 'const' keyword
+        '/profile': (context) =>
+            const ProfileScreen(), // Added route for ProfileScreen
       },
     );
   }

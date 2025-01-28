@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class FeedbackScreen extends StatefulWidget {
-  const FeedbackScreen({Key? key}) : super(key: key);
+  const FeedbackScreen({super.key});
 
   @override
   State<FeedbackScreen> createState() => _FeedbackScreenState();
