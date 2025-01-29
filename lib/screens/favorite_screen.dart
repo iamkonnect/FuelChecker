@@ -87,24 +87,30 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               itemBuilder: (context, index) {
                 final station = favoriteProvider.favorites[index];
                 return ListTile(
+                  leading: SizedBox(
+                    width: 40, // Set the width for the logo
+                    height: 40, // Set the height for the logo
+                    child: Image.asset(station.logo), // Display the logo
+                  ),
+
                   title: Text(station.name),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Harare"), // Updated location
+                      Text(station.location), // Updated location
                       const SizedBox(height: 4),
-                      const Text(
-                        '\$1.2 per gallon', // Updated fuel price
+                      Text(
+                        '\$${station.getFuelPrice('diesel')} per gallon', // Updated fuel price
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
                       const Text(
-                        'Fuel Type: Unleaded', // Dummy fuel type
+                        'Fuel Type: Diesel', // Dummy fuel type
                         style: TextStyle(fontWeight: FontWeight.normal),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        'Description: This is a popular fuel station with great service.', // Dummy description
+                      Text(
+                        'Contact: ${station.contact}', // Display contact
                         style: TextStyle(fontWeight: FontWeight.normal),
                       ),
                     ],
