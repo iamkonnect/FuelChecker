@@ -53,8 +53,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Favorites', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          backgroundColor: const Color.fromARGB(255, 244, 244, 245),
+          title: const Text('Favorites'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -69,7 +68,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           builder: (context, favoriteProvider, child) {
             if (favoriteProvider.favorites.isEmpty) {
               return const Center(
-                child: Text('No favorite fuel stations added.', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                child: Text('No favorite fuel stations added.',
+                    style: TextStyle(fontSize: 18, color: Colors.grey)),
               );
             }
             return ListView.builder(
@@ -77,14 +77,17 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               itemBuilder: (context, index) {
                 final station = favoriteProvider.favorites[index];
                 return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: ListTile(
                     leading: SizedBox(
                       width: 40,
                       height: 40,
                       child: Image.asset(station.logo),
                     ),
-                    title: Text(station.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    title: Text(station.name,
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -92,17 +95,20 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         const SizedBox(height: 4),
                         Text(
                           '\$${station.getFuelPrice('diesel')} per gallon',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(height: 4),
                         const Text(
                           'Fuel Type: Diesel',
-                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal, fontSize: 14),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Contact: ${station.contact}',
-                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal, fontSize: 14),
                         ),
                       ],
                     ),
