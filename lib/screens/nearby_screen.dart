@@ -50,6 +50,14 @@ class _NearbyScreenState extends State<NearbyScreen> {
     }
   }
 
+  String _formatStationName(String name) {
+    List<String> words = name.split(' ');
+    if (words.length > 4) {
+      return "${words.take(4).join(' ')} ....";
+    }
+    return name;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -87,7 +95,8 @@ class _NearbyScreenState extends State<NearbyScreen> {
               // TotalEnergies Station Information
               _buildStationInfo(
                 logoPath: 'assets/images/Total Energies.png',
-                stationName: 'TotalEnergies Service Station Coropark (Pvt) Ltd',
+                stationName: _formatStationName(
+                    'TotalEnergies Service Station Coropark (Pvt) Ltd'),
                 blendPrice: 'Blend E5: 1.34',
                 distance: '1.63 km',
               ),
@@ -97,7 +106,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
               _buildStationInfo(
                 logoPath:
                     'assets/images/zuva energy.png', // Assuming the logo path
-                stationName: 'Zuva Grendale',
+                stationName: _formatStationName('Zuva Grendale'),
                 blendPrice: 'Blend E5: 1.30',
                 distance: '2.00 km',
               ),
@@ -107,7 +116,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
               _buildStationInfo(
                 logoPath:
                     'assets/images/energy park.png', // Assuming the logo path
-                stationName: 'Energy Park',
+                stationName: _formatStationName('Energy Park'),
                 blendPrice: 'Blend E5: 1.25',
                 distance: '3.50 km',
               ),

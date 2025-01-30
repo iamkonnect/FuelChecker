@@ -1,3 +1,4 @@
+// Updated FuelMapScreen (Home Screen)
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -22,6 +23,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   final Set<Marker> _markers = {};
   int _selectedIndex = 0; // Default to Home (Index 0)
   String _searchTerm = ''; // Variable to hold the search term
+  GoogleMapController? _mapController;
 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
@@ -45,6 +47,17 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         _nearbyStations = getNearbyStations(
             _fuelStations, position.latitude, position.longitude);
         _addFuelStationMarkers();
+
+        // Add a marker for the current location
+        _markers.add(
+          Marker(
+            markerId: const MarkerId('current_location'),
+            position: _currentLocation!,
+            icon:
+                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+            onTap: () => _showLocationDetails(),
+          ),
+        );
       });
     }
   }
@@ -76,6 +89,45 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       print('Error getting coordinates: $e');
     }
     return null;
+  }
+
+  void _showLocationDetails() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16.0),
+        height: MediaQuery.of(context).size.height * 0.3,
+        child: Column(
+          children: [
+            const Text(
+              'Current Location Details',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Latitude: ${_currentLocation?.latitude}, Longitude: ${_currentLocation?.longitude}',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _searchPlace(String place) async {
+    LatLng? coordinates = await getCoordinates(place);
+    if (coordinates != null) {
+      _mapController?.animateCamera(CameraUpdate.newLatLng(coordinates));
+      setState(() {
+        _markers.add(
+          Marker(
+            markerId: MarkerId(place),
+            position: coordinates,
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueGreen),
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -158,7 +210,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                     ),
                     markers: _markers,
                     onMapCreated: (GoogleMapController controller) {
-                      // Additional setup if needed
+                      _mapController = controller;
                     },
                   ),
           ),
