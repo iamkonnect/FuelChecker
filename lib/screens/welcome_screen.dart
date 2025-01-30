@@ -57,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/assets/images/map_background.png'), // Updated map background image
+            image: AssetImage('assets/images/map_background.png'), // Updated map background image
             fit: BoxFit.cover,
           ),
         ),
@@ -76,7 +76,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   );
                 },
                 child: Image.asset(
-                  'lib/assets/images/Fuelcheck logo 150by1.png', // Updated path
+                  'assets/images/Fuelcheck logo 150by1.png', // Updated path
                   height: 200, // Adjust logo size as needed
                 ),
               ),

@@ -1,4 +1,4 @@
-# fuel_check
+# FuelCheckZW
 
 A new Flutter project.
 

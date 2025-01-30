@@ -1,6 +1,6 @@
 {
-    "name": "Fuel Check",
-    "short_name": "Fuel Check",
+    "name": "FuelCheckZW",
+    "short_name": "FuelCheckZW",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
@@ -9,6 +9,11 @@
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
+        {
+            "src": "assets/images/Fuelcheck logo 150by1.png",
+            "sizes": "150x1",
+            "type": "image/png"
+        },
         {
             "src": "icons/Icon-maskable-192.png",
             "sizes": "192x192",
