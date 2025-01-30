@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 import 'report_issue_screen.dart'; // Import the existing report issue screen
 import 'favorite_screen.dart'; // Import the existing favorite screen
 import 'fuel_map_screen.dart'; // Import the existing fuel map screen
+import '../providers/theme_provider.dart'; // Import ThemeProvider
 
 class NearbyScreen extends StatefulWidget {
   const NearbyScreen({Key? key}) : super(key: key);
@@ -57,8 +59,8 @@ class _NearbyScreenState extends State<NearbyScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Nearby'),
-          backgroundColor: Colors.transparent, // Set background color to transparent
+          title: const Text('Nearby', style: TextStyle(color: Colors.white)), // Updated for dark theme
+          backgroundColor: Provider.of<ThemeProvider>(context).currentTheme.appBarTheme.backgroundColor, // Updated for dark theme
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -116,7 +118,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Provider.of<ThemeProvider>(context).currentTheme.cardColor, // Updated for dark theme
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -139,6 +141,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white, // Updated for dark theme
                 ),
               ),
             ],
@@ -152,13 +155,14 @@ class _NearbyScreenState extends State<NearbyScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white, // Updated for dark theme
                 ),
               ),
               Row(
                 children: [
-                  Icon(Icons.location_pin),
+                  Icon(Icons.location_pin, color: Colors.white), // Updated for dark theme
                   SizedBox(width: 4),
-                  Text(distance),
+                  Text(distance, style: TextStyle(color: Colors.white)), // Updated for dark theme
                 ],
               ),
             ],
@@ -197,14 +201,15 @@ class _NearbyScreenState extends State<NearbyScreen> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
+              color: Colors.white, // Updated for dark theme
             ),
           ),
           SizedBox(height: 16),
 
           // Fuel Prices
-          Text('Fuel Prices:', style: TextStyle(fontSize: 18)),
+          Text('Fuel Prices:', style: TextStyle(fontSize: 18, color: Colors.white)), // Updated for dark theme
           SizedBox(height: 8),
-          Text('Diesel: 1.22'),
+          Text('Diesel: 1.22', style: TextStyle(color: Colors.white)), // Updated for dark theme
         ],
       ),
     );
@@ -225,7 +230,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
           ),
         ),
         SizedBox(height: 4),
-        Text(label),
+        Text(label, style: TextStyle(color: Colors.white)), // Updated for dark theme
       ],
     );
   }

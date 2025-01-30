@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/favorite_provider.dart';
+import '../providers/theme_provider.dart';
 import '../widgets/custom_bottom_navigation_bar.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -53,8 +54,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Favorites', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          backgroundColor: const Color.fromARGB(255, 244, 244, 245),
+          title: const Text('Favorites', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)), // Updated for dark theme
+          backgroundColor: Provider.of<ThemeProvider>(context).currentTheme.appBarTheme.backgroundColor, // Updated for dark theme
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -78,31 +79,32 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 final station = favoriteProvider.favorites[index];
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  color: Provider.of<ThemeProvider>(context).currentTheme.cardColor, // Updated for dark theme
                   child: ListTile(
                     leading: SizedBox(
                       width: 40,
                       height: 40,
                       child: Image.asset(station.logo),
                     ),
-                    title: Text(station.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    title: Text(station.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)), // Updated for dark theme
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(station.location, style: TextStyle(fontSize: 16)),
+                        Text(station.location, style: TextStyle(fontSize: 16, color: Colors.white)), // Updated for dark theme
                         const SizedBox(height: 4),
                         Text(
-                          '\$${station.getFuelPrice('diesel')} per gallon',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          '\$${station.getFuelPrice('diesel')} per litre',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white), // Updated for dark theme
                         ),
                         const SizedBox(height: 4),
                         const Text(
                           'Fuel Type: Diesel',
-                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.white), // Updated for dark theme
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Contact: ${station.contact}',
-                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.white), // Updated for dark theme
                         ),
                       ],
                     ),
