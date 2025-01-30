@@ -16,7 +16,8 @@ class _NearbyScreenState extends State<NearbyScreen> {
 
   /// Handles navigation based on the tapped index.
   void _onNavigationItemTapped(int index) {
-    if (_selectedIndex == index) return; // Avoid unnecessary navigation for the current screen
+    if (_selectedIndex == index)
+      return; // Avoid unnecessary navigation for the current screen
 
     setState(() {
       _selectedIndex = index;
@@ -24,22 +25,27 @@ class _NearbyScreenState extends State<NearbyScreen> {
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(context, '/fuel_map'); // Navigate to Fuel Map
+        Navigator.pushReplacementNamed(
+            context, '/fuel_map'); // Navigate to Fuel Map
         break;
       case 1:
-        Navigator.pushReplacementNamed(context, '/favorites'); // Navigate to Favorites
+        Navigator.pushReplacementNamed(
+            context, '/favorites'); // Navigate to Favorites
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, '/trends_screen'); // Navigate to Trends
+        Navigator.pushReplacementNamed(
+            context, '/trends_screen'); // Navigate to Trends
         break;
       case 3:
-        Navigator.pushReplacementNamed(context, '/my_trip'); // Navigate to My Trips
+        Navigator.pushReplacementNamed(
+            context, '/my_trip'); // Navigate to My Trips
         break;
       case 4:
         // Stay on Nearby
         break;
       case 5:
-        Navigator.pushReplacementNamed(context, '/settings'); // Navigate to Settings
+        Navigator.pushReplacementNamed(
+            context, '/settings'); // Navigate to Settings
         break;
     }
   }
@@ -52,24 +58,28 @@ class _NearbyScreenState extends State<NearbyScreen> {
         setState(() {
           _selectedIndex = 0; // Set Home as active
         });
-        Navigator.pushReplacementNamed(context, '/fuel_map'); // Navigate to Home
+        Navigator.pushReplacementNamed(
+            context, '/fuel_map'); // Navigate to Home
         return false; // Prevent default back behavior
       },
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Nearby'),
-          backgroundColor: Colors.transparent, // Set background color to transparent
+          backgroundColor:
+              Colors.transparent, // Set background color to transparent
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               setState(() {
                 _selectedIndex = 0; // Set Home as active
               });
-              Navigator.pushReplacementNamed(context, '/fuel_map'); // Navigate to Home
+              Navigator.pushReplacementNamed(
+                  context, '/fuel_map'); // Navigate to Home
             },
           ),
         ),
-        body: SingleChildScrollView( // Added scroll functionality
+        body: SingleChildScrollView(
+          // Added scroll functionality
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +95,8 @@ class _NearbyScreenState extends State<NearbyScreen> {
 
               // Zuva Grendale Station Information
               _buildStationInfo(
-                logoPath: 'assets/images/zuva energy.png', // Assuming the logo path
+                logoPath:
+                    'assets/images/zuva energy.png', // Assuming the logo path
                 stationName: 'Zuva Grendale',
                 blendPrice: 'Blend E5: 1.30',
                 distance: '2.00 km',
@@ -94,7 +105,8 @@ class _NearbyScreenState extends State<NearbyScreen> {
 
               // Energy Park Station Information
               _buildStationInfo(
-                logoPath: 'assets/images/energy park.png', // Assuming the logo path
+                logoPath:
+                    'assets/images/energy park.png', // Assuming the logo path
                 stationName: 'Energy Park',
                 blendPrice: 'Blend E5: 1.25',
                 distance: '3.50 km',
@@ -111,7 +123,11 @@ class _NearbyScreenState extends State<NearbyScreen> {
     );
   }
 
-  Widget _buildStationInfo({required String logoPath, required String stationName, required String blendPrice, required String distance}) {
+  Widget _buildStationInfo(
+      {required String logoPath,
+      required String stationName,
+      required String blendPrice,
+      required String distance}) {
     return Container(
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.symmetric(vertical: 8),
@@ -169,22 +185,29 @@ class _NearbyScreenState extends State<NearbyScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildActionButton(Icons.report_problem, 'Report Station', Colors.red, () {
+              _buildActionButton(
+                  Icons.report_problem, 'Report Station', Colors.red, () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ReportIssueScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const ReportIssueScreen()),
                 );
               }),
-              _buildActionButton(Icons.star, 'Add to Favourite', Colors.blue, () {
+              _buildActionButton(Icons.star, 'Add to Favourite', Colors.blue,
+                  () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const FavoriteScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const FavoriteScreen()),
                 );
               }),
-              _buildActionButton(Icons.directions, 'Take me there', Colors.green, () {
+              _buildActionButton(
+                  Icons.directions, 'Take me there', Colors.green, () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const FuelMapScreen(fuelType: 'Diesel')), // Pass the fuel type
+                  MaterialPageRoute(
+                      builder: (context) => const FuelMapScreen(
+                          fuelType: 'Diesel')), // Pass the fuel type
                 );
               }),
             ],
@@ -210,7 +233,8 @@ class _NearbyScreenState extends State<NearbyScreen> {
     );
   }
 
-  Widget _buildActionButton(IconData icon, String label, Color color, VoidCallback onPressed) {
+  Widget _buildActionButton(
+      IconData icon, String label, Color color, VoidCallback onPressed) {
     return Column(
       children: [
         GestureDetector(

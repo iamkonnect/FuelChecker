@@ -41,6 +41,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     }
   }
 
+  // Helper method to shorten the station name
+  String _shortenStationName(String stationName) {
+    final words = stationName.split(' ');
+    if (words.length > 4) {
+      return words.take(4).join(' ') + '...';
+    }
+    return stationName;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -85,17 +94,20 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       height: 40,
                       child: Image.asset(station.logo),
                     ),
-                    title: Text(station.name,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    title: Text(
+                      _shortenStationName(station.name),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(station.location, style: TextStyle(fontSize: 16)),
+                        Text(station.location,
+                            style: const TextStyle(fontSize: 16)),
                         const SizedBox(height: 4),
                         Text(
                           '\$${station.getFuelPrice('diesel')} per gallon',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(height: 4),
@@ -107,7 +119,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         const SizedBox(height: 4),
                         Text(
                           'Contact: ${station.contact}',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.normal, fontSize: 14),
                         ),
                       ],
