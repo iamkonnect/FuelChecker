@@ -94,9 +94,14 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
                       prefixIcon: IconButton(
                         icon: Icon(Icons.search, color: Colors.red),
                         onPressed: () {
-                          String from = fromController.text;
-                          String to = toController.text;
-                          String searchTerm = searchController.text;
+                          String from = fromController.text.trim();
+                          String to = toController.text.trim();
+                          String searchTerm = searchController.text.trim();
+
+                          if (from.isEmpty || to.isEmpty) {
+                            print('Please provide both "From" and "To" locations.');
+                            return;
+                          }
 
                           List<String> results = filterResults(
                               from, to, searchTerm, _selectedFilter);
@@ -193,7 +198,18 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
 
   List<String> filterResults(
       String from, String to, String searchTerm, String? filter) {
-    // Replace this with your filtering logic
-    return [];
+    if (from.isEmpty || to.isEmpty) {
+      print('Please provide both "From" and "To" locations.');
+      return [];
+    }
+    
+    // Example filtering logic (this should be replaced with actual logic)
+    List<String> allResults = ['Result 1', 'Result 2', 'Result 3']; // Placeholder for actual results
+    List<String> filteredResults = allResults.where((result) {
+      return result.contains(searchTerm) && 
+             result.contains(filter ?? '');
+    }).toList();
+    
+    return filteredResults;
   }
 }

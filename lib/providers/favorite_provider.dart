@@ -18,9 +18,36 @@ class FavoriteProvider with ChangeNotifier {
 
   void populateDummyFavorites() {
     _favorites.addAll([
-      FuelStation(name: 'Station A', location: '123 Main St'),
-      FuelStation(name: 'Station B', location: '456 Elm St'),
-      FuelStation(name: 'Station C', location: '789 Oak St'),
+      FuelStation(
+        name: 'TotalEnergies Service Station Coropark (Pvt) Ltd',
+        location: '123 Main St',
+        contact: '077 293 8722',
+        logo: 'assets/images/Total Energies.png',
+        fuelPrices: {
+          'diesel': 1.20,
+          'petrol': 1.50,
+        },
+      ),
+      FuelStation(
+        name: 'ZUVA Greendale',
+        location: '456 Elm St',
+        contact: '078 246 7409',
+        logo: 'assets/images/zuva energy.png',
+        fuelPrices: {
+          'diesel': 1.25,
+          'petrol': 1.55,
+        },
+      ),
+      FuelStation(
+        name: 'Energy Park',
+        location: '789 Oak St',
+        contact: '079 123 4567',
+        logo: 'assets/images/energy park.png',
+        fuelPrices: {
+          'diesel': 1.30,
+          'petrol': 1.60,
+        },
+      ),
     ]);
     notifyListeners();
   }
