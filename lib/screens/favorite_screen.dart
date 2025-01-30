@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/favorite_provider.dart';
-import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
+import '../widgets/custom_bottom_navigation_bar.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({Key? key}) : super(key: key);
@@ -11,12 +11,10 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  int _selectedIndex = 1; // Set the default index for Favorites
+  int _selectedIndex = 1;
 
-  /// Handles navigation based on the tapped index.
   void _onNavigationItemTapped(int index) {
-    if (_selectedIndex == index)
-      return; // Avoid unnecessary rebuilds for the current screen
+    if (_selectedIndex == index) return;
 
     setState(() {
       _selectedIndex = index;
@@ -24,27 +22,21 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(
-            context, '/fuel_map'); // Navigate to Home
+        Navigator.pushReplacementNamed(context, '/fuel_map');
         break;
       case 1:
-        // Stay on Favorites
         break;
       case 2:
-        Navigator.pushReplacementNamed(
-            context, '/trends_screen'); // Navigate to Trends
+        Navigator.pushReplacementNamed(context, '/trends_screen');
         break;
       case 3:
-        Navigator.pushReplacementNamed(
-            context, '/my_trip'); // Navigate to My Trips
+        Navigator.pushReplacementNamed(context, '/my_trip');
         break;
       case 4:
-        Navigator.pushReplacementNamed(
-            context, '/nearby'); // Navigate to Nearby
+        Navigator.pushReplacementNamed(context, '/nearby');
         break;
       case 5:
-        Navigator.pushReplacementNamed(
-            context, '/settings'); // Navigate to Settings
+        Navigator.pushReplacementNamed(context, '/settings');
         break;
     }
   }
@@ -53,25 +45,23 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // Handle back button press
         setState(() {
-          _selectedIndex = 0; // Set Home as active
+          _selectedIndex = 0;
         });
-        Navigator.pushReplacementNamed(
-            context, '/fuel_map'); // Navigate to Home
-        return false; // Prevent default back behavior
+        Navigator.pushReplacementNamed(context, '/fuel_map');
+        return false;
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Favorites'),
+          title: const Text('Favorites', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          backgroundColor: const Color.fromARGB(255, 244, 244, 245),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               setState(() {
-                _selectedIndex = 0; // Set Home as active
+                _selectedIndex = 0;
               });
-              Navigator.pushReplacementNamed(
-                  context, '/fuel_map'); // Navigate to Home
+              Navigator.pushReplacementNamed(context, '/fuel_map');
             },
           ),
         ),
@@ -79,41 +69,43 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           builder: (context, favoriteProvider, child) {
             if (favoriteProvider.favorites.isEmpty) {
               return const Center(
-                child: Text('No favorite fuel stations added.'),
+                child: Text('No favorite fuel stations added.', style: TextStyle(fontSize: 18, color: Colors.grey)),
               );
             }
             return ListView.builder(
               itemCount: favoriteProvider.favorites.length,
               itemBuilder: (context, index) {
                 final station = favoriteProvider.favorites[index];
-                return ListTile(
-                  leading: SizedBox(
-                    width: 40, // Set the width for the logo
-                    height: 40, // Set the height for the logo
-                    child: Image.asset(station.logo), // Display the logo
-                  ),
-
-                  title: Text(station.name),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(station.location), // Updated location
-                      const SizedBox(height: 4),
-                      Text(
-                        '\$${station.getFuelPrice('diesel')} per gallon', // Updated fuel price
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        'Fuel Type: Diesel', // Dummy fuel type
-                        style: TextStyle(fontWeight: FontWeight.normal),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Contact: ${station.contact}', // Display contact
-                        style: TextStyle(fontWeight: FontWeight.normal),
-                      ),
-                    ],
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: ListTile(
+                    leading: SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: Image.asset(station.logo),
+                    ),
+                    title: Text(station.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(station.location, style: TextStyle(fontSize: 16)),
+                        const SizedBox(height: 4),
+                        Text(
+                          '\$${station.getFuelPrice('diesel')} per gallon',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Fuel Type: Diesel',
+                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Contact: ${station.contact}',
+                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },

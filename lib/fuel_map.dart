@@ -1,7 +1,3 @@
-// ignore: file_names
-// ignore: file_names
-// ignore: file_names
-// ignore: file_names
 import 'package:flutter/material.dart';
 
 void main() {
@@ -120,19 +116,22 @@ class FuelTypeBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: const Color(0xFFF3F4F6)),
       ),
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Choose Station',
-            style: TextStyle(
-              fontFamily: 'Manrope',
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-              color: Color(0x801E232E),
-            ),
+          Column(
+            children: [
+              Image.asset('assets/images/diesel_logo.png', width: 40), // Example logo
+              const Text('Diesel'),
+            ],
           ),
-          Icon(Icons.search),
+          Column(
+            children: [
+              Image.asset('assets/images/petrol_logo.png', width: 40), // Example logo
+              const Text('Petrol'),
+            ],
+          ),
+          const Icon(Icons.search),
         ],
       ),
     );

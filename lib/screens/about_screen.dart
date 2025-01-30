@@ -23,7 +23,7 @@ class AboutScreen extends StatelessWidget {
           children: [
             // App logo
             Image.asset(
-              'assets/images/logo-full-color-150-x-1.png', // Updated path
+              'assets/images/Fuelcheck logo 150by1.png', // Updated path
               height: 100,
             ),
             const SizedBox(height: 16.0),
