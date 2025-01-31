@@ -13,12 +13,12 @@ class SummaryScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('lib/assets/images/logo-full-color-150-x-1.png', height: 200), // Updated path
+            Image.asset('assets/images/logo-full-color-150-x-1.png', height: 200), // Updated path
             const SizedBox(height: 32),
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/assets/images/mapbackground.png'), // Updated path
+                  image: AssetImage('assets/images/mapbackground.png'), // Updated path
                   fit: BoxFit.cover,
                 ),
               ),

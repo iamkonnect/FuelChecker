@@ -16,7 +16,7 @@ class FavoriteButtonScreen extends StatelessWidget {
           children: <Widget>[
             // Add an image asset if needed
             Image.asset(
-              'lib/assets/images/Favourites.png', // Corrected image name
+              'assets/images/Favourites.png', // Corrected image name
               height: 200, // Adjust height as needed
             ),
             const SizedBox(height: 20),

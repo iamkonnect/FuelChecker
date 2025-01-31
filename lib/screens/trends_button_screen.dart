@@ -15,7 +15,8 @@ class TrendsButtonScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset(
-              'lib/assets/images/Trends.png', // Adding the Trends image
+              'assets/images/Trends.png', // Adding the Trends image
+
               height: 200, // Adjust height as needed
             ),
             const SizedBox(height: 20),

@@ -12,7 +12,7 @@ class ForgotPasswordScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/assets/images/mapbackground.png'), // Updated path
+            image: AssetImage('assets/images/mapbackground.png'), // Updated path
             fit: BoxFit.cover,
           ),
         ),
