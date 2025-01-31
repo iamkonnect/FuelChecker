@@ -32,11 +32,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: 'Trends',
         ),
         _buildNavigationBarItem(
-          icon: Icons.location_on,
+          icon: Icons.map,
           label: 'My Trip',
         ),
         _buildNavigationBarItem(
-          icon: Icons.map,
+          icon: Icons.location_on,
           label: 'Nearby',
         ),
         _buildNavigationBarItem(

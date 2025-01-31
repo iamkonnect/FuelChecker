@@ -42,6 +42,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     }
   }
 
+  // Helper method to shorten the station name
+  String _shortenStationName(String stationName) {
+    final words = stationName.split(' ');
+    if (words.length > 4) {
+      return words.take(4).join(' ') + '...';
+    }
+    return stationName;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -70,7 +79,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           builder: (context, favoriteProvider, child) {
             if (favoriteProvider.favorites.isEmpty) {
               return const Center(
-                child: Text('No favorite fuel stations added.', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                child: Text('No favorite fuel stations added.',
+                    style: TextStyle(fontSize: 18, color: Colors.grey)),
               );
             }
             return ListView.builder(
