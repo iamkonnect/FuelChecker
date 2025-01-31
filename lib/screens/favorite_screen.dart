@@ -42,15 +42,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     }
   }
 
-  // Helper method to shorten the station name
-  String _shortenStationName(String stationName) {
-    final words = stationName.split(' ');
-    if (words.length > 4) {
-      return words.take(4).join(' ') + '...';
-    }
-    return stationName;
-  }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -63,8 +54,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Favorites', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)), // Updated for dark theme
-          backgroundColor: Provider.of<ThemeProvider>(context).currentTheme.appBarTheme.backgroundColor, // Updated for dark theme
+          title: const Text('Favorites', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black)), // Updated to black
+          backgroundColor: Provider.of<ThemeProvider>(context).currentTheme.appBarTheme.backgroundColor,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -80,7 +71,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             if (favoriteProvider.favorites.isEmpty) {
               return const Center(
                 child: Text('No favorite fuel stations added.',
-                    style: TextStyle(fontSize: 18, color: Colors.grey)),
+                    style: TextStyle(fontSize: 18, color: Colors.black)), // Updated to black
               );
             }
             return ListView.builder(
@@ -89,32 +80,32 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 final station = favoriteProvider.favorites[index];
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  color: Provider.of<ThemeProvider>(context).currentTheme.cardColor, // Updated for dark theme
+                  color: Provider.of<ThemeProvider>(context).currentTheme.cardColor,
                   child: ListTile(
                     leading: SizedBox(
                       width: 40,
                       height: 40,
                       child: Image.asset(station.logo),
                     ),
-                    title: Text(station.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)), // Updated for dark theme
+                    title: Text(station.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)), // Updated to black
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(station.location, style: TextStyle(fontSize: 16, color: Colors.white)), // Updated for dark theme
+                        Text(station.location, style: TextStyle(fontSize: 16, color: Colors.black)), // Updated to black
                         const SizedBox(height: 4),
                         Text(
                           '\$${station.getFuelPrice('diesel')} per litre',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white), // Updated for dark theme
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black), // Updated to black
                         ),
                         const SizedBox(height: 4),
                         const Text(
                           'Fuel Type: Diesel',
-                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.white), // Updated for dark theme
+                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black), // Updated to black
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Contact: ${station.contact}',
-                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.white), // Updated for dark theme
+                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black), // Updated to black
                         ),
                       ],
                     ),

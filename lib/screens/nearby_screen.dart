@@ -67,7 +67,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Nearby', style: TextStyle(color: Colors.white)), // Updated for dark theme
+          title: const Text('Nearby', style: TextStyle(color: Colors.black)), // Updated to black
           backgroundColor: Provider.of<ThemeProvider>(context).currentTheme.appBarTheme.backgroundColor, // Updated for dark theme
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -154,7 +154,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white, // Updated for dark theme
+                  color: Colors.black, // Updated to black
                 ),
               ),
             ],
@@ -168,14 +168,14 @@ class _NearbyScreenState extends State<NearbyScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white, // Updated for dark theme
+                  color: Colors.black, // Updated to black
                 ),
               ),
               Row(
                 children: [
-                  Icon(Icons.location_pin, color: Colors.white), // Updated for dark theme
+                  Icon(Icons.location_pin, color: Colors.black), // Updated to black
                   SizedBox(width: 4),
-                  Text(distance, style: TextStyle(color: Colors.white)), // Updated for dark theme
+                  Text(distance, style: TextStyle(color: Colors.black)), // Updated to black
                 ],
               ),
             ],
@@ -214,15 +214,15 @@ class _NearbyScreenState extends State<NearbyScreen> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.white, // Updated for dark theme
+              color: Colors.black, // Updated to black
             ),
           ),
           SizedBox(height: 16),
 
           // Fuel Prices
-          Text('Fuel Prices:', style: TextStyle(fontSize: 18, color: Colors.white)), // Updated for dark theme
+          Text('Fuel Prices:', style: TextStyle(fontSize: 18, color: Colors.black)), // Updated to black
           SizedBox(height: 8),
-          Text('Diesel: 1.22', style: TextStyle(color: Colors.white)), // Updated for dark theme
+          Text('Diesel: 1.22', style: TextStyle(color: Colors.black)), // Updated to black
         ],
       ),
     );
@@ -243,7 +243,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
           ),
         ),
         SizedBox(height: 4),
-        Text(label, style: TextStyle(color: Colors.white)), // Updated for dark theme
+        Text(label, style: TextStyle(color: Colors.black)), // Updated to black
       ],
     );
   }
