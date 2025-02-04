@@ -15,6 +15,7 @@ import 'screens/feedback_screen.dart'; // Added import
 import 'screens/report_issue_screen.dart'; // Added import
 import 'screens/help_screen.dart'; // Added import
 import 'screens/profile_screen.dart'; // Added import for ProfileScreen
+import 'screens/verification_screen.dart'; // Importing the VerificationScreen
 
 import 'package:provider/provider.dart';
 import 'providers/favorite_provider.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
         '/analytics': (context) => const AnalyticsScreen(),
         '/help': (context) => const HelpScreen(),
         '/profile': (context) => const ProfileScreen(),
+        '/verification': (context) => const VerificationScreen(isVerified: false), // Added route for VerificationScreen
       },
     );
   }

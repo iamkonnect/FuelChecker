@@ -1,6 +1,6 @@
-import 'package:FuelCheckZW/feedback_page.dart';
-import 'package:flutter_test/flutter_test.dart'; // Added import for testing
-import 'package:fuel_check/main.dart'; // Corrected path to match the actual app's main file path
+import 'package:FuelCheckZW/feedback_page.dart' hide MyApp; // Hiding MyApp from feedback_page.dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:FuelCheckZW/main.dart'; // Importing main.dart
 
 void main() {
   testWidgets('AnalyticsScreen has a title', (WidgetTester tester) async {
