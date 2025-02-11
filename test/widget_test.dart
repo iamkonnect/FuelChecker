@@ -1,4 +1,4 @@
-import 'package:FuelCheckZW/feedback_page.dart' hide MyApp; // Hiding MyApp from feedback_page.dart
+// Hiding MyApp from feedback_page.dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:FuelCheckZW/main.dart'; // Importing main.dart
 
