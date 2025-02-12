@@ -5,7 +5,8 @@ class FuelTypeSelectionScreen extends StatefulWidget {
   const FuelTypeSelectionScreen({super.key});
 
   @override
-  State<FuelTypeSelectionScreen> createState() => _FuelTypeSelectionScreenState();
+  State<FuelTypeSelectionScreen> createState() =>
+      _FuelTypeSelectionScreenState();
 }
 
 class _FuelTypeSelectionScreenState extends State<FuelTypeSelectionScreen> {
@@ -17,9 +18,9 @@ class _FuelTypeSelectionScreenState extends State<FuelTypeSelectionScreen> {
       appBar: AppBar(
         title: const Text(''),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back), // Updated to use Google Icons equivalent
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
           },
         ),
         backgroundColor: Colors.white,
@@ -31,7 +32,8 @@ class _FuelTypeSelectionScreenState extends State<FuelTypeSelectionScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/Fuelcheck logo 150by1.png', height: 300), // Updated path
+            Image.asset('assets/images/Fuelcheck logo 150by1.png',
+                height: 300), // Updated path
 
             const SizedBox(height: 32.0),
             const Text(
@@ -67,14 +69,16 @@ class _FuelTypeSelectionScreenState extends State<FuelTypeSelectionScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FuelMapScreen(fuelType: _selectedFuelType!),
+                      builder: (context) =>
+                          FuelMapScreen(fuelType: _selectedFuelType!),
                     ),
                   );
                 }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
-                padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 64.0, vertical: 16.0),
                 textStyle: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
