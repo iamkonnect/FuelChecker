@@ -257,13 +257,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () => _showThemeBottomSheet(context),
                 ),
                 const SizedBox(height: 16),
-                _buildSettingCard(
-                  icon: Icons.analytics,
-                  title: 'Analytics',
-                  onTap: () {
-                    Navigator.pushNamed(context, '/analytics');
-                  },
-                ),
+                // _buildSettingCard(
+                //   icon: Icons.analytics,
+                //   title: 'Analytics',
+                //   onTap: () {
+                //     Navigator.pushNamed(context, '/analytics');
+                //   },
+                // ),
                 const SizedBox(height: 16),
                 _buildSettingCard(
                   icon: Icons.info,

@@ -23,11 +23,13 @@ dependencies:
   fl_chart: ^0.70.2
   mailer: ^6.0.0 # Added mailer package
   provider: ^6.0.0 # Added provider package
-  firebase_core: ^latest_version # Added Firebase core
-  firebase_auth: ^latest_version # Added Firebase authentication
-  cloud_firestore: ^latest_version # Added Firestore
-  firebase_messaging: ^latest_version # Added Firebase messaging
+  firebase_core: ^3.11.0 # Added Firebase core
 
+  firebase_auth: ^5.4.2 # Added Firebase authentication
+
+  cloud_firestore: ^5.6.3 # Added Firestore
+
+  firebase_messaging: ^15.2.2 # Added Firebase messaging
 
 dev_dependencies:
   flutter_test:
@@ -39,9 +41,9 @@ flutter:
     - web/icons/Icon-maskable-512.png
     - web/favicon.png
     - assets/images/Settings.png
-    - assets/images/Favourites.png  # Updated to match actual file name
-    - assets/images/my trips.png  # Updated to match actual file name
-    - assets/images/map_background.png  # Added missing asset
+    - assets/images/Favourites.png # Updated to match actual file name
+    - assets/images/my trips.png # Updated to match actual file name
+    - assets/images/map_background.png # Added missing asset
     - assets/images/nearby.png
     - assets/images/Trends.png
     - assets/images/Fuelcheck logo 150by1.png # Updated to correct asset path
