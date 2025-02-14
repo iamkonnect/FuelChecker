@@ -1,4 +1,3 @@
-// Updated FuelMapScreen (Home Screen)
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,6 +23,9 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   int _selectedIndex = 0; // Default to Home (Index 0)
   String _searchTerm = ''; // Variable to hold the search term
   GoogleMapController? _mapController;
+  String _locationName = ''; // Variable to hold the location name
+  bool _isLocationDetailsVisible =
+      false; // Track whether to show the bottom sheet
 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
@@ -55,10 +57,29 @@ class FuelMapScreenState extends State<FuelMapScreen> {
             position: _currentLocation!,
             icon:
                 BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-            onTap: () => _showLocationDetails(),
+            onTap: _toggleLocationDetails, // Use the renamed function
           ),
         );
+
+        // Fetch the location name (address)
+        _getLocationName(position.latitude, position.longitude);
       });
+    }
+  }
+
+  Future<void> _getLocationName(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        setState(() {
+          _locationName =
+              '${place.street}, ${place.locality}, ${place.country}';
+        });
+      }
+    } catch (e) {
+      print('Error fetching location name: $e');
     }
   }
 
@@ -91,43 +112,18 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     return null;
   }
 
-  void _showLocationDetails() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(16.0),
-        height: MediaQuery.of(context).size.height * 0.3,
-        child: Column(
-          children: [
-            const Text(
-              'Current Location Details',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Latitude: ${_currentLocation?.latitude}, Longitude: ${_currentLocation?.longitude}',
-            ),
-          ],
-        ),
-      ),
-    );
+  // Function to show the bottom sheet
+  void _toggleLocationDetails() {
+    setState(() {
+      _isLocationDetailsVisible = true; // Show the bottom sheet
+    });
   }
 
-  void _searchPlace(String place) async {
-    LatLng? coordinates = await getCoordinates(place);
-    if (coordinates != null) {
-      _mapController?.animateCamera(CameraUpdate.newLatLng(coordinates));
-      setState(() {
-        _markers.add(
-          Marker(
-            markerId: MarkerId(place),
-            position: coordinates,
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueGreen),
-          ),
-        );
-      });
-    }
+  // Function to hide the bottom sheet
+  void _hideLocationDetails() {
+    setState(() {
+      _isLocationDetailsVisible = false; // Hide the bottom sheet
+    });
   }
 
   @override
@@ -217,6 +213,47 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         selectedIndex: _selectedIndex,
         onItemTapped: _onNavigationItemTapped,
       ),
+      bottomSheet: _isLocationDetailsVisible
+          ? Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(16)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Current Location Details',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Latitude: ${_currentLocation?.latitude}, Longitude: ${_currentLocation?.longitude}',
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Location: $_locationName',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _hideLocationDetails,
+                    child: const Text('Close'),
+                  ),
+                ],
+              ),
+            )
+          : null,
     );
   }
 }
