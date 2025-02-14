@@ -31,7 +31,7 @@ class _MyTripScreenState extends State<MyTripScreen> {
         break;
       case 2:
         Navigator.pushReplacementNamed(
-            context, '/trends_screen'); // Navigate to Trends
+            context, '/analytics'); // Navigate to Trends
         break;
       case 3:
         // Stay on My Trips

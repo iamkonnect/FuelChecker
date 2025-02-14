@@ -35,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         break;
       case 2:
         Navigator.pushReplacementNamed(
-            context, '/trends_screen'); // Navigate to Trends
+            context, '/analytics'); // Navigate to Trends
         break;
       case 3:
         Navigator.pushReplacementNamed(

@@ -27,7 +27,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       case 1:
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, '/trends_screen');
+        Navigator.pushReplacementNamed(context, '/analytics');
         break;
       case 3:
         Navigator.pushReplacementNamed(context, '/my_trip');
