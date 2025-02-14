@@ -31,10 +31,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
           icon: Icons.grid_view,
           label: 'Trends',
         ),
-        // _buildNavigationBarItem(
-        //   icon: Icons.map,
-        //   label: 'My Trip',
-        // ),
+        _buildNavigationBarItem(
+          icon: Icons.map,
+          label: 'My Trip',
+        ),
         _buildNavigationBarItem(
           icon: Icons.location_on,
           label: 'Nearby',

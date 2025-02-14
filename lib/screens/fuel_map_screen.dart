@@ -147,7 +147,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
 
     switch (index) {
       case 0: // Home Screen
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/fuel_map');
         break;
       case 1: // Favorites Screen
         Navigator.pushNamed(context, '/favorites');
