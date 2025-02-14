@@ -215,7 +215,8 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       ),
       bottomSheet: _isLocationDetailsVisible
           ? Container(
-              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height *
+                  0.2, // Set height to 20% of the screen
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -229,26 +230,40 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                   ),
                 ],
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+              child: Stack(
                 children: [
-                  const Text(
-                    'Current Location Details',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment
+                          .center, // Center contents horizontally
+                      children: [
+                        const SizedBox(
+                            height: 10), // Reduced space for the close button
+                        const Text(
+                          'Current Location Details',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Latitude: ${_currentLocation?.latitude}, Longitude: ${_currentLocation?.longitude}',
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Location: $_locationName',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Latitude: ${_currentLocation?.latitude}, Longitude: ${_currentLocation?.longitude}',
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Location: $_locationName',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _hideLocationDetails,
-                    child: const Text('Close'),
+                  Positioned(
+                    top: 8, // Adjusted position for the close icon
+                    right: 8, // Adjusted position for the close icon
+                    child: IconButton(
+                      icon: const Icon(Icons.close, size: 24), // Close icon
+                      onPressed: _hideLocationDetails, // Close the bottom sheet
+                    ),
                   ),
                 ],
               ),
