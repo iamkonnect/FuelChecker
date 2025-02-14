@@ -146,23 +146,20 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     });
 
     switch (index) {
-      case 0: // Home Screen
+      case 0:
         Navigator.pushReplacementNamed(context, '/fuel_map');
         break;
-      case 1: // Favorites Screen
-        Navigator.pushNamed(context, '/favorites');
+      case 1:
+        Navigator.pushReplacementNamed(context, '/favorites');
         break;
-      case 2: // Trends Screen
-        Navigator.pushNamed(context, '/analytics');
+      case 2:
+        Navigator.pushReplacementNamed(context, '/analytics');
         break;
-      case 3: // My Trip Screen
-        Navigator.pushNamed(context, '/my_trip');
+      case 3: // Nearby (previously My Trip)
+        Navigator.pushReplacementNamed(context, '/nearby');
         break;
-      case 4: // Nearby Screen
-        Navigator.pushNamed(context, '/nearby');
-        break;
-      case 5: // Settings Screen
-        Navigator.pushNamed(context, '/settings');
+      case 4: // Settings (previously Nearby)
+        Navigator.pushReplacementNamed(context, '/settings');
         break;
     }
   }

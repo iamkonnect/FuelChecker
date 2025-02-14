@@ -14,7 +14,7 @@ class NearbyScreen extends StatefulWidget {
 }
 
 class _NearbyScreenState extends State<NearbyScreen> {
-  int _selectedIndex = 4; // Set the default index for Nearby
+  int _selectedIndex = 3; // Set the default index for Nearby
 
   /// Handles navigation based on the tapped index.
   void _onNavigationItemTapped(int index) {
@@ -27,27 +27,19 @@ class _NearbyScreenState extends State<NearbyScreen> {
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(
-            context, '/fuel_map'); // Navigate to Fuel Map
+        Navigator.pushReplacementNamed(context, '/fuel_map');
         break;
       case 1:
-        Navigator.pushReplacementNamed(
-            context, '/favorites'); // Navigate to Favorites
+        Navigator.pushReplacementNamed(context, '/favorites');
         break;
       case 2:
-        Navigator.pushReplacementNamed(
-            context, '/analytics'); // Navigate to Trends
+        Navigator.pushReplacementNamed(context, '/analytics');
         break;
-      case 3:
-        Navigator.pushReplacementNamed(
-            context, '/my_trip'); // Navigate to My Trips
+      case 3: // Nearby (previously My Trip)
+        Navigator.pushReplacementNamed(context, '/nearby');
         break;
-      case 4:
-        // Stay on Nearby
-        break;
-      case 5:
-        Navigator.pushReplacementNamed(
-            context, '/settings'); // Navigate to Settings
+      case 4: // Settings (previously Nearby)
+        Navigator.pushReplacementNamed(context, '/settings');
         break;
     }
   }
