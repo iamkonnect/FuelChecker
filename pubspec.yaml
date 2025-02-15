@@ -38,6 +38,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/images/location1.png
     - web/icons/Icon-maskable-512.png
     - web/favicon.png
     - assets/images/Settings.png

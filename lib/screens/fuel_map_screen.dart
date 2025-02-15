@@ -51,20 +51,28 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         _addFuelStationMarkers();
 
         // Add a marker for the current location
-        _markers.add(
-          Marker(
-            markerId: const MarkerId('current_location'),
-            position: _currentLocation!,
-            icon:
-                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-            onTap: _toggleLocationDetails, // Use the renamed function
-          ),
-        );
+        _getCustomMarkerIcon().then((customIcon) {
+          _markers.add(
+            Marker(
+              markerId: const MarkerId('current_location'),
+              position: _currentLocation!,
+              icon: customIcon, // Use the custom icon
+              onTap: _toggleLocationDetails,
+            ),
+          );
+        });
 
         // Fetch the location name (address)
         _getLocationName(position.latitude, position.longitude);
       });
     }
+  }
+
+  Future<BitmapDescriptor> _getCustomMarkerIcon() async {
+    return await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(48, 48)), // Adjust size as needed
+      'assets/images/location1.png',
+    );
   }
 
   Future<void> _getLocationName(double latitude, double longitude) async {
