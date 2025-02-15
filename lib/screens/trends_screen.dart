@@ -14,8 +14,7 @@ class _TrendsScreenState extends State<TrendsScreen> {
 
   /// Handles navigation based on the tapped index.
   void _onNavigationItemTapped(int index) {
-    if (_selectedIndex == index)
-      return; // Avoid unnecessary rebuilds for the current screen
+    if (_selectedIndex == index) return;
 
     setState(() {
       _selectedIndex = index;
@@ -23,27 +22,19 @@ class _TrendsScreenState extends State<TrendsScreen> {
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(
-            context, '/fuel_map'); // Navigate to Fuel Map
+        Navigator.pushReplacementNamed(context, '/fuel_map');
         break;
       case 1:
-        Navigator.pushReplacementNamed(
-            context, '/favorites'); // Navigate to Favorites
+        Navigator.pushReplacementNamed(context, '/favorites');
         break;
       case 2:
-        // Stay on Trends
+        Navigator.pushReplacementNamed(context, '/analytics');
         break;
-      case 3:
-        Navigator.pushReplacementNamed(
-            context, '/my_trip'); // Navigate to My Trips
+      case 3: // Nearby (previously My Trip)
+        Navigator.pushReplacementNamed(context, '/nearby');
         break;
-      case 4:
-        Navigator.pushReplacementNamed(
-            context, '/nearby'); // Navigate to Nearby
-        break;
-      case 5:
-        Navigator.pushReplacementNamed(
-            context, '/settings'); // Navigate to Settings
+      case 4: // Settings (previously Nearby)
+        Navigator.pushReplacementNamed(context, '/settings');
         break;
     }
   }

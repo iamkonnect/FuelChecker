@@ -15,7 +15,7 @@ class MyTripButtonScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset(
-              'lib/assets/images/my trips.png', // Updated to use the new icon
+              'assets/images/my trips.png', // Updated to use the new icon
               height: 120, // Adjust height for better visibility
             ),
             const SizedBox(height: 20),
@@ -41,7 +41,7 @@ class MyTripButtonScreen extends StatelessWidget {
                   height: 12,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-color: Colors.black,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -50,7 +50,7 @@ color: Colors.black,
                   height: 12,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-color: Colors.orange, // Change to orange for the second dot
+                    color: Colors.orange, // Change to orange for the second dot
                   ),
                 ),
                 const SizedBox(width: 10),

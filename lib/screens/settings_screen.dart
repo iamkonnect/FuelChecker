@@ -13,7 +13,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   double _brightness = 0.5; // Default brightness value
   bool _notificationsEnabled = true; // Default notification toggle state
   String _selectedTheme = 'light'; // Default theme selection
-  int _selectedIndex = 5; // Index for Settings
+  int _selectedIndex = 4; // Index for Settings
 
   /// Handles navigation based on the tapped index.
   void _onNavigationItemTapped(int index) {
@@ -26,27 +26,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(
-            context, '/fuel_map'); // Navigate to Home
+        Navigator.pushReplacementNamed(context, '/fuel_map');
         break;
       case 1:
-        Navigator.pushReplacementNamed(
-            context, '/favorites'); // Navigate to Favorites
+        Navigator.pushReplacementNamed(context, '/favorites');
         break;
       case 2:
-        Navigator.pushReplacementNamed(
-            context, '/trends_screen'); // Navigate to Trends
+        Navigator.pushReplacementNamed(context, '/analytics');
         break;
-      case 3:
-        Navigator.pushReplacementNamed(
-            context, '/my_trip'); // Navigate to My Trips
+      case 3: // Nearby (previously My Trip)
+        Navigator.pushReplacementNamed(context, '/nearby');
         break;
-      case 4:
-        Navigator.pushReplacementNamed(
-            context, '/nearby'); // Navigate to Nearby
-        break;
-      case 5:
-        // Stay on Settings
+      case 4: // Settings (previously Nearby)
+        Navigator.pushReplacementNamed(context, '/settings');
         break;
     }
   }
@@ -257,13 +249,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () => _showThemeBottomSheet(context),
                 ),
                 const SizedBox(height: 16),
-                _buildSettingCard(
-                  icon: Icons.analytics,
-                  title: 'Analytics',
-                  onTap: () {
-                    Navigator.pushNamed(context, '/analytics');
-                  },
-                ),
+                // _buildSettingCard(
+                //   icon: Icons.analytics,
+                //   title: 'Analytics',
+                //   onTap: () {
+                //     Navigator.pushNamed(context, '/analytics');
+                //   },
+                // ),
                 const SizedBox(height: 16),
                 _buildSettingCard(
                   icon: Icons.info,

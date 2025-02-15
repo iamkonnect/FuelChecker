@@ -25,17 +25,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         Navigator.pushReplacementNamed(context, '/fuel_map');
         break;
       case 1:
+        Navigator.pushReplacementNamed(context, '/favorites');
         break;
       case 2:
-        Navigator.pushReplacementNamed(context, '/trends_screen');
+        Navigator.pushReplacementNamed(context, '/analytics');
         break;
-      case 3:
-        Navigator.pushReplacementNamed(context, '/my_trip');
-        break;
-      case 4:
+      case 3: // Nearby (previously My Trip)
         Navigator.pushReplacementNamed(context, '/nearby');
         break;
-      case 5:
+      case 4: // Settings (previously Nearby)
         Navigator.pushReplacementNamed(context, '/settings');
         break;
     }

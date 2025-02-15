@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
 import 'report_issue_screen.dart'; // Import the existing report issue screen
 import 'favorite_screen.dart'; // Import the existing favorite screen
 import 'fuel_map_screen.dart'; // Import the existing fuel map screen
+import '../providers/theme_provider.dart'; // Import ThemeProvider
 
 class NearbyScreen extends StatefulWidget {
   const NearbyScreen({Key? key}) : super(key: key);
@@ -12,7 +14,7 @@ class NearbyScreen extends StatefulWidget {
 }
 
 class _NearbyScreenState extends State<NearbyScreen> {
-  int _selectedIndex = 4; // Set the default index for Nearby
+  int _selectedIndex = 3; // Set the default index for Nearby
 
   /// Handles navigation based on the tapped index.
   void _onNavigationItemTapped(int index) {
@@ -25,35 +27,27 @@ class _NearbyScreenState extends State<NearbyScreen> {
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(
-            context, '/fuel_map'); // Navigate to Fuel Map
+        Navigator.pushReplacementNamed(context, '/fuel_map');
         break;
       case 1:
-        Navigator.pushReplacementNamed(
-            context, '/favorites'); // Navigate to Favorites
+        Navigator.pushReplacementNamed(context, '/favorites');
         break;
       case 2:
-        Navigator.pushReplacementNamed(
-            context, '/trends_screen'); // Navigate to Trends
+        Navigator.pushReplacementNamed(context, '/analytics');
         break;
-      case 3:
-        Navigator.pushReplacementNamed(
-            context, '/my_trip'); // Navigate to My Trips
+      case 3: // Nearby (previously My Trip)
+        Navigator.pushReplacementNamed(context, '/nearby');
         break;
-      case 4:
-        // Stay on Nearby
-        break;
-      case 5:
-        Navigator.pushReplacementNamed(
-            context, '/settings'); // Navigate to Settings
+      case 4: // Settings (previously Nearby)
+        Navigator.pushReplacementNamed(context, '/settings');
         break;
     }
   }
 
   String _formatStationName(String name) {
     List<String> words = name.split(' ');
-    if (words.length > 4) {
-      return "${words.take(4).join(' ')} ....";
+    if (words.length > 3) {
+      return "${words.take(3).join(' ')} ....";
     }
     return name;
   }
@@ -72,9 +66,12 @@ class _NearbyScreenState extends State<NearbyScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Nearby'),
-          backgroundColor:
-              Colors.transparent, // Set background color to transparent
+          title: const Text('Nearby',
+              style: TextStyle(color: Colors.black)), // Updated to black
+          backgroundColor: Provider.of<ThemeProvider>(context)
+              .currentTheme
+              .appBarTheme
+              .backgroundColor, // Updated for dark theme
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -141,7 +138,9 @@ class _NearbyScreenState extends State<NearbyScreen> {
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Provider.of<ThemeProvider>(context)
+            .currentTheme
+            .cardColor, // Updated for dark theme
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -164,6 +163,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black, // Updated to black
                 ),
               ),
             ],
@@ -177,13 +177,17 @@ class _NearbyScreenState extends State<NearbyScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black, // Updated to black
                 ),
               ),
               Row(
                 children: [
-                  Icon(Icons.location_pin),
+                  Icon(Icons.location_pin,
+                      color: Colors.black), // Updated to black
                   SizedBox(width: 4),
-                  Text(distance),
+                  Text(distance,
+                      style:
+                          TextStyle(color: Colors.black)), // Updated to black
                 ],
               ),
             ],
@@ -229,14 +233,18 @@ class _NearbyScreenState extends State<NearbyScreen> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
+              color: Colors.black, // Updated to black
             ),
           ),
           SizedBox(height: 16),
 
           // Fuel Prices
-          Text('Fuel Prices:', style: TextStyle(fontSize: 18)),
+          Text('Fuel Prices:',
+              style: TextStyle(
+                  fontSize: 18, color: Colors.black)), // Updated to black
           SizedBox(height: 8),
-          Text('Diesel: 1.22'),
+          Text('Diesel: 1.22',
+              style: TextStyle(color: Colors.black)), // Updated to black
         ],
       ),
     );
@@ -258,7 +266,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
           ),
         ),
         SizedBox(height: 4),
-        Text(label),
+        Text(label, style: TextStyle(color: Colors.black)), // Updated to black
       ],
     );
   }

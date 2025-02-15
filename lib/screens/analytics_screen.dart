@@ -1,8 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../widgets/custom_bottom_navigation_bar.dart'; // Ensure this import is correct
 
-class AnalyticsScreen extends StatelessWidget {
+class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AnalyticsScreen> createState() => _AnalyticsScreenState();
+}
+
+class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  int _selectedIndex =
+      2; // Assuming AnalyticsScreen is the 3rd item in the bottom nav
+
+  void _onNavigationItemTapped(int index) {
+    if (_selectedIndex == index) return;
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, '/fuel_map');
+        break;
+      case 1:
+        Navigator.pushReplacementNamed(context, '/favorites');
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, '/analytics');
+        break;
+      case 3: // Nearby (previously My Trip)
+        Navigator.pushReplacementNamed(context, '/nearby');
+        break;
+      case 4: // Settings (previously Nearby)
+        Navigator.pushReplacementNamed(context, '/settings');
+        break;
+    }
+  }
 
   Widget _buildCircularIndicator({
     required String title,
@@ -206,61 +241,82 @@ class AnalyticsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Analytics Dashboard'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: _buildCircularIndicator(
-                    title: 'Favourite Stations Visits',
-                    percentage: 58,
-                    icon: Icons.local_gas_station,
-                    color: Colors.red,
+    return WillPopScope(
+      onWillPop: () async {
+        setState(() {
+          _selectedIndex = 0;
+        });
+        Navigator.pushReplacementNamed(context, '/fuel_map');
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Analytics Dashboard'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              setState(() {
+                _selectedIndex = 0;
+              });
+              Navigator.pushReplacementNamed(context, '/fuel_map');
+            },
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildCircularIndicator(
+                      title: 'Favourite Stations Visits',
+                      percentage: 58,
+                      icon: Icons.local_gas_station,
+                      color: Colors.red,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildCircularIndicator(
-                    title: 'Trips Targets',
-                    percentage: 78,
-                    icon: Icons.directions_car,
-                    color: Colors.orange,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildCircularIndicator(
+                      title: 'Trips Targets',
+                      percentage: 78,
+                      icon: Icons.directions_car,
+                      color: Colors.orange,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildCard(
-                    title: 'Fuel Usage',
-                    value: '\$26',
-                    icon: Icons.local_gas_station,
-                    color: Colors.green,
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildCard(
+                        title: 'Fuel Usage',
+                        value: '\$26',
+                        icon: Icons.local_gas_station,
+                        color: Colors.green),
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildCard(
-                    title: 'Price Fluctuation',
-                    value: '\$66',
-                    icon: Icons.price_check,
-                    color: Colors.blue,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildCard(
+                      title: 'Price Fluctuation',
+                      value: '\$66',
+                      icon: Icons.price_check,
+                      color: Colors.blue,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildFuelExpenseHistory(),
-          ],
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildFuelExpenseHistory(),
+            ],
+          ),
+        ),
+        bottomNavigationBar: CustomBottomNavigationBar(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onNavigationItemTapped,
         ),
       ),
     );
