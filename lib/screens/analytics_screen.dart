@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../widgets/custom_bottom_navigation_bar.dart'; // Ensure this import is correct
+import '../widgets/custom_bottom_navigation_bar.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({Key? key}) : super(key: key);
@@ -10,8 +10,7 @@ class AnalyticsScreen extends StatefulWidget {
 }
 
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
-  int _selectedIndex =
-      2; // Assuming AnalyticsScreen is the 3rd item in the bottom nav
+  int _selectedIndex = 2;
 
   void _onNavigationItemTapped(int index) {
     if (_selectedIndex == index) return;
@@ -30,10 +29,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       case 2:
         Navigator.pushReplacementNamed(context, '/analytics');
         break;
-      case 3: // Nearby (previously My Trip)
+      case 3:
         Navigator.pushReplacementNamed(context, '/nearby');
         break;
-      case 4: // Settings (previously Nearby)
+      case 4:
         Navigator.pushReplacementNamed(context, '/settings');
         break;
     }
@@ -159,10 +158,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     DropdownMenuItem(value: 'Monthly', child: Text('Monthly')),
                     DropdownMenuItem(value: 'Yearly', child: Text('Yearly')),
                   ],
-                  onChanged: (value) {
-                    // Implement filter functionality
-                  },
+                  onChanged: null,
                 ),
+
               ],
             ),
             const SizedBox(height: 16),
@@ -241,13 +239,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (didPop) {
+        if (didPop) return;
         setState(() {
           _selectedIndex = 0;
         });
         Navigator.pushReplacementNamed(context, '/fuel_map');
-        return false;
       },
       child: Scaffold(
         appBar: AppBar(

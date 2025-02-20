@@ -62,16 +62,17 @@ class _TrendsScreenState extends State<TrendsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (didPop) {
+        if (didPop) return;
         // Handle back button press
         setState(() {
           _selectedIndex = 0; // Set Home as active
         });
         Navigator.pushReplacementNamed(
             context, '/fuel_map'); // Navigate to Home
-        return false; // Prevent default back behavior
       },
+
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Trends'),

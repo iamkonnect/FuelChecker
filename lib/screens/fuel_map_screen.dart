@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart'; // Geocoding package
-import '../models/fuel_price.dart'; // Import FuelStation model
-import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
-import '../widgets/search_bar_with_filter_final.dart'; // Import the search bar with filter
+import 'dart:developer' as developer;
+
+import '../widgets/custom_bottom_navigation_bar.dart';
+import '../widgets/search_bar_with_filter_final.dart';
+import '../widgets/map_controls.dart';
+import '../models/fuel_station.dart';
+import '../services/fuel_station_service.dart' as fuel_service;
+import '../controllers/map_controller.dart';
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -16,134 +21,113 @@ class FuelMapScreen extends StatefulWidget {
 }
 
 class FuelMapScreenState extends State<FuelMapScreen> {
-  LatLng? _currentLocation;
+  int _selectedIndex = 0;
+  String _searchTerm = '';
+  String _locationName = '';
+  bool _isLocationDetailsVisible = false;
+  LatLng? _location;
+  late GoogleMapController mapController;
+  Position? _currentPosition;
   List<FuelStation> _fuelStations = [];
-  List<FuelStation> _nearbyStations = [];
-  final Set<Marker> _markers = {};
-  int _selectedIndex = 0; // Default to Home (Index 0)
-  String _searchTerm = ''; // Variable to hold the search term
-  GoogleMapController? _mapController;
-  String _locationName = ''; // Variable to hold the location name
-  bool _isLocationDetailsVisible =
-      false; // Track whether to show the bottom sheet
-
-  Future<void> _getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        return; // Permissions denied, handle accordingly
-      }
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 100,
-      ),
-    );
-    if (mounted) {
-      setState(() {
-        _currentLocation = LatLng(position.latitude, position.longitude);
-        _nearbyStations = getNearbyStations(
-            _fuelStations, position.latitude, position.longitude);
-        _addFuelStationMarkers();
-
-        // Add a marker for the current location
-        _getCustomMarkerIcon().then((customIcon) {
-          _markers.add(
-            Marker(
-              markerId: const MarkerId('current_location'),
-              position: _currentLocation!,
-              icon: customIcon, // Use the custom icon
-              onTap: _toggleLocationDetails,
-            ),
-          );
-        });
-
-        // Fetch the location name (address)
-        _getLocationName(position.latitude, position.longitude);
-      });
-    }
-  }
-
-  Future<BitmapDescriptor> _getCustomMarkerIcon() async {
-    return await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(48, 48)), // Adjust size as needed
-      'assets/images/location1.png',
-    );
-  }
-
-  Future<void> _getLocationName(double latitude, double longitude) async {
-    try {
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(latitude, longitude);
-      if (placemarks.isNotEmpty) {
-        Placemark place = placemarks.first;
-        setState(() {
-          _locationName =
-              '${place.street}, ${place.locality}, ${place.country}';
-        });
-      }
-    } catch (e) {
-      print('Error fetching location name: $e');
-    }
-  }
-
-  void _addFuelStationMarkers() {
-    _markers.clear();
-    for (final station in _nearbyStations) {
-      if (_searchTerm.isEmpty ||
-          station.name.toLowerCase().contains(_searchTerm.toLowerCase())) {
-        _markers.add(
-          Marker(
-            markerId: MarkerId(station.name),
-            position: LatLng(station.latitude, station.longitude),
-            icon:
-                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          ),
-        );
-      }
-    }
-  }
-
-  Future<LatLng?> getCoordinates(String location) async {
-    try {
-      List<Location> locations = await locationFromAddress(location);
-      if (locations.isNotEmpty) {
-        return LatLng(locations.first.latitude, locations.first.longitude);
-      }
-    } catch (e) {
-      print('Error getting coordinates: $e');
-    }
-    return null;
-  }
-
-  // Function to show the bottom sheet
-  void _toggleLocationDetails() {
-    setState(() {
-      _isLocationDetailsVisible = true; // Show the bottom sheet
-    });
-  }
-
-  // Function to hide the bottom sheet
-  void _hideLocationDetails() {
-    setState(() {
-      _isLocationDetailsVisible = false; // Hide the bottom sheet
-    });
-  }
+  late Set<Marker> _markers = {};
+  BitmapDescriptor? _userLocationIcon;
+  final MapController _mapController = MapController();
 
   @override
   void initState() {
     super.initState();
-    _fuelStations = [
-      // Initialize fuel stations here
-    ];
+    _loadUserLocationIcon();
     _getCurrentLocation();
+    _fetchFuelStations();
   }
 
-  /// Navigates to the respective screen based on the index.
+  Future<void> _loadUserLocationIcon() async {
+    _userLocationIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(48, 48)),
+      'assets/images/user_location.png',
+    );
+  }
+
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse && 
+          permission != LocationPermission.always) {
+        return;
+      }
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    setState(() {
+      _currentPosition = position;
+      _location = LatLng(position.latitude, position.longitude);
+    });
+
+    if (mapController != null) {
+      mapController.animateCamera(
+        CameraUpdate.newLatLngZoom(_location!, 14.0),
+      );
+    }
+  }
+
+  Future<void> _fetchFuelStations() async {
+    final service = fuel_service.FuelStationService();
+    final stations = await service.fetchFuelStations(
+      _currentPosition!.latitude,
+      _currentPosition!.longitude,
+      widget.fuelType,
+    );
+
+    setState(() {
+      _fuelStations = stations.cast<FuelStation>();
+    });
+    await _createMarkers();
+    setState(() {}); // Trigger rebuild with updated markers
+  }
+
+  Future<void> _createMarkers() async {
+    final customIcon = await _getCustomMarkerIcon();
+    final userIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(48, 48)),
+      'assets/images/user_location.png',
+    );
+
+    final markers = _fuelStations.map((station) => Marker(
+      markerId: MarkerId(station.id),
+      position: LatLng(station.latitude, station.longitude),
+      icon: customIcon,
+      infoWindow: InfoWindow(
+        title: station.name,
+        snippet: '${station.location}\nPrice: \$${station.getFuelPrice(widget.fuelType).toStringAsFixed(2)}',
+      ),
+    )).toSet();
+
+    if (_location != null) {
+      markers.add(Marker(
+        markerId: const MarkerId('user_location'),
+        position: _location!,
+        icon: userIcon,
+      ));
+    }
+
+    setState(() {
+      _markers = markers;
+    });
+  }
+
+  Future<BitmapDescriptor> _getCustomMarkerIcon() async {
+    return await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(48, 48)),
+      'assets/images/fuel_marker.png',
+    );
+  }
+
   void _onNavigationItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -159,10 +143,10 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       case 2:
         Navigator.pushReplacementNamed(context, '/analytics');
         break;
-      case 3: // Nearby (previously My Trip)
+      case 3:
         Navigator.pushReplacementNamed(context, '/nearby');
         break;
-      case 4: // Settings (previously Nearby)
+      case 4:
         Navigator.pushReplacementNamed(context, '/settings');
         break;
     }
@@ -177,12 +161,11 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             setState(() {
-              _selectedIndex = 0; // Set Home as active
+              _selectedIndex = 0;
             });
-            Navigator.pushReplacementNamed(
-                context, '/fuel_type'); // Navigate to fuel type selection
+            Navigator.pushReplacementNamed(context, '/fuel_type');
           },
-        ), // No back button on the Home screen
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.near_me),
@@ -197,23 +180,47 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         children: [
           SearchBarWithFilter(
             getCoordinates: getCoordinates,
-            from: '', // Pass any required parameters
-            to: '', // Pass any required parameters
+            from: '',
+            to: '',
             searchTerm: _searchTerm,
           ),
           Expanded(
-            child: _currentLocation == null
-                ? const Center(child: CircularProgressIndicator())
-                : GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: _currentLocation!,
-                      zoom: 13.0,
-                    ),
-                    markers: _markers,
-                    onMapCreated: (GoogleMapController controller) {
-                      _mapController = controller;
-                    },
-                  ),
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: _location ?? const LatLng(-17.825, 31.033),
+                zoom: 14.0,
+              ),
+              myLocationEnabled: false,
+              myLocationButtonEnabled: true,
+              zoomControlsEnabled: false,
+              markers: _markers,
+              onMapCreated: (controller) {
+                setState(() {
+                  mapController = controller;
+                  _mapController.setController(controller);
+                });
+              },
+              onCameraMove: (position) {
+                _mapController.updateCameraPosition(position);
+              },
+              onTap: (location) {
+                _getLocationName(location.latitude, location.longitude);
+                setState(() {
+                  _isLocationDetailsVisible = true;
+                  _location = location;
+                });
+              },
+            ),
+          ),
+          MapControls(
+            controller: _mapController,
+            onZoomIn: () => mapController.animateCamera(
+              CameraUpdate.zoomIn(),
+            ),
+            onZoomOut: () => mapController.animateCamera(
+              CameraUpdate.zoomOut(),
+            ),
+            onLocateUser: _getCurrentLocation,
           ),
         ],
       ),
@@ -221,62 +228,33 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         selectedIndex: _selectedIndex,
         onItemTapped: _onNavigationItemTapped,
       ),
-      bottomSheet: _isLocationDetailsVisible
-          ? Container(
-              height: MediaQuery.of(context).size.height *
-                  0.2, // Set height to 20% of the screen
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(16)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment
-                          .center, // Center contents horizontally
-                      children: [
-                        const SizedBox(
-                            height: 10), // Reduced space for the close button
-                        const Text(
-                          'Current Location Details',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Latitude: ${_currentLocation?.latitude}, Longitude: ${_currentLocation?.longitude}',
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Location: $_locationName',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 8, // Adjusted position for the close icon
-                    right: 8, // Adjusted position for the close icon
-                    child: IconButton(
-                      icon: const Icon(Icons.close, size: 24), // Close icon
-                      onPressed: _hideLocationDetails, // Close the bottom sheet
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : null,
     );
+  }
+
+  Future<LatLng?> getCoordinates(String location) async {
+    try {
+      List<Location> locations = await locationFromAddress(location);
+      if (locations.isNotEmpty) {
+        return LatLng(locations.first.latitude, locations.first.longitude);
+      }
+    } catch (e) {
+      developer.log('Error getting coordinates: ${e.toString()}',
+          name: 'FuelMapScreen');
+    }
+    return null;
+  }
+
+  Future<void> _getLocationName(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      if (placemarks.isNotEmpty) {
+        setState(() {
+          _locationName = placemarks.first.name ?? '';
+        });
+      }
+    } catch (e) {
+      developer.log('Error fetching location name: ${e.toString()}',
+          name: 'FuelMapScreen');
+    }
   }
 }

@@ -13,8 +13,10 @@ class _MyTripScreenState extends State<MyTripScreen> {
 
   /// Handles navigation based on the tapped index.
   void _onNavigationItemTapped(int index) {
-    if (_selectedIndex == index)
+    if (_selectedIndex == index) {
       return; // Avoid unnecessary navigation for the current screen
+    }
+
 
     setState(() {
       _selectedIndex = index;
@@ -70,16 +72,19 @@ class _MyTripScreenState extends State<MyTripScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // Handle back button press
-        setState(() {
-          _selectedIndex = 0; // Set Home as active
-        });
-        Navigator.pushReplacementNamed(
-            context, '/fuel_map'); // Navigate to Home
-        return false; // Prevent default back behavior
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (!didPop) {
+          // Handle back button press
+          setState(() {
+            _selectedIndex = 0; // Set Home as active
+          });
+          Navigator.pushReplacementNamed(
+              context, '/fuel_map'); // Navigate to Home
+        }
       },
+
       child: Scaffold(
         appBar: AppBar(
           title: const Text('My Trip'),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
-import 'report_issue_screen.dart'; // Import the existing report issue screen
-import 'favorite_screen.dart'; // Import the existing favorite screen
-import 'fuel_map_screen.dart'; // Import the existing fuel map screen
-import '../providers/theme_provider.dart'; // Import ThemeProvider
+import '../widgets/custom_bottom_navigation_bar.dart';
+import 'report_issue_screen.dart';
+import 'favorite_screen.dart';
+import 'fuel_map_screen.dart';
+import '../providers/theme_provider.dart';
 
 class NearbyScreen extends StatefulWidget {
   const NearbyScreen({Key? key}) : super(key: key);
@@ -14,33 +14,32 @@ class NearbyScreen extends StatefulWidget {
 }
 
 class _NearbyScreenState extends State<NearbyScreen> {
-  int _selectedIndex = 3; // Set the default index for Nearby
+  int _selectedIndex = 3;
 
-  /// Handles navigation based on the tapped index.
-  void _onNavigationItemTapped(int index) {
-    if (_selectedIndex == index)
-      return; // Avoid unnecessary navigation for the current screen
+  void _onNavigationItemTapped(int index) async {
+    if (_selectedIndex == index) return;
 
-    setState(() {
-      _selectedIndex = index;
-    });
+    try {
+      final route = _getRouteForIndex(index);
+      if (route != null) {
+        await Navigator.pushReplacementNamed(context, route);
+        setState(() {
+          _selectedIndex = index;
+        });
+      }
+    } catch (e) {
+      debugPrint('Navigation error: $e');
+    }
+  }
 
+  String? _getRouteForIndex(int index) {
     switch (index) {
-      case 0:
-        Navigator.pushReplacementNamed(context, '/fuel_map');
-        break;
-      case 1:
-        Navigator.pushReplacementNamed(context, '/favorites');
-        break;
-      case 2:
-        Navigator.pushReplacementNamed(context, '/analytics');
-        break;
-      case 3: // Nearby (previously My Trip)
-        Navigator.pushReplacementNamed(context, '/nearby');
-        break;
-      case 4: // Settings (previously Nearby)
-        Navigator.pushReplacementNamed(context, '/settings');
-        break;
+      case 0: return '/fuel_map';
+      case 1: return '/favorites';
+      case 2: return '/analytics';
+      case 3: return '/nearby';
+      case 4: return '/settings';
+      default: return null;
     }
   }
 
@@ -54,42 +53,40 @@ class _NearbyScreenState extends State<NearbyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // Handle back button press
-        setState(() {
-          _selectedIndex = 0; // Set Home as active
-        });
-        Navigator.pushReplacementNamed(
-            context, '/fuel_map'); // Navigate to Home
-        return false; // Prevent default back behavior
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          setState(() {
+            _selectedIndex = 0;
+          });
+          Navigator.pushReplacementNamed(context, '/fuel_map');
+        }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Nearby',
-              style: TextStyle(color: Colors.black)), // Updated to black
+          title: Text('Nearby',
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color)),
           backgroundColor: Provider.of<ThemeProvider>(context)
               .currentTheme
               .appBarTheme
-              .backgroundColor, // Updated for dark theme
+              .backgroundColor,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               setState(() {
-                _selectedIndex = 0; // Set Home as active
+                _selectedIndex = 0;
               });
-              Navigator.pushReplacementNamed(
-                  context, '/fuel_map'); // Navigate to Home
+              Navigator.pushReplacementNamed(context, '/fuel_map');
             },
           ),
         ),
         body: SingleChildScrollView(
-          // Added scroll functionality
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // TotalEnergies Station Information
               _buildStationInfo(
                 logoPath: 'assets/images/Total Energies.png',
                 stationName: _formatStationName(
@@ -97,27 +94,21 @@ class _NearbyScreenState extends State<NearbyScreen> {
                 blendPrice: 'Blend E5: 1.34',
                 distance: '1.63 km',
               ),
-              SizedBox(height: 24),
-
-              // Zuva Grendale Station Information
+              const SizedBox(height: 24),
               _buildStationInfo(
-                logoPath:
-                    'assets/images/zuva energy.png', // Assuming the logo path
+                logoPath: 'assets/images/zuva energy.png',
                 stationName: _formatStationName('Zuva Grendale'),
                 blendPrice: 'Blend E5: 1.30',
                 distance: '2.00 km',
               ),
-              SizedBox(height: 24),
-
-              // Energy Park Station Information
+              const SizedBox(height: 24),
               _buildStationInfo(
-                logoPath:
-                    'assets/images/energy park.png', // Assuming the logo path
+                logoPath: 'assets/images/energy park.png',
                 stationName: _formatStationName('Energy Park'),
                 blendPrice: 'Blend E5: 1.25',
                 distance: '3.50 km',
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -129,25 +120,26 @@ class _NearbyScreenState extends State<NearbyScreen> {
     );
   }
 
-  Widget _buildStationInfo(
-      {required String logoPath,
-      required String stationName,
-      required String blendPrice,
-      required String distance}) {
+  Widget _buildStationInfo({
+    required String logoPath,
+    required String stationName,
+    required String blendPrice,
+    required String distance,
+  }) {
     return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         color: Provider.of<ThemeProvider>(context)
             .currentTheme
-            .cardColor, // Updated for dark theme
+            .cardColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -156,19 +148,19 @@ class _NearbyScreenState extends State<NearbyScreen> {
         children: [
           Row(
             children: [
-              Image.asset(logoPath, height: 16), // Logo
-              SizedBox(width: 8),
+              Image.asset(logoPath, height: 16),
+              const SizedBox(width: 8),
               Text(
                 stationName,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black, // Updated to black
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -177,24 +169,22 @@ class _NearbyScreenState extends State<NearbyScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black, // Updated to black
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               Row(
                 children: [
                   Icon(Icons.location_pin,
-                      color: Colors.black), // Updated to black
-                  SizedBox(width: 4),
+                      color: Theme.of(context).iconTheme.color),
+                  const SizedBox(width: 4),
                   Text(distance,
-                      style:
-                          TextStyle(color: Colors.black)), // Updated to black
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyLarge?.color)),
                 ],
               ),
             ],
           ),
-          SizedBox(height: 16),
-
-          // Action Buttons
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -220,31 +210,29 @@ class _NearbyScreenState extends State<NearbyScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => const FuelMapScreen(
-                          fuelType: 'Diesel')), // Pass the fuel type
+                          fuelType: 'Diesel')),
                 );
               }),
             ],
           ),
-          SizedBox(height: 16),
-
-          // Opening Hours
+          const SizedBox(height: 16),
           Text(
             'OPEN: Closes 11:00 PM',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black, // Updated to black
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
           ),
-          SizedBox(height: 16),
-
-          // Fuel Prices
+          const SizedBox(height: 16),
           Text('Fuel Prices:',
               style: TextStyle(
-                  fontSize: 18, color: Colors.black)), // Updated to black
-          SizedBox(height: 8),
+                  fontSize: 18,
+                  color: Theme.of(context).textTheme.bodyLarge?.color)),
+          const SizedBox(height: 8),
           Text('Diesel: 1.22',
-              style: TextStyle(color: Colors.black)), // Updated to black
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color)),
         ],
       ),
     );
@@ -261,12 +249,14 @@ class _NearbyScreenState extends State<NearbyScreen> {
               shape: BoxShape.circle,
               color: color,
             ),
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Icon(icon, color: Colors.white),
           ),
         ),
-        SizedBox(height: 4),
-        Text(label, style: TextStyle(color: Colors.black)), // Updated to black
+        const SizedBox(height: 4),
+        Text(label,
+            style: TextStyle(
+                color: Theme.of(context).textTheme.bodyLarge?.color)),
       ],
     );
   }

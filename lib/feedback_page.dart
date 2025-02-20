@@ -51,7 +51,8 @@ void submitFeedback(BuildContext context) {
 
   // Navigate back to the Fuel Map
   Navigator.of(context).pushReplacement(
-    MaterialPageRoute(builder: (context) => const FuelMapPage()), // Ensure FuelMapPage is defined
+    MaterialPageRoute(builder: (context) => const FuelMapPage(fuelType: 'Diesel')), // Default fuel type
+
   );
 }
 

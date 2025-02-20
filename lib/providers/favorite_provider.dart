@@ -19,35 +19,50 @@ class FavoriteProvider with ChangeNotifier {
   void populateDummyFavorites() {
     _favorites.addAll([
       FuelStation(
+        id: 'station1',
         name: 'TotalEnergies Service Station Coropark (Pvt) Ltd',
+
         location: '123 Main St',
         contact: '077 293 8722',
         logo: 'assets/images/Total Energies.png',
+        latitude: -17.8252,
+        longitude: 31.0335,
         fuelPrices: {
           'diesel': 1.20,
           'petrol': 1.50,
         },
       ),
+
       FuelStation(
+        id: 'station2',
         name: 'ZUVA Greendale',
+
         location: '456 Elm St',
         contact: '078 246 7409',
         logo: 'assets/images/zuva energy.png',
+        latitude: -17.8300,
+        longitude: 31.0400,
         fuelPrices: {
           'diesel': 1.25,
           'petrol': 1.55,
         },
       ),
+
       FuelStation(
+        id: 'station3',
         name: 'Energy Park',
+
         location: '789 Oak St',
         contact: '079 123 4567',
         logo: 'assets/images/energy park.png',
+        latitude: -17.8350,
+        longitude: 31.0450,
         fuelPrices: {
           'diesel': 1.30,
           'petrol': 1.60,
         },
       ),
+
     ]);
     notifyListeners();
   }
