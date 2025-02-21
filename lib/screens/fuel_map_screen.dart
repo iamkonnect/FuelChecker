@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart'; // Geocoding package
-import '../models/fuel_price.dart'; // Import FuelStation model
-import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
-import '../widgets/search_bar_with_filter_final.dart'; // Import the search bar with filter
+import 'package:geocoding/geocoding.dart';
+import '../local_gas_stations.dart'; // Import local data
+import '../models/fuel_gas_station.dart'; // Adjust the path as needed
+import '../widgets/custom_bottom_navigation_bar.dart';
+import '../widgets/search_bar_with_filter_final.dart';
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -17,15 +18,14 @@ class FuelMapScreen extends StatefulWidget {
 
 class FuelMapScreenState extends State<FuelMapScreen> {
   LatLng? _currentLocation;
-  List<FuelStation> _fuelStations = [];
-  List<FuelStation> _nearbyStations = [];
+  List<GasStation> _fuelStations = [];
+  List<GasStation> _nearbyStations = [];
   final Set<Marker> _markers = {};
-  int _selectedIndex = 0; // Default to Home (Index 0)
-  String _searchTerm = ''; // Variable to hold the search term
+  int _selectedIndex = 0;
+  String _searchTerm = '';
   GoogleMapController? _mapController;
-  String _locationName = ''; // Variable to hold the location name
-  bool _isLocationDetailsVisible =
-      false; // Track whether to show the bottom sheet
+  String _locationName = '';
+  bool _isLocationDetailsVisible = false;
 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
@@ -33,7 +33,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        return; // Permissions denied, handle accordingly
+        return;
       }
     }
 
@@ -50,19 +50,17 @@ class FuelMapScreenState extends State<FuelMapScreen> {
             _fuelStations, position.latitude, position.longitude);
         _addFuelStationMarkers();
 
-        // Add a marker for the current location
         _getCustomMarkerIcon().then((customIcon) {
           _markers.add(
             Marker(
               markerId: const MarkerId('current_location'),
               position: _currentLocation!,
-              icon: customIcon, // Use the custom icon
+              icon: customIcon,
               onTap: _toggleLocationDetails,
             ),
           );
         });
 
-        // Fetch the location name (address)
         _getLocationName(position.latitude, position.longitude);
       });
     }
@@ -70,7 +68,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
 
   Future<BitmapDescriptor> _getCustomMarkerIcon() async {
     return await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(48, 48)), // Adjust size as needed
+      const ImageConfiguration(size: Size(48, 48)),
       'assets/images/location1.png',
     );
   }
@@ -98,10 +96,15 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           station.name.toLowerCase().contains(_searchTerm.toLowerCase())) {
         _markers.add(
           Marker(
-            markerId: MarkerId(station.name),
+            markerId: MarkerId(station.id), // Use station.id as the markerId
             position: LatLng(station.latitude, station.longitude),
             icon:
                 BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+            infoWindow: InfoWindow(
+              title: station.name,
+              snippet:
+                  'Petrol: \$${station.petrolPrice}, Diesel: \$${station.dieselPrice}',
+            ),
           ),
         );
       }
@@ -120,30 +123,27 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     return null;
   }
 
-  // Function to show the bottom sheet
   void _toggleLocationDetails() {
     setState(() {
-      _isLocationDetailsVisible = true; // Show the bottom sheet
+      _isLocationDetailsVisible = true;
     });
   }
 
-  // Function to hide the bottom sheet
   void _hideLocationDetails() {
     setState(() {
-      _isLocationDetailsVisible = false; // Hide the bottom sheet
+      _isLocationDetailsVisible = false;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _fuelStations = [
-      // Initialize fuel stations here
-    ];
+    _fuelStations = localGasStations.map((station) {
+      return GasStation.fromMap(station['id'], station);
+    }).toList();
     _getCurrentLocation();
   }
 
-  /// Navigates to the respective screen based on the index.
   void _onNavigationItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -159,13 +159,27 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       case 2:
         Navigator.pushReplacementNamed(context, '/analytics');
         break;
-      case 3: // Nearby (previously My Trip)
+      case 3:
         Navigator.pushReplacementNamed(context, '/nearby');
         break;
-      case 4: // Settings (previously Nearby)
+      case 4:
         Navigator.pushReplacementNamed(context, '/settings');
         break;
     }
+  }
+
+  // Define the getNearbyStations method
+  List<GasStation> getNearbyStations(
+      List<GasStation> stations, double lat, double lng) {
+    return stations.where((station) {
+      double distance = Geolocator.distanceBetween(
+        lat,
+        lng,
+        station.latitude,
+        station.longitude,
+      );
+      return distance <= 5000; // Filter stations within 5 KM
+    }).toList();
   }
 
   @override
@@ -177,12 +191,11 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             setState(() {
-              _selectedIndex = 0; // Set Home as active
+              _selectedIndex = 0;
             });
-            Navigator.pushReplacementNamed(
-                context, '/fuel_type'); // Navigate to fuel type selection
+            Navigator.pushReplacementNamed(context, '/fuel_type');
           },
-        ), // No back button on the Home screen
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.near_me),
@@ -197,8 +210,8 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         children: [
           SearchBarWithFilter(
             getCoordinates: getCoordinates,
-            from: '', // Pass any required parameters
-            to: '', // Pass any required parameters
+            from: '',
+            to: '',
             searchTerm: _searchTerm,
           ),
           Expanded(
@@ -223,8 +236,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       ),
       bottomSheet: _isLocationDetailsVisible
           ? Container(
-              height: MediaQuery.of(context).size.height *
-                  0.2, // Set height to 20% of the screen
+              height: MediaQuery.of(context).size.height * 0.2,
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -243,11 +255,9 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                   Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment
-                          .center, // Center contents horizontally
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(
-                            height: 10), // Reduced space for the close button
+                        const SizedBox(height: 10),
                         const Text(
                           'Current Location Details',
                           style: TextStyle(
@@ -266,11 +276,11 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                     ),
                   ),
                   Positioned(
-                    top: 8, // Adjusted position for the close icon
-                    right: 8, // Adjusted position for the close icon
+                    top: 8,
+                    right: 8,
                     child: IconButton(
-                      icon: const Icon(Icons.close, size: 24), // Close icon
-                      onPressed: _hideLocationDetails, // Close the bottom sheet
+                      icon: const Icon(Icons.close, size: 24),
+                      onPressed: _hideLocationDetails,
                     ),
                   ),
                 ],
