@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_maps_flutter: ^2.1.1
+  widget_to_image: ^2.0.0 # Use the latest version
   logger: ^2.5.0 # Updated logger package
   geolocator: ^13.0.2 # Updated geolocator package
   geocoding: ^3.0.0 # Updated geocoding package
@@ -39,6 +40,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/location1.png
+    - assets/Logo/cameloil.jpeg
+    - assets/Logo/puma.png
+    - assets/Logo/tsn.png
     - web/icons/Icon-maskable-512.png
     - web/favicon.png
     - assets/images/Settings.png
