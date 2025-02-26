@@ -89,21 +89,44 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     }
   }
 
-  void _addFuelStationMarkers() {
+  void _addFuelStationMarkers() async {
     _markers.clear();
     for (final station in _nearbyStations) {
       if (_searchTerm.isEmpty ||
           station.name.toLowerCase().contains(_searchTerm.toLowerCase())) {
+        // Load custom marker icon from stationIcon URL
+        final BitmapDescriptor customIcon =
+            await BitmapDescriptor.fromAssetImage(
+          const ImageConfiguration(size: Size(45, 45)),
+          station.logoAsset, // Use logoAsset as the marker icon
+        );
+
         _markers.add(
           Marker(
             markerId: MarkerId(station.id), // Use station.id as the markerId
             position: LatLng(station.latitude, station.longitude),
-            icon:
-                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+            icon: customIcon, // Use custom icon
             infoWindow: InfoWindow(
               title: station.name,
               snippet:
-                  'Petrol: \$${station.petrolPrice}, Diesel: \$${station.dieselPrice}',
+                  'Blend: \$${station.blendPrice}, Diesel: \$${station.dieselPrice}',
+              onTap: () {
+                // Show logoAsset in InfoWindow
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(station.logoAsset), // Display logoAsset
+                        const SizedBox(height: 10),
+                        Text('Blend: \$${station.blendPrice}'),
+                        Text('Diesel: \$${station.dieselPrice}'),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         );

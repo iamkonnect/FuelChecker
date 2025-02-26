@@ -4,9 +4,10 @@ class GasStation {
   final String town;
   final double latitude;
   final double longitude;
-  final double petrolPrice;
+  final double blendPrice;
   final double dieselPrice;
   final String logoAsset;
+  final String stationIcon;
 
   GasStation({
     required this.id,
@@ -14,9 +15,10 @@ class GasStation {
     required this.town,
     required this.latitude,
     required this.longitude,
-    required this.petrolPrice,
+    required this.blendPrice,
     required this.dieselPrice,
     required this.logoAsset,
+    required this.stationIcon,
   });
 
   factory GasStation.fromMap(String id, Map<String, dynamic> data) {
@@ -26,9 +28,10 @@ class GasStation {
       town: data['town'],
       latitude: data['latitude'],
       longitude: data['longitude'],
-      petrolPrice: data['petrolPrice'],
+      blendPrice: data['blendPrice'],
       dieselPrice: data['dieselPrice'],
       logoAsset: data['logoAsset'],
+      stationIcon: data['stationIcon'],
     );
   }
 }
