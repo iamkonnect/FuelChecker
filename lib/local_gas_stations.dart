@@ -478,5 +478,89 @@ const List<Map<String, dynamic>> localGasStations = [
     "logoAsset": "assets/Logo/pumaBR.png",
     "stationIcon":
         "https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg"
-  }
+  },
+  {
+    "id": "41",
+    "name": "Mount Meru Petrol Station Kigamboni",
+    "town": "Kigamboni, Dar es Salaam",
+    "latitude": -6.8277873,
+    "longitude": 39.3075572,
+    "blendPrice": 1.30,
+    "dieselPrice": 1.20,
+    "logoAsset": "assets/Logo/pumaBR.png",
+    "stationIcon":
+        "https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg"
+  },
+  {
+    "id": "42",
+    "name": "Engen Ferry Kigamboni",
+    "town": "Kigamboni, Dar es Salaam",
+    "latitude": -6.8296179,
+    "longitude": 39.3095536,
+    "blendPrice": 1.35,
+    "dieselPrice": 1.25,
+    "logoAsset": "assets/Logo/pumaBR.png",
+    "stationIcon":
+        "https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg"
+  },
+  {
+    "id": "43",
+    "name": "TotalEnergies Kigamboni Service Station",
+    "town": "Kigamboni, Dar es Salaam",
+    "latitude": -6.8226625,
+    "longitude": 39.3024465,
+    "blendPrice": 1.32,
+    "dieselPrice": 1.22,
+    "logoAsset": "assets/Logo/pumaBR.png",
+    "stationIcon":
+        "https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg"
+  },
+  {
+    "id": "44",
+    "name": "Kobil Petrol Station",
+    "town": "Kigamboni, Dar es Salaam",
+    "latitude": -6.8234573,
+    "longitude": 39.3033924,
+    "blendPrice": 1.28,
+    "dieselPrice": 1.18,
+    "logoAsset": "assets/Logo/pumaBR.png",
+    "stationIcon":
+        "https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg"
+  },
+  {
+    "id": "45",
+    "name": "Afroil Kigamboni Service Station",
+    "town": "Kigamboni, Dar es Salaam",
+    "latitude": -6.8474084,
+    "longitude": 39.3153688,
+    "blendPrice": 1.34,
+    "dieselPrice": 1.24,
+    "logoAsset": "assets/Logo/pumaBR.png",
+    "stationIcon":
+        "https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg"
+  },
+  {
+    "id": "46",
+    "name": "Oilcom",
+    "town": "Kigamboni, Dar es Salaam",
+    "latitude": -6.8210281,
+    "longitude": 39.304533,
+    "blendPrice": 1.29,
+    "dieselPrice": 1.19,
+    "logoAsset": "assets/Logo/pumaBR.png",
+    "stationIcon":
+        "https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg"
+  },
+  {
+    "id": "47",
+    "name": "Oil Link (T) LTD",
+    "town": "Kigamboni, Dar es Salaam",
+    "latitude": -6.8342325,
+    "longitude": 39.3139745,
+    "blendPrice": 1.31,
+    "dieselPrice": 1.21,
+    "logoAsset": "assets/Logo/pumaBR.png",
+    "stationIcon":
+        "https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg"
+  },
 ];

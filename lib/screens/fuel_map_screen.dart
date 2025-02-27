@@ -174,8 +174,8 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                 children: [
                   // Logo
                   Container(
-                    width: 100,
-                    height: 80,
+                    width: 40,
+                    height: 48,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       image: DecorationImage(
