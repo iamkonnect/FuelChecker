@@ -100,7 +100,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           station.name.toLowerCase().contains(_searchTerm.toLowerCase())) {
         final BitmapDescriptor customIcon =
             await BitmapDescriptor.fromAssetImage(
-          const ImageConfiguration(size: Size(45, 45)),
+          const ImageConfiguration(size: Size(50, 50)),
           station.logoAsset,
         );
 
