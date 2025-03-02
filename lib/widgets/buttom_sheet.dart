@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 void _showGasStationBottomSheet(GasStation station) {
   setState(() {
     _isLocationDetailsVisible = true;

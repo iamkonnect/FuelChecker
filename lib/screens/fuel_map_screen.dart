@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:http/http.dart' as http;
 import '../local_gas_stations.dart'; // Import local data
 import '../models/fuel_gas_station.dart'; // Adjust the path as needed
 import '../widgets/custom_bottom_navigation_bar.dart';
@@ -334,31 +336,60 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     );
   }
 
-  void _drawPathLine(GasStation station) {
-    final PolylineId polylineId = const PolylineId('path_line');
-    final Polyline polyline = Polyline(
-      polylineId: polylineId,
-      color: Colors.blue,
-      width: 5,
-      points: [
+  void _drawPathLine(GasStation station) async {
+    try {
+      // Fetch directions from the Directions API
+      final response = await DirectionsAPI.getDirections(
         _currentLocation!,
         LatLng(station.latitude, station.longitude),
-      ],
-    );
+      );
 
-    setState(() {
-      _polylines[polylineId] = polyline;
-    });
+      // Decode the polyline points
+      final String encodedPolyline =
+          response['routes'][0]['overview_polyline']['points'];
+      final List<LatLng> polylinePoints =
+          DirectionsAPI.decodePolyline(encodedPolyline);
 
-    // Move the camera to show both locations
-    _mapController?.animateCamera(
-      CameraUpdate.newLatLngBounds(
-        LatLngBounds(
-          northeast: _currentLocation!,
-          southwest: LatLng(station.latitude, station.longitude),
-        ),
-        50.0, // Padding
-      ),
+      // Define the polyline
+      final PolylineId polylineId = const PolylineId('path_line');
+      final Polyline polyline = Polyline(
+        polylineId: polylineId,
+        color: Colors.blue,
+        width: 5,
+        points: polylinePoints,
+      );
+
+      // Update the map with the new polyline
+      setState(() {
+        _polylines[polylineId] = polyline;
+      });
+
+      // Move the camera to show the entire route
+      final LatLngBounds bounds = _boundsFromLatLngList(polylinePoints);
+      _mapController?.animateCamera(
+        CameraUpdate.newLatLngBounds(bounds, 50.0), // Padding
+      );
+    } catch (e) {
+      print('Error drawing path: $e');
+    }
+  }
+
+  LatLngBounds _boundsFromLatLngList(List<LatLng> list) {
+    double? x0, x1, y0, y1;
+    for (LatLng latLng in list) {
+      if (x0 == null) {
+        x0 = x1 = latLng.latitude;
+        y0 = y1 = latLng.longitude;
+      } else {
+        if (latLng.latitude > x1!) x1 = latLng.latitude;
+        if (latLng.latitude < x0) x0 = latLng.latitude;
+        if (latLng.longitude > y1!) y1 = latLng.longitude;
+        if (latLng.longitude < y0!) y0 = latLng.longitude;
+      }
+    }
+    return LatLngBounds(
+      northeast: LatLng(x1!, y1!),
+      southwest: LatLng(x0!, y0!),
     );
   }
 
@@ -492,5 +523,57 @@ class FuelMapScreenState extends State<FuelMapScreen> {
               : null
           : null,
     );
+  }
+}
+
+class DirectionsAPI {
+  static const String _baseUrl =
+      'https://maps.googleapis.com/maps/api/directions/json';
+  static const String _apiKey =
+      'AIzaSyAsCuHDu2BRITXGGUvEU4kZiwUlK4KEnxU'; // Replace with your API key
+
+  static Future<Map<String, dynamic>> getDirections(
+      LatLng origin, LatLng destination) async {
+    final Uri url = Uri.parse(
+        '$_baseUrl?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$_apiKey');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load directions');
+    }
+  }
+
+  static List<LatLng> decodePolyline(String encoded) {
+    List<LatLng> points = [];
+    int index = 0, len = encoded.length;
+    int lat = 0, lng = 0;
+
+    while (index < len) {
+      int b, shift = 0, result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1F) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1F) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lng += dlng;
+
+      points.add(LatLng(lat / 1E5, lng / 1E5));
+    }
+
+    return points;
   }
 }
