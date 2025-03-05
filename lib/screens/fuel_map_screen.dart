@@ -81,17 +81,36 @@ class FuelMapScreenState extends State<FuelMapScreen> {
 
   Future<void> _getLocationName(double latitude, double longitude) async {
     try {
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(latitude, longitude);
-      if (placemarks.isNotEmpty) {
-        Placemark place = placemarks.first;
-        setState(() {
-          _locationName =
-              '${place.street}, ${place.locality}, ${place.country}';
-        });
+      print('Fetching location for: $latitude, $longitude');
+
+      final placemarks = await placemarkFromCoordinates(latitude, longitude);
+
+      if (placemarks.isEmpty) {
+        print('No placemarks found for coordinates');
+        return;
       }
-    } catch (e) {
-      print('Error fetching location name: $e');
+
+      final place = placemarks.first;
+      print('Received placemark: ${place.toJson()}');
+
+      final street = place.street ?? 'Unknown Street';
+      final locality = place.locality ?? 'Unknown City';
+      final country = place.country ?? 'Unknown Country';
+
+      setState(() {
+        _locationName = '$street, $locality, $country';
+      });
+    } catch (e, stack) {
+      print('''
+    Location name error:
+    Coordinates: $latitude,$longitude
+    Error: $e
+    Stack: $stack
+    ''');
+
+      setState(() {
+        _locationName = 'Location details unavailable';
+      });
     }
   }
 
@@ -249,6 +268,10 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                 child: ElevatedButton.icon(
                   onPressed: () {
                     _drawPathLine(station);
+                    Navigator.pop(context);
+                    setState(() {
+                      _isLocationDetailsVisible = false;
+                    });
                   },
                   icon: const Icon(Icons.directions, size: 24),
                   label: const Text(
@@ -337,59 +360,119 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   }
 
   void _drawPathLine(GasStation station) async {
+    if (_currentLocation == null) return;
+
     try {
-      // Fetch directions from the Directions API
-      final response = await DirectionsAPI.getDirections(
-        _currentLocation!,
-        LatLng(station.latitude, station.longitude),
-      );
+      final start = _currentLocation!;
+      final end = LatLng(station.latitude, station.longitude);
 
-      // Decode the polyline points
-      final String encodedPolyline =
-          response['routes'][0]['overview_polyline']['points'];
-      final List<LatLng> polylinePoints =
-          DirectionsAPI.decodePolyline(encodedPolyline);
+      print('''
+    Requesting directions from:
+    ${start.latitude},${start.longitude}
+    to:
+    ${end.latitude},${end.longitude}
+    ''');
 
-      // Define the polyline
-      final PolylineId polylineId = const PolylineId('path_line');
-      final Polyline polyline = Polyline(
+      final response = await DirectionsAPI.getDirections(start, end);
+      print('API Response: ${jsonEncode(response)}');
+
+      // Validate response structure
+      final routes = response['routes'] as List<dynamic>?;
+      if (routes == null || routes.isEmpty) {
+        throw Exception('No routes found in response');
+      }
+
+      final overviewPolyline =
+          routes[0]['overview_polyline'] as Map<String, dynamic>?;
+      final encodedPoints = overviewPolyline?['points'] as String?;
+
+      if (encodedPoints == null || encodedPoints.isEmpty) {
+        throw Exception('Invalid polyline data');
+      }
+
+      // Decode and verify points
+      final coordinates = DirectionsAPI.decodePolyline(encodedPoints);
+      print('Decoded ${coordinates.length} points');
+      // Add in _drawPathLine after decoding
+      print('First 3 coordinates:');
+      coordinates.take(3).forEach((p) => print('${p.latitude},${p.longitude}'));
+
+      print('Last 3 coordinates:');
+      coordinates.reversed
+          .take(3)
+          .forEach((p) => print('${p.latitude},${p.longitude}'));
+
+      if (coordinates.isEmpty) {
+        throw Exception('Decoded polyline contains no points');
+      }
+
+      // Create polyline ID
+      final polylineId = PolylineId(
+          'route_${station.id}_${DateTime.now().millisecondsSinceEpoch}');
+
+      // Create new polyline
+      final polyline = Polyline(
         polylineId: polylineId,
         color: Colors.blue,
         width: 5,
-        points: polylinePoints,
+        points: coordinates,
       );
 
-      // Update the map with the new polyline
+      // Update state
       setState(() {
-        _polylines[polylineId] = polyline;
+        _polylines
+          ..clear() // Clear previous routes
+          ..putIfAbsent(polylineId, () => polyline);
       });
 
-      // Move the camera to show the entire route
-      final LatLngBounds bounds = _boundsFromLatLngList(polylinePoints);
-      _mapController?.animateCamera(
-        CameraUpdate.newLatLngBounds(bounds, 50.0), // Padding
+      // Calculate bounds including start and end points
+      final allPoints = [start, ...coordinates, end];
+      final bounds = _boundsFromLatLngList(allPoints);
+
+      print('''
+    Camera bounds:
+    NE: ${bounds.northeast.latitude},${bounds.northeast.longitude}
+    SW: ${bounds.southwest.latitude},${bounds.southwest.longitude}
+    ''');
+
+      // Animate camera with proper padding
+      await _mapController?.animateCamera(
+        CameraUpdate.newLatLngBounds(bounds, 100),
       );
-    } catch (e) {
-      print('Error drawing path: $e');
+    } catch (e, stack) {
+      print('''
+    Route drawing error:
+    Error: $e
+    Stack: $stack
+    ''');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Route error: ${e.toString().split(':').last.trim()}'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
     }
   }
 
-  LatLngBounds _boundsFromLatLngList(List<LatLng> list) {
-    double? x0, x1, y0, y1;
-    for (LatLng latLng in list) {
-      if (x0 == null) {
-        x0 = x1 = latLng.latitude;
-        y0 = y1 = latLng.longitude;
-      } else {
-        if (latLng.latitude > x1!) x1 = latLng.latitude;
-        if (latLng.latitude < x0) x0 = latLng.latitude;
-        if (latLng.longitude > y1!) y1 = latLng.longitude;
-        if (latLng.longitude < y0!) y0 = latLng.longitude;
-      }
+  LatLngBounds _boundsFromLatLngList(List<LatLng> points) {
+    if (points.isEmpty) throw ArgumentError('Empty points list');
+
+    double minLat = points[0].latitude;
+    double maxLat = points[0].latitude;
+    double minLng = points[0].longitude;
+    double maxLng = points[0].longitude;
+
+    for (final point in points) {
+      minLat = point.latitude < minLat ? point.latitude : minLat;
+      maxLat = point.latitude > maxLat ? point.latitude : maxLat;
+      minLng = point.longitude < minLng ? point.longitude : minLng;
+      maxLng = point.longitude > maxLng ? point.longitude : maxLng;
     }
+
     return LatLngBounds(
-      northeast: LatLng(x1!, y1!),
-      southwest: LatLng(x0!, y0!),
+      southwest: LatLng(minLat, minLng),
+      northeast: LatLng(maxLat, maxLng),
     );
   }
 
@@ -506,8 +589,16 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                     ),
                     markers: _markers,
                     polylines: Set<Polyline>.of(_polylines.values),
+                    // Add this in your GoogleMap widget
                     onMapCreated: (GoogleMapController controller) {
                       _mapController = controller;
+                      print('Map controller ready');
+                      // Add initial camera position if needed
+                      if (_currentLocation != null) {
+                        controller.animateCamera(
+                          CameraUpdate.newLatLngZoom(_currentLocation!, 14),
+                        );
+                      }
                     },
                   ),
           ),
@@ -527,51 +618,64 @@ class FuelMapScreenState extends State<FuelMapScreen> {
 }
 
 class DirectionsAPI {
+  // Replace with your actual Firebase project ID
   static const String _baseUrl =
-      'https://maps.googleapis.com/maps/api/directions/json';
-  static const String _apiKey =
-      'AIzaSyAsCuHDu2BRITXGGUvEU4kZiwUlK4KEnxU'; // Replace with your API key
+      'https://us-central1-bahati-4911e.cloudfunctions.net/getDirections';
 
   static Future<Map<String, dynamic>> getDirections(
       LatLng origin, LatLng destination) async {
-    final Uri url = Uri.parse(
-        '$_baseUrl?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$_apiKey');
+    try {
+      final Uri url =
+          Uri.parse('$_baseUrl?origin=${origin.latitude},${origin.longitude}'
+              '&destination=${destination.latitude},${destination.longitude}');
 
-    final response = await http.get(url);
+      final response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load directions');
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print('Directions API Error: ${response.statusCode}');
+        print('Response Body: ${response.body}');
+        throw Exception('Directions API Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Directions Error: $e');
+      rethrow;
     }
   }
 
+  /// Decodes a Google Maps encoded polyline into a list of LatLng points.
   static List<LatLng> decodePolyline(String encoded) {
+    if (encoded.isEmpty) return [];
+
     List<LatLng> points = [];
     int index = 0, len = encoded.length;
     int lat = 0, lng = 0;
 
     while (index < len) {
-      int b, shift = 0, result = 0;
+      // Latitude
+      int shift = 0, result = 0;
+      int b;
       do {
         b = encoded.codeUnitAt(index++) - 63;
-        result |= (b & 0x1F) << shift;
+        result |= (b & 0x1f) << shift;
         shift += 5;
       } while (b >= 0x20);
-      int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      int dlat = (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
       lat += dlat;
 
+      // Longitude
       shift = 0;
       result = 0;
       do {
         b = encoded.codeUnitAt(index++) - 63;
-        result |= (b & 0x1F) << shift;
+        result |= (b & 0x1f) << shift;
         shift += 5;
       } while (b >= 0x20);
-      int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      int dlng = (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
       lng += dlng;
 
-      points.add(LatLng(lat / 1E5, lng / 1E5));
+      points.add(LatLng(lat / 1e5, lng / 1e5));
     }
 
     return points;

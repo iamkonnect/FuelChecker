@@ -7,7 +7,6 @@ import 'screens/favorite_screen.dart';
 import 'screens/fuel_map_screen.dart';
 import 'screens/fuel_type_selection_screen.dart';
 import 'screens/login_screen.dart';
-import 'screens/my_trip_screen.dart';
 import 'screens/nearby_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/trends_screen.dart';
@@ -70,7 +69,6 @@ class MyApp extends StatelessWidget {
         },
         '/favorites': (context) => const FavoriteScreen(),
         '/trends_screen': (context) => TrendsScreen(),
-        '/my_trip': (context) => const MyTripScreen(),
         '/nearby': (context) => const NearbyScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/about': (context) => const AboutScreen(),
