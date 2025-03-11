@@ -1,4 +1,4 @@
-import 'package:firebase_core/firebase_core.dart'; // Ensure this import exists
+import './services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'screens/about_screen.dart';
 import 'screens/analytics_screen.dart';
@@ -19,22 +19,15 @@ import 'screens/verification_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/favorite_provider.dart';
 import 'providers/theme_provider.dart';
+import './scripts/migration_script.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   print("Firebase initialized successfully!");
-  // Initialize Firebase with your configuration
-  await Firebase.initializeApp(
-    options: FirebaseOptions(
-        apiKey: "AIzaSyAyySS4qUvBiSadoplbTQT6g-vi3OElxWM",
-        authDomain: "bahati-4911e.firebaseapp.com",
-        projectId: "bahati-4911e",
-        storageBucket: "bahati-4911e.firebasestorage.app",
-        messagingSenderId: "588077245698",
-        appId: "1:588077245698:web:0122f07e52f59e65a70e1b",
-        measurementId: "G-ER707HTEVD"),
-  );
-
+  // Initialize Firebase
+  await FirebaseService.initialize(); // Use service class
+// Run migration (remove after first run)
+  await uploadLocalStations();
   runApp(
     MultiProvider(
       providers: [

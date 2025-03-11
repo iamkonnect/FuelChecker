@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class GasStation {
   final String id;
   final String name;
@@ -8,6 +10,7 @@ class GasStation {
   final double dieselPrice;
   final String logoAsset;
   final String stationIcon;
+  final bool isOpen;
 
   GasStation({
     required this.id,
@@ -19,19 +22,39 @@ class GasStation {
     required this.dieselPrice,
     required this.logoAsset,
     required this.stationIcon,
+    required this.isOpen,
   });
 
+  // For Firestore documents
+  factory GasStation.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return GasStation(
+      id: doc.id,
+      name: data['name'] ?? 'Unknown Station',
+      town: data['town'] ?? '',
+      latitude: (data['latitude'] as num).toDouble(),
+      longitude: (data['longitude'] as num).toDouble(),
+      blendPrice: (data['blendPrice'] as num).toDouble(),
+      dieselPrice: (data['dieselPrice'] as num).toDouble(),
+      logoAsset: data['logoAsset'] ?? 'assets/Logo/default.png',
+      stationIcon: data['stationIcon'] ?? '',
+      isOpen: data['isOpen'] ?? false,
+    );
+  }
+
+  // For local data migration
   factory GasStation.fromMap(String id, Map<String, dynamic> data) {
     return GasStation(
       id: id,
-      name: data['name'],
-      town: data['town'],
-      latitude: data['latitude'],
-      longitude: data['longitude'],
-      blendPrice: data['blendPrice'],
-      dieselPrice: data['dieselPrice'],
-      logoAsset: data['logoAsset'],
-      stationIcon: data['stationIcon'],
+      name: data['name'] ?? 'Unknown Station',
+      town: data['town'] ?? '',
+      latitude: (data['latitude'] as num).toDouble(),
+      longitude: (data['longitude'] as num).toDouble(),
+      blendPrice: (data['blendPrice'] as num).toDouble(),
+      dieselPrice: (data['dieselPrice'] as num).toDouble(),
+      logoAsset: data['logoAsset'] ?? 'assets/Logo/default.png',
+      stationIcon: data['stationIcon'] ?? '',
+      isOpen: data['isOpen'] ?? true,
     );
   }
 }

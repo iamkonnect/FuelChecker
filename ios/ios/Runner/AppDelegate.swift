@@ -1,5 +1,9 @@
 import Flutter
 import UIKit
+import Firebase
+
+// In application(_:didFinishLaunchingWithOptions:)
+FirebaseApp.configure()
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {

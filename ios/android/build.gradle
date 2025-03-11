@@ -16,3 +16,11 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+dependencies {
+  // Add these
+  implementation platform('com.google.firebase:firebase-bom:33.1.0')
+  implementation 'com.google.firebase:firebase-firestore'
+}
+
+// Add to bottom of file
+apply plugin: 'com.google.gms.google-services'

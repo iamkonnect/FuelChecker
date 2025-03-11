@@ -81,37 +81,31 @@ class FuelMapScreenState extends State<FuelMapScreen> {
 
   Future<void> _getLocationName(double latitude, double longitude) async {
     try {
-      print('Fetching location for: $latitude, $longitude');
-
       final placemarks = await placemarkFromCoordinates(latitude, longitude);
 
-      if (placemarks.isEmpty) {
-        print('No placemarks found for coordinates');
+      final place = placemarks.firstOrNull;
+      if (place == null) {
+        setState(() => _locationName = 'Unknown Location');
         return;
       }
 
-      final place = placemarks.first;
-      print('Received placemark: ${place.toJson()}');
-
-      final street = place.street ?? 'Unknown Street';
-      final locality = place.locality ?? 'Unknown City';
-      final country = place.country ?? 'Unknown Country';
+      final street = _cleanString(place.street) ?? 'Unnamed Road';
+      final locality = _cleanString(place.locality) ?? 'Unknown Area';
+      final country = _cleanString(place.country) ?? 'Unknown Country';
 
       setState(() {
-        _locationName = '$street, $locality, $country';
+        _locationName = '$street, $locality, $country'
+            .replaceAll(RegExp(r' ,'), ',') // Remove awkward spaces
+            .replaceAll(', ,', ',');
       });
     } catch (e, stack) {
-      print('''
-    Location name error:
-    Coordinates: $latitude,$longitude
-    Error: $e
-    Stack: $stack
-    ''');
-
-      setState(() {
-        _locationName = 'Location details unavailable';
-      });
+      print('Geocoding Error: ${e.toString()}\n$stack');
+      setState(() => _locationName = 'Location details unavailable');
     }
+  }
+
+  String? _cleanString(String? input) {
+    return input?.trim().isEmpty ?? true ? null : input!.trim();
   }
 
   void _addFuelStationMarkers() async {
@@ -366,89 +360,68 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       final start = _currentLocation!;
       final end = LatLng(station.latitude, station.longitude);
 
-      print('''
-    Requesting directions from:
-    ${start.latitude},${start.longitude}
-    to:
-    ${end.latitude},${end.longitude}
-    ''');
+      print('''Requesting directions:
+    From: ${start.latitude},${start.longitude}
+    To: ${end.latitude},${end.longitude}''');
 
       final response = await DirectionsAPI.getDirections(start, end);
-      print('API Response: ${jsonEncode(response)}');
+      print('Raw API Response: ${jsonEncode(response)}');
 
       // Validate response structure
       final routes = response['routes'] as List<dynamic>?;
-      if (routes == null || routes.isEmpty) {
-        throw Exception('No routes found in response');
-      }
-
       final overviewPolyline =
-          routes[0]['overview_polyline'] as Map<String, dynamic>?;
-      final encodedPoints = overviewPolyline?['points'] as String?;
+          routes?.firstOrNull?['overview_polyline'] as Map<String, dynamic>?;
+      final encodedPolyline = overviewPolyline?['points'] as String?;
 
-      if (encodedPoints == null || encodedPoints.isEmpty) {
-        throw Exception('Invalid polyline data');
+      if (encodedPolyline == null || encodedPolyline.isEmpty) {
+        throw Exception('No valid polyline found in response');
       }
 
-      // Decode and verify points
-      final coordinates = DirectionsAPI.decodePolyline(encodedPoints);
+      // Decode and validate coordinates
+      final coordinates = DirectionsAPI.decodePolyline(encodedPolyline);
       print('Decoded ${coordinates.length} points');
-      // Add in _drawPathLine after decoding
-      print('First 3 coordinates:');
-      coordinates.take(3).forEach((p) => print('${p.latitude},${p.longitude}'));
-
-      print('Last 3 coordinates:');
-      coordinates.reversed
-          .take(3)
-          .forEach((p) => print('${p.latitude},${p.longitude}'));
 
       if (coordinates.isEmpty) {
-        throw Exception('Decoded polyline contains no points');
+        throw Exception('Decoded polyline is empty');
       }
 
-      // Create polyline ID
-      final polylineId = PolylineId(
-          'route_${station.id}_${DateTime.now().millisecondsSinceEpoch}');
+      // Create unique polyline ID
+      final polylineId =
+          PolylineId('${station.id}_${DateTime.now().millisecondsSinceEpoch}');
 
-      // Create new polyline
-      final polyline = Polyline(
-        polylineId: polylineId,
-        color: Colors.blue,
-        width: 5,
-        points: coordinates,
-      );
-
-      // Update state
       setState(() {
         _polylines
-          ..clear() // Clear previous routes
-          ..putIfAbsent(polylineId, () => polyline);
+          ..clear()
+          ..putIfAbsent(
+              polylineId,
+              () => Polyline(
+                    polylineId: polylineId,
+                    color: Colors.red, // More visible color
+                    width: 4,
+                    points: coordinates,
+                  ));
       });
 
-      // Calculate bounds including start and end points
-      final allPoints = [start, ...coordinates, end];
-      final bounds = _boundsFromLatLngList(allPoints);
+      // Calculate bounds with padding
+      final bounds = _boundsFromLatLngList([start, end, ...coordinates]);
+      print('Camera Bounds: NE ${bounds.northeast}, SW ${bounds.southwest}');
 
-      print('''
-    Camera bounds:
-    NE: ${bounds.northeast.latitude},${bounds.northeast.longitude}
-    SW: ${bounds.southwest.latitude},${bounds.southwest.longitude}
-    ''');
-
-      // Animate camera with proper padding
+      // Animate camera with padding
       await _mapController?.animateCamera(
         CameraUpdate.newLatLngBounds(bounds, 100),
       );
+
+      // Force redraw
+      if (mounted) setState(() {});
     } catch (e, stack) {
-      print('''
-    Route drawing error:
-    Error: $e
-    Stack: $stack
-    ''');
+      print('''Route Error:
+    $e
+    $stack''');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Route error: ${e.toString().split(':').last.trim()}'),
+          content: Text(
+              'Failed to draw route: ${e.toString().split(':').last.trim()}'),
           duration: const Duration(seconds: 3),
         ),
       );
@@ -456,18 +429,18 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   }
 
   LatLngBounds _boundsFromLatLngList(List<LatLng> points) {
-    if (points.isEmpty) throw ArgumentError('Empty points list');
+    assert(points.isNotEmpty, "Can't calculate bounds for empty points list");
 
-    double minLat = points[0].latitude;
-    double maxLat = points[0].latitude;
-    double minLng = points[0].longitude;
-    double maxLng = points[0].longitude;
+    var minLat = points.first.latitude;
+    var maxLat = points.first.latitude;
+    var minLng = points.first.longitude;
+    var maxLng = points.first.longitude;
 
     for (final point in points) {
-      minLat = point.latitude < minLat ? point.latitude : minLat;
-      maxLat = point.latitude > maxLat ? point.latitude : maxLat;
-      minLng = point.longitude < minLng ? point.longitude : minLng;
-      maxLng = point.longitude > maxLng ? point.longitude : maxLng;
+      minLat = minLat < point.latitude ? minLat : point.latitude;
+      maxLat = maxLat > point.latitude ? maxLat : point.latitude;
+      minLng = minLng < point.longitude ? minLng : point.longitude;
+      maxLng = maxLng > point.longitude ? maxLng : point.longitude;
     }
 
     return LatLngBounds(
