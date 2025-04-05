@@ -20,6 +20,7 @@ dependencies:
   flutter_polyline_points: ^1.0.0 # Added for route optimization
   email_validator: ^3.0.0 # Re-added email validator package
   flutter_rating_bar: ^4.0.1 # Re-added flutter rating bar package
+  shared_preferences: ^2.2.2
 
   fl_chart: ^0.70.2
   mailer: ^6.0.0 # Added mailer package

@@ -4,10 +4,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
-import '../local_gas_stations.dart'; // Import local data
-import '../models/fuel_gas_station.dart'; // Adjust the path as needed
+import 'package:provider/provider.dart';
+import '../local_gas_stations.dart';
+import '../models/fuel_gas_station.dart';
 import '../widgets/custom_bottom_navigation_bar.dart';
 import '../widgets/search_bar_with_filter_final.dart';
+import '../services/favorites_service.dart';
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
@@ -81,37 +83,31 @@ class FuelMapScreenState extends State<FuelMapScreen> {
 
   Future<void> _getLocationName(double latitude, double longitude) async {
     try {
-      print('Fetching location for: $latitude, $longitude');
-
       final placemarks = await placemarkFromCoordinates(latitude, longitude);
 
-      if (placemarks.isEmpty) {
-        print('No placemarks found for coordinates');
+      final place = placemarks.firstOrNull;
+      if (place == null) {
+        setState(() => _locationName = 'Unknown Location');
         return;
       }
 
-      final place = placemarks.first;
-      print('Received placemark: ${place.toJson()}');
-
-      final street = place.street ?? 'Unknown Street';
-      final locality = place.locality ?? 'Unknown City';
-      final country = place.country ?? 'Unknown Country';
+      final street = _cleanString(place.street) ?? 'Unnamed Road';
+      final locality = _cleanString(place.locality) ?? 'Unknown Area';
+      final country = _cleanString(place.country) ?? 'Unknown Country';
 
       setState(() {
-        _locationName = '$street, $locality, $country';
+        _locationName = '$street, $locality, $country'
+            .replaceAll(RegExp(r' ,'), ',')
+            .replaceAll(', ,', ',');
       });
     } catch (e, stack) {
-      print('''
-    Location name error:
-    Coordinates: $latitude,$longitude
-    Error: $e
-    Stack: $stack
-    ''');
-
-      setState(() {
-        _locationName = 'Location details unavailable';
-      });
+      print('Geocoding Error: ${e.toString()}\n$stack');
+      setState(() => _locationName = 'Location details unavailable');
     }
+  }
+
+  String? _cleanString(String? input) {
+    return input?.trim().isEmpty ?? true ? null : input!.trim();
   }
 
   void _addFuelStationMarkers() async {
@@ -149,153 +145,190 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.35,
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 8,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header with station name and close button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    station.name,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, size: 24),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      setState(() {
-                        _isLocationDetailsVisible = false;
-                      });
-                    },
+        final favoritesService = Provider.of<FavoritesService>(context);
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.4,
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(16)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, -2),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-
-              // Logo and Prices
-              Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Logo
-                  Container(
-                    width: 40,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
-                        image: AssetImage(station.logoAsset),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-
-                  // Prices
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Blend: \$${station.blendPrice}',
+                        station.name,
                         style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        'Diesel: \$${station.dieselPrice}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      IconButton(
+                        icon: const Icon(Icons.close, size: 24),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(() {
+                            _isLocationDetailsVisible = false;
+                          });
+                        },
                       ),
                     ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Status
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color:
-                      _isGasStationOpen() ? Colors.green[50] : Colors.red[50],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      _isGasStationOpen() ? Icons.check_circle : Icons.cancel,
-                      color: _isGasStationOpen() ? Colors.green : Colors.red,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      _isGasStationOpen() ? 'Open Now' : 'Closed',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: _isGasStationOpen() ? Colors.green : Colors.red,
-                        fontWeight: FontWeight.w500,
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          image: DecorationImage(
+                            image: AssetImage(station.logoAsset),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Blend: \$${station.blendPrice}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Diesel: \$${station.dieselPrice}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        favoritesService.toggleFavorite(station);
+                        setModalState(() {});
+                        setState(() {});
+                      },
+                      icon: Icon(
+                        favoritesService.isFavorite(station)
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: favoritesService.isFavorite(station)
+                            ? Colors.red
+                            : Colors.grey,
+                      ),
+                      label: Text(
+                        favoritesService.isFavorite(station)
+                            ? 'Remove from Favorites'
+                            : 'Add to Favorites',
+                        style: TextStyle(
+                          color: favoritesService.isFavorite(station)
+                              ? Colors.red
+                              : Colors.grey,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: BorderSide(
+                          color: favoritesService.isFavorite(station)
+                              ? Colors.red
+                              : Colors.grey,
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Direction Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    _drawPathLine(station);
-                    Navigator.pop(context);
-                    setState(() {
-                      _isLocationDetailsVisible = false;
-                    });
-                  },
-                  icon: const Icon(Icons.directions, size: 24),
-                  label: const Text(
-                    'Get Directions',
-                    style: TextStyle(fontSize: 16),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
+                  const SizedBox(height: 8),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: _isGasStationOpen()
+                          ? Colors.green[50]
+                          : Colors.red[50],
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          _isGasStationOpen()
+                              ? Icons.check_circle
+                              : Icons.cancel,
+                          color:
+                              _isGasStationOpen() ? Colors.green : Colors.red,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          _isGasStationOpen() ? 'Open Now' : 'Closed',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color:
+                                _isGasStationOpen() ? Colors.green : Colors.red,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        _drawPathLine(station);
+                        Navigator.pop(context);
+                        setState(() {
+                          _isLocationDetailsVisible = false;
+                        });
+                      },
+                      icon: const Icon(Icons.directions, size: 24),
+                      label: const Text(
+                        'Get Directions',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
   }
 
   bool _isGasStationOpen() {
-    // Add logic to determine if the gas station is open or closed
-    // For now, we'll assume it's always open
     return true;
   }
 
@@ -366,89 +399,44 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       final start = _currentLocation!;
       final end = LatLng(station.latitude, station.longitude);
 
-      print('''
-    Requesting directions from:
-    ${start.latitude},${start.longitude}
-    to:
-    ${end.latitude},${end.longitude}
-    ''');
-
       final response = await DirectionsAPI.getDirections(start, end);
-      print('API Response: ${jsonEncode(response)}');
-
-      // Validate response structure
       final routes = response['routes'] as List<dynamic>?;
-      if (routes == null || routes.isEmpty) {
-        throw Exception('No routes found in response');
-      }
-
       final overviewPolyline =
-          routes[0]['overview_polyline'] as Map<String, dynamic>?;
-      final encodedPoints = overviewPolyline?['points'] as String?;
+          routes?.firstOrNull?['overview_polyline'] as Map<String, dynamic>?;
+      final encodedPolyline = overviewPolyline?['points'] as String?;
 
-      if (encodedPoints == null || encodedPoints.isEmpty) {
-        throw Exception('Invalid polyline data');
+      if (encodedPolyline == null || encodedPolyline.isEmpty) {
+        throw Exception('No valid polyline found in response');
       }
 
-      // Decode and verify points
-      final coordinates = DirectionsAPI.decodePolyline(encodedPoints);
-      print('Decoded ${coordinates.length} points');
-      // Add in _drawPathLine after decoding
-      print('First 3 coordinates:');
-      coordinates.take(3).forEach((p) => print('${p.latitude},${p.longitude}'));
+      final coordinates = DirectionsAPI.decodePolyline(encodedPolyline);
+      final polylineId =
+          PolylineId('${station.id}_${DateTime.now().millisecondsSinceEpoch}');
 
-      print('Last 3 coordinates:');
-      coordinates.reversed
-          .take(3)
-          .forEach((p) => print('${p.latitude},${p.longitude}'));
-
-      if (coordinates.isEmpty) {
-        throw Exception('Decoded polyline contains no points');
-      }
-
-      // Create polyline ID
-      final polylineId = PolylineId(
-          'route_${station.id}_${DateTime.now().millisecondsSinceEpoch}');
-
-      // Create new polyline
-      final polyline = Polyline(
-        polylineId: polylineId,
-        color: Colors.blue,
-        width: 5,
-        points: coordinates,
-      );
-
-      // Update state
       setState(() {
         _polylines
-          ..clear() // Clear previous routes
-          ..putIfAbsent(polylineId, () => polyline);
+          ..clear()
+          ..putIfAbsent(
+              polylineId,
+              () => Polyline(
+                    polylineId: polylineId,
+                    color: Colors.red,
+                    width: 4,
+                    points: coordinates,
+                  ));
       });
 
-      // Calculate bounds including start and end points
-      final allPoints = [start, ...coordinates, end];
-      final bounds = _boundsFromLatLngList(allPoints);
-
-      print('''
-    Camera bounds:
-    NE: ${bounds.northeast.latitude},${bounds.northeast.longitude}
-    SW: ${bounds.southwest.latitude},${bounds.southwest.longitude}
-    ''');
-
-      // Animate camera with proper padding
+      final bounds = _boundsFromLatLngList([start, end, ...coordinates]);
       await _mapController?.animateCamera(
         CameraUpdate.newLatLngBounds(bounds, 100),
       );
-    } catch (e, stack) {
-      print('''
-    Route drawing error:
-    Error: $e
-    Stack: $stack
-    ''');
 
+      if (mounted) setState(() {});
+    } catch (e, stack) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Route error: ${e.toString().split(':').last.trim()}'),
+          content: Text(
+              'Failed to draw route: ${e.toString().split(':').last.trim()}'),
           duration: const Duration(seconds: 3),
         ),
       );
@@ -456,18 +444,18 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   }
 
   LatLngBounds _boundsFromLatLngList(List<LatLng> points) {
-    if (points.isEmpty) throw ArgumentError('Empty points list');
+    assert(points.isNotEmpty, "Can't calculate bounds for empty points list");
 
-    double minLat = points[0].latitude;
-    double maxLat = points[0].latitude;
-    double minLng = points[0].longitude;
-    double maxLng = points[0].longitude;
+    var minLat = points.first.latitude;
+    var maxLat = points.first.latitude;
+    var minLng = points.first.longitude;
+    var maxLng = points.first.longitude;
 
     for (final point in points) {
-      minLat = point.latitude < minLat ? point.latitude : minLat;
-      maxLat = point.latitude > maxLat ? point.latitude : maxLat;
-      minLng = point.longitude < minLng ? point.longitude : minLng;
-      maxLng = point.longitude > maxLng ? point.longitude : maxLng;
+      minLat = minLat < point.latitude ? minLat : point.latitude;
+      maxLat = maxLat > point.latitude ? maxLat : point.latitude;
+      minLng = minLng < point.longitude ? minLng : point.longitude;
+      maxLng = maxLng > point.longitude ? maxLng : point.longitude;
     }
 
     return LatLngBounds(
@@ -491,7 +479,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   void _toggleLocationDetails() {
     setState(() {
       _isLocationDetailsVisible = true;
-      _selectedStation = null; // Ensure no gas station is selected
+      _selectedStation = null;
     });
   }
 
@@ -504,9 +492,15 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   @override
   void initState() {
     super.initState();
+    final favoritesService =
+        Provider.of<FavoritesService>(context, listen: false);
+
     _fuelStations = localGasStations.map((station) {
-      return GasStation.fromMap(station['id'], station);
+      final gasStation = GasStation.fromMap(station['id'], station);
+      gasStation.isFavorite = favoritesService.isFavorite(gasStation);
+      return gasStation;
     }).toList();
+
     _getCurrentLocation();
   }
 
@@ -543,7 +537,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         station.latitude,
         station.longitude,
       );
-      return distance <= 5000; // Filter stations within 5 KM
+      return distance <= 5000;
     }).toList();
   }
 
@@ -589,11 +583,8 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                     ),
                     markers: _markers,
                     polylines: Set<Polyline>.of(_polylines.values),
-                    // Add this in your GoogleMap widget
                     onMapCreated: (GoogleMapController controller) {
                       _mapController = controller;
-                      print('Map controller ready');
-                      // Add initial camera position if needed
                       if (_currentLocation != null) {
                         controller.animateCamera(
                           CameraUpdate.newLatLngZoom(_currentLocation!, 14),
@@ -618,7 +609,6 @@ class FuelMapScreenState extends State<FuelMapScreen> {
 }
 
 class DirectionsAPI {
-  // Replace with your actual Firebase project ID
   static const String _baseUrl =
       'https://us-central1-bahati-4911e.cloudfunctions.net/getDirections';
 
@@ -634,17 +624,13 @@ class DirectionsAPI {
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
-        print('Directions API Error: ${response.statusCode}');
-        print('Response Body: ${response.body}');
         throw Exception('Directions API Error: ${response.statusCode}');
       }
     } catch (e) {
-      print('Directions Error: $e');
       rethrow;
     }
   }
 
-  /// Decodes a Google Maps encoded polyline into a list of LatLng points.
   static List<LatLng> decodePolyline(String encoded) {
     if (encoded.isEmpty) return [];
 
@@ -653,7 +639,6 @@ class DirectionsAPI {
     int lat = 0, lng = 0;
 
     while (index < len) {
-      // Latitude
       int shift = 0, result = 0;
       int b;
       do {
@@ -664,7 +649,6 @@ class DirectionsAPI {
       int dlat = (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
       lat += dlat;
 
-      // Longitude
       shift = 0;
       result = 0;
       do {
