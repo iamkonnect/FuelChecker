@@ -8,6 +8,7 @@ class GasStation {
   final double dieselPrice;
   final String logoAsset;
   final String stationIcon;
+  bool isFavorite;
 
   GasStation({
     required this.id,
@@ -19,6 +20,7 @@ class GasStation {
     required this.dieselPrice,
     required this.logoAsset,
     required this.stationIcon,
+    this.isFavorite = false, // Optional with default value
   });
 
   factory GasStation.fromMap(String id, Map<String, dynamic> data) {
@@ -32,6 +34,23 @@ class GasStation {
       dieselPrice: data['dieselPrice'],
       logoAsset: data['logoAsset'],
       stationIcon: data['stationIcon'],
+      // isFavorite will default to false if not specified
+    );
+  }
+
+  // Optional: Add method to toggle favorite status
+  GasStation copyWith({bool? isFavorite}) {
+    return GasStation(
+      id: id,
+      name: name,
+      town: town,
+      latitude: latitude,
+      longitude: longitude,
+      blendPrice: blendPrice,
+      dieselPrice: dieselPrice,
+      logoAsset: logoAsset,
+      stationIcon: stationIcon,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }
