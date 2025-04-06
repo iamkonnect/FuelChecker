@@ -10,6 +10,7 @@ import '../models/fuel_gas_station.dart';
 import '../widgets/custom_bottom_navigation_bar.dart';
 import '../widgets/search_bar_with_filter_final.dart';
 import '../services/favorites_service.dart';
+import '../services/nearby_service.dart';
 import '../services/gas_station_service.dart';
 
 class FuelMapScreen extends StatefulWidget {
@@ -73,6 +74,8 @@ class FuelMapScreenState extends State<FuelMapScreen> {
 
       final favoritesService =
           Provider.of<FavoritesService>(context, listen: false);
+      final nearbyService = Provider.of<NearbyService>(context, listen: false);
+      nearbyService.updateNearbyStations(_nearbyStations);
 
       setState(() {
         _fuelStations = combinedStations.map((station) {

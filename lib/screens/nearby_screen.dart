@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widgets/custom_bottom_navigation_bar.dart'; // Import the custom bottom navigation bar
-import 'report_issue_screen.dart'; // Import the existing report issue screen
-import 'favorite_screen.dart'; // Import the existing favorite screen
-import 'fuel_map_screen.dart'; // Import the existing fuel map screen
-import '../providers/theme_provider.dart'; // Import ThemeProvider
+import 'package:geolocator/geolocator.dart';
+import '../models/fuel_gas_station.dart';
+import '../services/nearby_service.dart';
+import '../widgets/custom_bottom_navigation_bar.dart';
+import '../providers/theme_provider.dart';
 
 class NearbyScreen extends StatefulWidget {
   const NearbyScreen({Key? key}) : super(key: key);
@@ -14,113 +14,63 @@ class NearbyScreen extends StatefulWidget {
 }
 
 class _NearbyScreenState extends State<NearbyScreen> {
-  int _selectedIndex = 3; // Set the default index for Nearby
+  int _selectedIndex = 3;
+  Position? _currentPosition;
 
-  /// Handles navigation based on the tapped index.
-  void _onNavigationItemTapped(int index) {
-    if (_selectedIndex == index)
-      return; // Avoid unnecessary navigation for the current screen
-
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacementNamed(context, '/fuel_map');
-        break;
-      case 1:
-        Navigator.pushReplacementNamed(context, '/favorites');
-        break;
-      case 2:
-        Navigator.pushReplacementNamed(context, '/analytics');
-        break;
-      case 3: // Nearby (previously My Trip)
-        Navigator.pushReplacementNamed(context, '/nearby');
-        break;
-      case 4: // Settings (previously Nearby)
-        Navigator.pushReplacementNamed(context, '/settings');
-        break;
-    }
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
   }
 
-  String _formatStationName(String name) {
-    List<String> words = name.split(' ');
-    if (words.length > 3) {
-      return "${words.take(3).join(' ')} ....";
-    }
-    return name;
+  Future<void> _getCurrentLocation() async {
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    setState(() => _currentPosition = position);
+  }
+
+  void _onNavigationItemTapped(int index) {
+    if (_selectedIndex == index) return;
+    setState(() => _selectedIndex = index);
+
+    final routes = [
+      '/fuel_map',
+      '/favorites',
+      '/analytics',
+      '/nearby',
+      '/settings'
+    ];
+    Navigator.pushReplacementNamed(context, routes[index]);
+  }
+
+  String _formatDistance(double distance) {
+    return distance > 1000
+        ? '${(distance / 1000).toStringAsFixed(2)} km'
+        : '${distance.toStringAsFixed(0)} m';
   }
 
   @override
   Widget build(BuildContext context) {
+    final nearbyService = Provider.of<NearbyService>(context);
+    final theme = Provider.of<ThemeProvider>(context).currentTheme;
+
     return WillPopScope(
       onWillPop: () async {
-        // Handle back button press
-        setState(() {
-          _selectedIndex = 0; // Set Home as active
-        });
-        Navigator.pushReplacementNamed(
-            context, '/fuel_map'); // Navigate to Home
-        return false; // Prevent default back behavior
+        Navigator.pushReplacementNamed(context, '/fuel_map');
+        return false;
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Nearby',
-              style: TextStyle(color: Colors.black)), // Updated to black
-          backgroundColor: Provider.of<ThemeProvider>(context)
-              .currentTheme
-              .appBarTheme
-              .backgroundColor, // Updated for dark theme
+          title: const Text('Nearby Stations'),
+          backgroundColor: theme.appBarTheme.backgroundColor,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              setState(() {
-                _selectedIndex = 0; // Set Home as active
-              });
-              Navigator.pushReplacementNamed(
-                  context, '/fuel_map'); // Navigate to Home
-            },
+            onPressed: () =>
+                Navigator.pushReplacementNamed(context, '/fuel_map'),
           ),
         ),
-        body: SingleChildScrollView(
-          // Added scroll functionality
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // TotalEnergies Station Information
-              _buildStationInfo(
-                logoPath: 'assets/images/Total Energies.png',
-                stationName: _formatStationName(
-                    'TotalEnergies Service Station Coropark (Pvt) Ltd'),
-                blendPrice: 'Blend E5: 1.34',
-                distance: '1.63 km',
-              ),
-              SizedBox(height: 24),
-
-              // Zuva Grendale Station Information
-              _buildStationInfo(
-                logoPath:
-                    'assets/images/zuva energy.png', // Assuming the logo path
-                stationName: _formatStationName('Zuva Grendale'),
-                blendPrice: 'Blend E5: 1.30',
-                distance: '2.00 km',
-              ),
-              SizedBox(height: 24),
-
-              // Energy Park Station Information
-              _buildStationInfo(
-                logoPath:
-                    'assets/images/energy park.png', // Assuming the logo path
-                stationName: _formatStationName('Energy Park'),
-                blendPrice: 'Blend E5: 1.25',
-                distance: '3.50 km',
-              ),
-              SizedBox(height: 24),
-            ],
-          ),
-        ),
+        body: _buildBody(nearbyService, theme),
         bottomNavigationBar: CustomBottomNavigationBar(
           selectedIndex: _selectedIndex,
           onItemTapped: _onNavigationItemTapped,
@@ -129,145 +79,217 @@ class _NearbyScreenState extends State<NearbyScreen> {
     );
   }
 
-  Widget _buildStationInfo(
-      {required String logoPath,
-      required String stationName,
-      required String blendPrice,
-      required String distance}) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: Provider.of<ThemeProvider>(context)
-            .currentTheme
-            .cardColor, // Updated for dark theme
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3), // changes position of shadow
-          ),
-        ],
+  Widget _buildBody(NearbyService nearbyService, ThemeData theme) {
+    if (nearbyService.nearbyStations.isEmpty) {
+      return _buildEmptyState(theme);
+    }
+
+    return RefreshIndicator(
+      onRefresh: _getCurrentLocation,
+      child: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: nearbyService.nearbyStations.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 16),
+        itemBuilder: (context, index) {
+          final station = nearbyService.nearbyStations[index];
+          return _buildStationCard(station, theme);
+        },
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    );
+  }
+
+  Widget _buildStationCard(GasStation station, ThemeData theme) {
+    final distance = _currentPosition != null
+        ? Geolocator.distanceBetween(
+            _currentPosition!.latitude,
+            _currentPosition!.longitude,
+            station.latitude,
+            station.longitude,
+          )
+        : 0.0;
+
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildStationHeader(station, theme),
+            const SizedBox(height: 12),
+            _buildPriceRow(station, theme),
+            const SizedBox(height: 16),
+            _buildActionRow(station, distance, theme),
+            const SizedBox(height: 12),
+            _buildOpeningHours(theme),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStationHeader(GasStation station, ThemeData theme) {
+    return Row(
+      children: [
+        Image.asset(station.logoAsset, height: 32),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            station.name,
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPriceRow(GasStation station, ThemeData theme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildPriceChip('Blend', station.blendPrice, theme),
+        _buildPriceChip('Diesel', station.dieselPrice, theme),
+      ],
+    );
+  }
+
+  Widget _buildPriceChip(String label, double price, ThemeData theme) {
+    return Chip(
+      backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+      label: Text(
+        '$label: \$${price.toStringAsFixed(2)}',
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.primary,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionRow(GasStation station, double distance, ThemeData theme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildActionButton(
+          icon: Icons.directions,
+          label: 'Directions',
+          color: theme.colorScheme.primary,
+          onPressed: () => _navigateToDirections(station),
+        ),
+        _buildActionButton(
+          icon: Icons.favorite_border,
+          label: 'Favorite',
+          color: theme.colorScheme.secondary,
+          onPressed: () => _toggleFavorite(station),
+        ),
+        _buildActionButton(
+          icon: Icons.report,
+          label: 'Report',
+          color: theme.colorScheme.error,
+          onPressed: _showReportDialog,
+        ),
+        _buildDistanceBadge(distance, theme),
+      ],
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return Column(
+      children: [
+        IconButton(
+          icon: Icon(icon, color: color),
+          onPressed: onPressed,
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDistanceBadge(double distance, ThemeData theme) {
+    return Chip(
+      backgroundColor: theme.colorScheme.surface,
+      label: Row(
         children: [
-          Row(
-            children: [
-              Image.asset(logoPath, height: 16), // Logo
-              SizedBox(width: 8),
-              Text(
-                stationName,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black, // Updated to black
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                blendPrice,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black, // Updated to black
-                ),
-              ),
-              Row(
-                children: [
-                  Icon(Icons.location_pin,
-                      color: Colors.black), // Updated to black
-                  SizedBox(width: 4),
-                  Text(distance,
-                      style:
-                          TextStyle(color: Colors.black)), // Updated to black
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
-
-          // Action Buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildActionButton(
-                  Icons.report_problem, 'Report Station', Colors.red, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ReportIssueScreen()),
-                );
-              }),
-              _buildActionButton(Icons.star, 'Add to Favourite', Colors.blue,
-                  () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const FavoriteScreen()),
-                );
-              }),
-              _buildActionButton(
-                  Icons.directions, 'Take me there', Colors.green, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const FuelMapScreen(
-                          fuelType: 'Diesel')), // Pass the fuel type
-                );
-              }),
-            ],
-          ),
-          SizedBox(height: 16),
-
-          // Opening Hours
+          Icon(Icons.location_on, size: 16, color: theme.colorScheme.primary),
+          const SizedBox(width: 4),
           Text(
-            'OPEN: Closes 11:00 PM',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black, // Updated to black
-            ),
+            _formatDistance(distance),
+            style: theme.textTheme.bodySmall,
           ),
-          SizedBox(height: 16),
-
-          // Fuel Prices
-          Text('Fuel Prices:',
-              style: TextStyle(
-                  fontSize: 18, color: Colors.black)), // Updated to black
-          SizedBox(height: 8),
-          Text('Diesel: 1.22',
-              style: TextStyle(color: Colors.black)), // Updated to black
         ],
       ),
     );
   }
 
-  Widget _buildActionButton(
-      IconData icon, String label, Color color, VoidCallback onPressed) {
-    return Column(
+  Widget _buildOpeningHours(ThemeData theme) {
+    return Row(
       children: [
-        GestureDetector(
-          onTap: onPressed,
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: color,
-            ),
-            padding: EdgeInsets.all(16),
-            child: Icon(icon, color: Colors.white),
+        Icon(Icons.access_time, size: 16, color: theme.colorScheme.secondary),
+        const SizedBox(width: 8),
+        Text(
+          'Open 24 Hours',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.secondary,
           ),
         ),
-        SizedBox(height: 4),
-        Text(label, style: TextStyle(color: Colors.black)), // Updated to black
       ],
     );
+  }
+
+  Widget _buildEmptyState(ThemeData theme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.local_gas_station,
+              size: 64, color: theme.colorScheme.secondary),
+          const SizedBox(height: 24),
+          Text(
+            'No Stations Nearby',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Text(
+              'Adjust your search radius or move to a different location '
+              'to find nearby gas stations.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _toggleFavorite(GasStation station) {
+    // Implement favorite logic
+  }
+
+  void _navigateToDirections(GasStation station) {
+    // Implement directions logic
+  }
+
+  void _showReportDialog() {
+    // Implement report dialog
   }
 }
