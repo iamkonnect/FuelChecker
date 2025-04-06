@@ -7,7 +7,7 @@ import '../models/fuel_gas_station.dart';
 class GasStationService {
   final Position currentPosition;
   final List<Map<String, dynamic>> localStations;
-  static const String _apiKey = 'DfTXLcqP50wIO63JO2xG3ryZKes=';
+  static const String _apiKey = const String.fromEnvironment('GOOGLE_API_KEY');
   static const String _placesBaseUrl =
       'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
