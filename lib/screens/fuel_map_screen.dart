@@ -275,8 +275,8 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                   Row(
                     children: [
                       Container(
-                        width: 40,
-                        height: 48,
+                        width: 45,
+                        height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           image: DecorationImage(
