@@ -80,6 +80,10 @@ class _NearbyScreenState extends State<NearbyScreen> {
   }
 
   Widget _buildBody(NearbyService nearbyService, ThemeData theme) {
+    if (_currentPosition == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     if (nearbyService.nearbyStations.isEmpty) {
       return _buildEmptyState(theme);
     }
@@ -92,13 +96,20 @@ class _NearbyScreenState extends State<NearbyScreen> {
         separatorBuilder: (_, __) => const SizedBox(height: 16),
         itemBuilder: (context, index) {
           final station = nearbyService.nearbyStations[index];
-          return _buildStationCard(station, theme);
+          final distance = Geolocator.distanceBetween(
+            _currentPosition!.latitude,
+            _currentPosition!.longitude,
+            station.latitude,
+            station.longitude,
+          );
+          return _buildStationCard(station, distance, theme);
         },
       ),
     );
   }
 
-  Widget _buildStationCard(GasStation station, ThemeData theme) {
+  Widget _buildStationCard(
+      GasStation station, double distance, ThemeData theme) {
     final distance = _currentPosition != null
         ? Geolocator.distanceBetween(
             _currentPosition!.latitude,

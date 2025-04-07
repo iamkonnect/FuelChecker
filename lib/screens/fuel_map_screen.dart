@@ -23,6 +23,7 @@ class FuelMapScreen extends StatefulWidget {
 }
 
 class FuelMapScreenState extends State<FuelMapScreen> {
+  Position? _currentPosition;
   LatLng? _currentLocation;
   List<GasStation> _fuelStations = [];
   List<GasStation> _nearbyStations = [];
@@ -56,6 +57,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     if (mounted) {
       setState(() {
         _currentLocation = LatLng(position.latitude, position.longitude);
+        _currentPosition = position;
         _loadCombinedData(position);
         _getLocationName(position.latitude, position.longitude);
       });
@@ -75,7 +77,10 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       final favoritesService =
           Provider.of<FavoritesService>(context, listen: false);
       final nearbyService = Provider.of<NearbyService>(context, listen: false);
-      nearbyService.updateNearbyStations(_nearbyStations);
+      nearbyService.updateNearbyStations(
+          _fuelStations, // Original station list
+          position, // Current position
+          _searchRadius);
 
       setState(() {
         _fuelStations = combinedStations.map((station) {
@@ -88,7 +93,10 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           position.longitude,
         );
       });
-
+      Provider.of<NearbyService>(context, listen: false).updateNearbyStations(
+          _fuelStations, // Original station list
+          position, // Current position
+          _searchRadius);
       _addFuelStationMarkers();
       _updateCurrentLocationMarker(position);
     } catch (e) {
@@ -129,6 +137,22 @@ class FuelMapScreenState extends State<FuelMapScreen> {
           _fuelStations,
           _currentLocation!.latitude,
           _currentLocation!.longitude,
+        );
+        Provider.of<NearbyService>(context, listen: false).updateNearbyStations(
+          _fuelStations,
+          Position(
+            latitude: _currentLocation!.latitude,
+            longitude: _currentLocation!.longitude,
+            timestamp: DateTime.now(),
+            accuracy: 0,
+            altitude: 0,
+            heading: 0,
+            speed: 0,
+            speedAccuracy: 0,
+            altitudeAccuracy: 0,
+            headingAccuracy: 0,
+          ),
+          radius,
         );
         _addFuelStationMarkers();
       }

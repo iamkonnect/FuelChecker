@@ -88,14 +88,17 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
               children: [
                 Row(
                   children: [
-                    const Text('Radius:'),
+                    const Text('Distance:'),
                     const SizedBox(width: 8),
                     DropdownButton<double>(
                       value: _currentRadius,
                       items: const [
                         DropdownMenuItem(value: 500, child: Text('500m')),
+                        DropdownMenuItem(value: 15000, child: Text('15km')),
                         DropdownMenuItem(value: 1000, child: Text('1km')),
                         DropdownMenuItem(value: 2000, child: Text('2km')),
+                        DropdownMenuItem(value: 3000, child: Text('3km')),
+                        DropdownMenuItem(value: 4000, child: Text('4km')),
                         DropdownMenuItem(value: 5000, child: Text('5km')),
                       ],
                       onChanged: (value) {
