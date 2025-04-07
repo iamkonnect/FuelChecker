@@ -18,6 +18,7 @@ import 'screens/profile_screen.dart';
 import 'screens/verification_screen.dart';
 import 'package:provider/provider.dart';
 import 'services/favorites_service.dart';
+import 'services/nearby_service.dart';
 import 'providers/favorite_provider.dart';
 import 'providers/theme_provider.dart';
 
@@ -40,6 +41,9 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FavoritesService()),
+        ChangeNotifierProvider(
+          create: (context) => NearbyService(),
+        ),
         ChangeNotifierProvider(
           create: (context) => FavoriteProvider()..populateDummyFavorites(),
         ),
