@@ -42,10 +42,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     }
 
     Position position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 100,
-      ),
+      desiredAccuracy: LocationAccuracy.high,
     );
     if (mounted) {
       setState(() {

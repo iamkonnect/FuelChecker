@@ -1,0 +1,7 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /gas_stations/{station} {
+      allow read, write: if true; // Allow all reads and writes
+    }
+  }
+}

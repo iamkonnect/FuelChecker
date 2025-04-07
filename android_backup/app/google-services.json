@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "588077245698",
+    "firebase_url": "https://bahati-4911e-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "bahati-4911e",
     "storage_bucket": "bahati-4911e.firebasestorage.app"
   },
@@ -14,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "588077245698-blktt5fs83e7he7lf28e65sllov1mmhh.apps.googleusercontent.com",
+          "client_id": "588077245698-du7l9vhs0fmth552fd5b0i6laink2qj4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -29,6 +30,13 @@
             {
               "client_id": "588077245698-blktt5fs83e7he7lf28e65sllov1mmhh.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "588077245698-5fu9sc4pqjc1utne59gcs3do5mk7nkci.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fuelCheck"
+              }
             }
           ]
         }
@@ -43,7 +51,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "588077245698-blktt5fs83e7he7lf28e65sllov1mmhh.apps.googleusercontent.com",
+          "client_id": "588077245698-du7l9vhs0fmth552fd5b0i6laink2qj4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -58,6 +66,13 @@
             {
               "client_id": "588077245698-blktt5fs83e7he7lf28e65sllov1mmhh.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "588077245698-5fu9sc4pqjc1utne59gcs3do5mk7nkci.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fuelCheck"
+              }
             }
           ]
         }
@@ -72,7 +87,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "588077245698-blktt5fs83e7he7lf28e65sllov1mmhh.apps.googleusercontent.com",
+          "client_id": "588077245698-du7l9vhs0fmth552fd5b0i6laink2qj4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -87,6 +102,13 @@
             {
               "client_id": "588077245698-blktt5fs83e7he7lf28e65sllov1mmhh.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "588077245698-5fu9sc4pqjc1utne59gcs3do5mk7nkci.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fuelCheck"
+              }
             }
           ]
         }

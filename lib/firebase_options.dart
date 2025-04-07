@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '588077245698',
     projectId: 'bahati-4911e',
     authDomain: 'bahati-4911e.firebaseapp.com',
+    databaseURL: 'https://bahati-4911e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'bahati-4911e.firebasestorage.app',
     measurementId: 'G-ER707HTEVD',
   );
@@ -55,6 +56,7 @@ class DefaultFirebaseOptions {
     appId: '1:588077245698:android:a6c8452cf0eb49a4a70e1b',
     messagingSenderId: '588077245698',
     projectId: 'bahati-4911e',
+    databaseURL: 'https://bahati-4911e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'bahati-4911e.firebasestorage.app',
   );
 
@@ -63,7 +65,9 @@ class DefaultFirebaseOptions {
     appId: '1:588077245698:ios:2a8a3ac852e0b4e4a70e1b',
     messagingSenderId: '588077245698',
     projectId: 'bahati-4911e',
+    databaseURL: 'https://bahati-4911e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'bahati-4911e.firebasestorage.app',
+    iosClientId: '588077245698-5fu9sc4pqjc1utne59gcs3do5mk7nkci.apps.googleusercontent.com',
     iosBundleId: 'com.example.fuelCheck',
   );
 
@@ -72,7 +76,9 @@ class DefaultFirebaseOptions {
     appId: '1:588077245698:ios:2a8a3ac852e0b4e4a70e1b',
     messagingSenderId: '588077245698',
     projectId: 'bahati-4911e',
+    databaseURL: 'https://bahati-4911e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'bahati-4911e.firebasestorage.app',
+    iosClientId: '588077245698-5fu9sc4pqjc1utne59gcs3do5mk7nkci.apps.googleusercontent.com',
     iosBundleId: 'com.example.fuelCheck',
   );
 
@@ -82,7 +88,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '588077245698',
     projectId: 'bahati-4911e',
     authDomain: 'bahati-4911e.firebaseapp.com',
+    databaseURL: 'https://bahati-4911e-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'bahati-4911e.firebasestorage.app',
     measurementId: 'G-LRWRGXDZY8',
   );
+
 }

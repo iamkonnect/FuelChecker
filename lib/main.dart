@@ -1,5 +1,6 @@
 import './services/firebase_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'screens/about_screen.dart';
 import 'screens/analytics_screen.dart';
 import 'screens/deactivate_account_screen.dart';
@@ -16,7 +17,6 @@ import 'screens/report_issue_screen.dart';
 import 'screens/help_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/verification_screen.dart';
-import 'package:provider/provider.dart';
 import 'providers/favorite_provider.dart';
 import 'providers/theme_provider.dart';
 import './scripts/migration_script.dart';
@@ -32,7 +32,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => FavoriteProvider()..populateDummyFavorites(),
+          create: (context) => FavoriteProvider()..populateDummyFavorites(), // Correctly returns FavoriteProvider
         ),
         ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
@@ -42,6 +42,8 @@ void main() async {
     ),
   );
 }
+
+// Removed incorrect ChangeNotifierProvider definition
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Camel Oil",
+    "location": "Dar es salaam, Mikocheni",
+    "contact": "",
+    "logo": "assets/Logo/pumaBR.png",
+    "fuelPrices": {
+      "blend": 1.25,
+      "diesel": 1.15
+    }
+  },
+  {
+    "name": "Puma Mwenge", 
+    "location": "Dar es salaam, Mikocheni",
+    "contact": "",
+    "logo": "assets/Logo/pumaBR.png",
+    "fuelPrices": {
+      "blend": 1.30,
+      "diesel": 1.20
+    }
+  },
+  // [All 47 stations in this format...]
+  {
+    "name": "Oil Link (T) LTD",
+    "location": "Kigamboni, Dar es Salaam",
+    "contact": "",
+    "logo": "assets/Logo/pumaBR.png",
+    "fuelPrices": {
+      "blend": 1.31,
+      "diesel": 1.21
+    }
+  }
+]

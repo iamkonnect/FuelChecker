@@ -1,66 +1,48 @@
-name: FuelCheckZW
-description: "A new Flutter project."
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
-
+name: fuelcheckzw
+description: "A fuel price tracking application for Zimbabwe."
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.0 <4.0.0" # Updated
+  sdk: ">=2.17.0 <3.0.0"  # Updated to enable super-parameters
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  google_maps_flutter: ^2.1.1
-  widget_to_image: ^2.0.0 # Use the latest version
-  logger: ^2.5.0 # Updated logger package
-  geolocator: ^13.0.2 # Updated geolocator package
-  geocoding: ^3.0.0 # Updated geocoding package
-  http: ^0.13.6 # Downgraded http package for compatibility
-  google_maps_webservice: ^0.0.19 # Updated for Places API
-  flutter_polyline_points: ^1.0.0 # Added for route optimization
-  email_validator: ^3.0.0 # Re-added email validator package
-  flutter_rating_bar: ^4.0.1 # Re-added flutter rating bar package
+  cupertino_icons: ^1.0.2
 
+  # Firebase
+  firebase_core: ^2.18.0
+  firebase_auth: ^4.11.1
+  cloud_firestore: ^4.9.1
+  firebase_messaging: ^14.7.0
+
+  # Location & Maps
+  geolocator: ^10.1.1
+  geocoding: ^2.1.0
+  google_maps_flutter: ^2.2.3
+  flutter_polyline_points: ^1.0.0
+  http: ^0.13.6
+
+  # UI & Utilities
+  provider: ^6.1.1
+  flutter_rating_bar: ^4.0.1
   fl_chart: ^0.70.2
-  mailer: ^6.0.0 # Added mailer package
-  provider: ^6.0.0 # Added provider package
-  firebase_core: ^3.11.0 # Added Firebase core
-
-  firebase_auth: ^5.4.2 # Added Firebase authentication
-
-  cloud_firestore: ^5.6.3 # Added Firestore
-
-  firebase_messaging: ^15.2.2 # Added Firebase messaging
+  logger: ^2.5.0
+  email_validator: ^3.0.0
+  mailer: ^6.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^2.0.0
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/location1.png
-    - assets/Logo/pumaBR.png
-    - assets/Logo/cameloil.jpeg
-    - assets/Logo/puma.png
-    - assets/Logo/tsn.png
-    - web/icons/Icon-maskable-512.png
-    - web/favicon.png
-    - assets/images/Settings.png
-    - assets/images/Favourites.png # Updated to match actual file name
-    - assets/images/my trips.png # Updated to match actual file name
-    - assets/images/map_background.png # Added missing asset
-    - assets/images/nearby.png
-    - assets/images/Trends.png
-    - assets/images/Fuelcheck logo 150by1.png # Updated to correct asset path
-    - assets/images/Facebook Icon.png # Updated to use raw space
-    - assets/images/apple icon logo.png # Updated to use raw space
-    - assets/images/Black Google Icon.png # Updated to use raw space
-    - assets/images/Total Energies.png # Added logo for TotalEnergies
-    - assets/images/zuva energy.png # Added logo for ZUVA
-    - assets/images/energy park.png # Added logo for Energy Park
-
+    - assets/images/
+    - assets/fonts/
   fonts:
     - family: GoogleIcons
       fonts:
-        - asset: fonts/google_icons.ttf
+        - asset: assets/fonts/google_icons.ttf
