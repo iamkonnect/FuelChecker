@@ -201,7 +201,9 @@ class _NearbyScreenState extends State<NearbyScreen> {
               icon: Icons.report,
               label: 'Report',
               color: theme.colorScheme.error,
-              onPressed: () => {print("_showReportDialog(station)")},
+              onPressed: () => {
+                Navigator.pushReplacementNamed(context, '/report'),
+              },
             ),
             _buildDistanceBadge(distance, theme),
           ],
