@@ -20,36 +20,52 @@ class GasStation {
     required this.dieselPrice,
     required this.logoAsset,
     required this.stationIcon,
-    this.isFavorite = false, // Optional with default value
+    this.isFavorite = false,
   });
 
   factory GasStation.fromMap(String id, Map<String, dynamic> data) {
     return GasStation(
       id: id,
-      name: data['name'],
-      town: data['town'],
-      latitude: data['latitude'],
-      longitude: data['longitude'],
-      blendPrice: data['blendPrice'],
-      dieselPrice: data['dieselPrice'],
-      logoAsset: data['logoAsset'],
-      stationIcon: data['stationIcon'],
-      // isFavorite will default to false if not specified
+      name: data['name'] ?? 'Unknown Station',
+      town: data['town'] ?? data['vicinity'] ?? 'Unknown Area',
+      latitude:
+          (data['latitude'] ?? data['geometry']['location']['lat'])?.toDouble(),
+      longitude: (data['longitude'] ?? data['geometry']['location']['lng'])
+          ?.toDouble(),
+      blendPrice: (data['blendPrice'] ?? 0.0).toDouble(),
+      dieselPrice: (data['dieselPrice'] ?? 0.0).toDouble(),
+      logoAsset: data['logoAsset'] ?? _getDefaultLogo(data['name']),
+      stationIcon: data['stationIcon'] ??
+          data['icon'] ??
+          'https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg',
+      isFavorite: data['isFavorite'] ?? false,
     );
   }
 
-  // Optional: Add method to toggle favorite status
-  GasStation copyWith({bool? isFavorite}) {
+  static String _getDefaultLogo(String? name) {
+    final cleanedName = name?.toLowerCase() ?? '';
+    if (cleanedName.contains('shell')) return 'assets/logos/shell.png';
+    if (cleanedName.contains('bp')) return 'assets/logos/bp.png';
+    return 'assets/logos/default_station.png';
+  }
+
+  GasStation copyWith({
+    double? blendPrice,
+    double? dieselPrice,
+    String? logoAsset,
+    String? stationIcon,
+    bool? isFavorite,
+  }) {
     return GasStation(
       id: id,
       name: name,
       town: town,
       latitude: latitude,
       longitude: longitude,
-      blendPrice: blendPrice,
-      dieselPrice: dieselPrice,
-      logoAsset: logoAsset,
-      stationIcon: stationIcon,
+      blendPrice: blendPrice ?? this.blendPrice,
+      dieselPrice: dieselPrice ?? this.dieselPrice,
+      logoAsset: logoAsset ?? this.logoAsset,
+      stationIcon: stationIcon ?? this.stationIcon,
       isFavorite: isFavorite ?? this.isFavorite,
     );
   }
@@ -61,4 +77,9 @@ class GasStation {
 
   @override
   int get hashCode => id.hashCode;
+
+  @override
+  String toString() {
+    return 'GasStation($id, $name, $blendPrice/$dieselPrice)';
+  }
 }

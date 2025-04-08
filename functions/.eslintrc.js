@@ -1,28 +1,19 @@
 module.exports = {
+  root: true,
   env: {
     es6: true,
     node: true,
   },
-  parserOptions: {
-    "ecmaVersion": 2018,
-  },
   extends: [
     "eslint:recommended",
-    "google",
+    "plugin:prettier/recommended", // Note the "plugin:" prefix
   ],
-  rules: {
-    "no-restricted-globals": ["error", "name", "length"],
-    "prefer-arrow-callback": "error",
-    "quotes": ["error", "double", {"allowTemplateLiterals": true}],
+  parserOptions: {
+    ecmaVersion: 2022,
+    sourceType: "module",
   },
-  overrides: [
-    {
-      files: ["**/*.spec.*"],
-      env: {
-        mocha: true,
-      },
-      rules: {},
-    },
-  ],
-  globals: {},
+  rules: {
+    "prettier/prettier": "error",
+    "no-console": "off",
+  },
 };
