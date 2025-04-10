@@ -60,7 +60,6 @@ class GasStationService {
       dieselPrice: _getPriceFromLocalData(result['name'], 'diesel'),
       logoAsset: _getLocalAsset(result['name']),
       stationIcon: _getStationIcon(result),
-      // rating: (result['rating'] ?? 0.0).toDouble(),
     );
   }
 
