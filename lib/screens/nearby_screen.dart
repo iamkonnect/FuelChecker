@@ -3,8 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import '../models/fuel_gas_station.dart';
 import '../services/nearby_service.dart';
+import '../services/favorites_service.dart';
 import '../widgets/custom_bottom_navigation_bar.dart';
 import '../providers/theme_provider.dart';
+import '../screens/fuel_map_screen.dart';
+import '../screens/report_issue_screen.dart';
 
 class NearbyScreen extends StatefulWidget {
   const NearbyScreen({Key? key}) : super(key: key);
@@ -81,7 +84,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
 
   Widget _buildBody(NearbyService nearbyService, ThemeData theme) {
     if (_currentPosition == null) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (nearbyService.nearbyStations.isEmpty) {
@@ -110,15 +113,6 @@ class _NearbyScreenState extends State<NearbyScreen> {
 
   Widget _buildStationCard(
       GasStation station, double distance, ThemeData theme) {
-    final distance = _currentPosition != null
-        ? Geolocator.distanceBetween(
-            _currentPosition!.latitude,
-            _currentPosition!.longitude,
-            station.latitude,
-            station.longitude,
-          )
-        : 0.0;
-
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -182,29 +176,39 @@ class _NearbyScreenState extends State<NearbyScreen> {
   }
 
   Widget _buildActionRow(GasStation station, double distance, ThemeData theme) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildActionButton(
-          icon: Icons.directions,
-          label: 'Directions',
-          color: theme.colorScheme.primary,
-          onPressed: () => _navigateToDirections(station),
-        ),
-        _buildActionButton(
-          icon: Icons.favorite_border,
-          label: 'Favorite',
-          color: theme.colorScheme.secondary,
-          onPressed: () => _toggleFavorite(station),
-        ),
-        _buildActionButton(
-          icon: Icons.report,
-          label: 'Report',
-          color: theme.colorScheme.error,
-          onPressed: _showReportDialog,
-        ),
-        _buildDistanceBadge(distance, theme),
-      ],
+    return Consumer<FavoritesService>(
+      builder: (context, favoritesService, _) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildActionButton(
+              icon: Icons.directions,
+              label: 'Directions',
+              color: theme.colorScheme.primary,
+              onPressed: () => _navigateToDirections(station),
+            ),
+            _buildActionButton(
+              icon: favoritesService.isFavorite(station)
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              label: 'Favorite',
+              color: favoritesService.isFavorite(station)
+                  ? Colors.red
+                  : theme.colorScheme.secondary,
+              onPressed: () => _toggleFavorite(station, favoritesService),
+            ),
+            _buildActionButton(
+              icon: Icons.report,
+              label: 'Report',
+              color: theme.colorScheme.error,
+              onPressed: () => {
+                Navigator.pushReplacementNamed(context, '/report'),
+              },
+            ),
+            _buildDistanceBadge(distance, theme),
+          ],
+        );
+      },
     );
   }
 
@@ -292,15 +296,28 @@ class _NearbyScreenState extends State<NearbyScreen> {
     );
   }
 
-  void _toggleFavorite(GasStation station) {
-    // Implement favorite logic
+  void _toggleFavorite(GasStation station, FavoritesService favoritesService) {
+    favoritesService.toggleFavorite(station);
   }
 
   void _navigateToDirections(GasStation station) {
-    // Implement directions logic
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FuelMapScreen(
+          fuelType: 'Regular',
+          selectedStation: station,
+        ),
+      ),
+    );
   }
 
-  void _showReportDialog() {
-    // Implement report dialog
-  }
+  // void _showReportDialog(GasStation station) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => ReportIssueScreen(station: station),
+  //     ),
+  //   );
+  // }
 }

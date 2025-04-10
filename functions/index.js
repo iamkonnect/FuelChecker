@@ -1,112 +1,80 @@
-const functions = require("firebase-functions");
-const axios = require("axios");
+import { onRequest } from "firebase-functions/v2/https";
+import { setGlobalOptions } from "firebase-functions/v2";
+import axios from "axios";
+import cors from "cors";
 
-exports.getDirections = functions.https.onRequest(async (req, res) => {
-  // CORS Handling
-  res.set("Access-Control-Allow-Origin", "*");
-  res.set("Access-Control-Allow-Methods", "GET");
-
-  if (req.method === "OPTIONS") {
-    res.status(204).send("");
-    return;
-  }
-
-  try {
-    const apiKey = process.env.GOOGLE_DIRECTIONSKEY;
-    // eslint-disable-next-line object-curly-spacing
-    const { origin, destination } = req.query;
-
-    if (!origin || !destination) {
-      return res.status(400).json({
-        error: "Missing origin or destination parameters",
-      });
+setGlobalOptions({
+  region: "us-central1",
+  memory: "256MiB",
+  timeoutSeconds: 60,
+});
+const corsHandler = cors({ origin: true });
+const handleCors = (handler) => (req, res) => {
+  corsHandler(req, res, async () => {
+    if (req.method === "OPTIONS") {
+      res.status(204).send("");
+      return;
     }
-    /* eslint-disable object-curly-spacing, indent */
-    const response = await axios.get(
-      "https://maps.googleapis.com/maps/api/directions/json",
-      {
+    await handler(req, res);
+  });
+};
+
+const PLACES_API_KEY = process.env.GOOGLE_PLACES_KEY;
+const DIRECTIONS_API_KEY = process.env.GOOGLE_DIRECTIONS_KEY;
+
+export const getDirections = onRequest(
+  { secrets: ["GOOGLE_DIRECTIONS_KEY"] },
+  handleCors(async (req, res) => {
+    try {
+      const { origin, destination } = req.query;
+
+      if (!origin || !destination) {
+        return res.status(400).json({ error: "Missing origin or destination" });
+      }
+
+      const response = await axios.get("https://maps.googleapis.com/maps/api/directions/json", {
         params: {
           origin,
           destination,
-          key: apiKey,
-          mode: "driving", // Explicitly set travel mode
+          key: DIRECTIONS_API_KEY,
+          mode: "driving",
         },
-      }
-    );
-    /* eslint-disable object-curly-spacing, indent */
-    if (response.data.status !== "OK") {
-      console.error("Directions API Error:", response.data);
-      return res.status(400).json({
-        status: response.data.status,
-        error: response.data.error_message || "No error message",
       });
+
+      res.json(response.data);
+    } catch (error) {
+      console.error("Directions error:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
+  })
+);
 
-    res.json(response.data);
-  } catch (error) {
-    console.error("Full Error:", error);
-    res.status(500).json({
-      error: "Internal server error",
-      details: error.message,
-      stack: error.stack,
-    });
-  }
-});
+export const getNearbyGasStations = onRequest(
+  { secrets: ["GOOGLE_PLACES_KEY"] },
+  handleCors(async (req, res) => {
+    try {
+      const { lat, lng, radius } = req.query;
 
-// const functions = require("firebase-functions");
-// const axios = require("axios");
+      if (!lat || !lng) {
+        return res.status(400).json({ error: "Missing location parameters" });
+      }
 
-// exports.getDirections = functions.https.onRequest(async (req, res) => {
-//   // Simple API key verification
-//   const clientKey = req.headers["x-api-key"];
-//   if (clientKey !== "YOUR_CLIENT_SECRET") {
-//     // eslint-disable-next-line object-curly-spacing
-//     return res.status(401).json({ error: "Unauthorized" });
-//   }
+      const response = await axios.get(
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
+        {
+          params: {
+            location: `${lat},${lng}`,
+            radius: radius || 5000,
+            type: "gas_station",
+            key: PLACES_API_KEY,
+          },
+        }
+      );
 
-//   // CORS Handling
-//   res.set("Access-Control-Allow-Origin", "*");
-//   res.set("Access-Control-Allow-Methods", "GET");
-
-//   if (req.method === "OPTIONS") {
-//     res.end();
-//     return;
-//   }
-
-//   const apiKey = process.env.GOOGLE_DIRECTIONSKEY;
-//   // eslint-disable-next-line object-curly-spacing
-//   const { origin, destination } = req.query;
-
-//   try {
-//     /* eslint-disable object-curly-spacing, indent */
-//     const response = await axios.get(
-//       "https://maps.googleapis.com/maps/api/directions/json",
-//       {
-//         params: {
-//           origin,
-//           destination,
-//           key: apiKey,
-//         }, // <-- Trailing comma added
-//       } // <-- Trailing comma added
-//     );
-//     /* eslint-enable object-curly-spacing, indent */
-
-//     if (response.data.status !== "OK") {
-//       console.error("Directions API Error:", response.data);
-//       // eslint-disable-next-line object-curly-spacing
-//       return res.status(400).json({
-//         status: response.data.status,
-//         error: response.data.error_message,
-//       }); // <-- Trailing comma added
-//     }
-
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error("Server Error:", error);
-//     // eslint-disable-next-line object-curly-spacing
-//     res.status(500).json({
-//       error: "Internal server error",
-//       details: error.message,
-//     }); // <-- Trailing comma added
-//   }
-// });
+      res.json(response.data);
+    } catch (error) {
+      console.error("Places error:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  })
+);

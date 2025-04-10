@@ -15,8 +15,12 @@ import '../services/gas_station_service.dart';
 
 class FuelMapScreen extends StatefulWidget {
   final String fuelType;
-
-  const FuelMapScreen({Key? key, required this.fuelType}) : super(key: key);
+  final GasStation? selectedStation;
+  const FuelMapScreen({
+    Key? key,
+    required this.fuelType,
+    this.selectedStation,
+  }) : super(key: key);
 
   @override
   FuelMapScreenState createState() => FuelMapScreenState();
@@ -271,8 +275,8 @@ class FuelMapScreenState extends State<FuelMapScreen> {
                   Row(
                     children: [
                       Container(
-                        width: 40,
-                        height: 48,
+                        width: 45,
+                        height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           image: DecorationImage(
@@ -531,7 +535,14 @@ class FuelMapScreenState extends State<FuelMapScreen> {
       return gasStation;
     }).toList();
 
-    _getCurrentLocation();
+    _getCurrentLocation().then((_) {
+      if (widget.selectedStation != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _drawPathLine(widget.selectedStation!);
+          _showGasStationBottomSheet(widget.selectedStation!);
+        });
+      }
+    });
   }
 
   void _onNavigationItemTapped(int index) {
@@ -563,8 +574,21 @@ class FuelMapScreenState extends State<FuelMapScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            setState(() => _selectedIndex = 0);
-            Navigator.pushReplacementNamed(context, '/fuel_type');
+            // setState(() => _selectedIndex = 0);
+            // Navigator.pushReplacementNamed(context, '/fuel_type');
+            // Clear selected station when going back
+            if (widget.selectedStation != null) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FuelMapScreen(
+                    fuelType: widget.fuelType,
+                  ),
+                ),
+              );
+            } else {
+              Navigator.pushReplacementNamed(context, '/fuel_type');
+            }
           },
         ),
         actions: [
