@@ -69,7 +69,7 @@ class GasStationService {
           '?maxwidth=400'
           '&photoreference=${result['photos'][0]['photo_reference']}';
     }
-    return 'https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg';
+    return 'assets/Logo/pumaBR.png';
   }
 
   double _getPriceFromLocalData(String stationName, String fuelType) {
@@ -194,8 +194,7 @@ class GasStationService {
     return brandAssets.entries
         .firstWhere(
           (entry) => cleanedName.contains(entry.key),
-          orElse: () => const MapEntry('default',
-              'https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg'),
+          orElse: () => const MapEntry('default', 'assets/Logo/pumaBR.png'),
         )
         .value;
   }
@@ -272,7 +271,7 @@ class GasStationService {
 //       dieselPrice: _getPriceFromDetails(details, 'diesel'),
 //       logoAsset: _getLocalAsset(place['name']),
 //       stationIcon: place['icon'] ??
-//           'https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg',
+//           'assets/Logo/pumaBR.png',
 //       // openingHours: details['opening_hours']?['weekday_text'] ?? [],
 //       // rating: details['rating']?.toDouble() ?? 0.0,
 //     );
@@ -300,9 +299,9 @@ class GasStationService {
 //   String _getLocalAsset(String stationName) {
 //     const brandAssets = {
 //       'shell':
-//           'https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg',
+//           'assets/Logo/pumaBR.png',
 //       'bp':
-//           'https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg',
+//           'assets/Logo/pumaBR.png',
 //       // Add more brand mappings
 //     };
 
@@ -310,7 +309,7 @@ class GasStationService {
 //         .firstWhere(
 //           (entry) => stationName.toLowerCase().contains(entry.key),
 //           orElse: () => MapEntry('default',
-//               'https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg'),
+//               'assets/Logo/pumaBR.png'),
 //         )
 //         .value;
 //   }
