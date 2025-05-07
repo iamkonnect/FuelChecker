@@ -37,19 +37,6 @@
 
     <!-- Your existing scripts -->
     <script src="main.dart.js" type="application/javascript"></script>
-    <!-- In web/index.html -->
-    <script>
-      window.console.log = function (message) {
-        if (
-          typeof message === "string" &&
-          message.includes("google.maps.Marker")
-        )
-          return;
-        Function.prototype.bind
-          .call(console.log, console)
-          .apply(console, arguments);
-      };
-    </script>
     <link rel="manifest" href="manifest.json" />
   </head>
   <body>

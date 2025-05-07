@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class GasStation {
   final String id;
   final String name;
@@ -23,21 +25,35 @@ class GasStation {
     this.isFavorite = false,
   });
 
+  // For Firestore documents
+  factory GasStation.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return GasStation(
+      id: doc.id,
+      name: data['name'] ?? 'Unknown Station',
+      town: data['town'] ?? data['vicinity'] ?? 'Unknown Area',
+      latitude: (data['latitude'] ?? data['geometry']['location']['lat'])?.toDouble(),
+      longitude: (data['longitude'] ?? data['geometry']['location']['lng'])?.toDouble(),
+      blendPrice: (data['blendPrice'] ?? 0.0).toDouble(),
+      dieselPrice: (data['dieselPrice'] ?? 0.0).toDouble(),
+      logoAsset: data['logoAsset'] ?? _getDefaultLogo(data['name']),
+      stationIcon: data['stationIcon'] ?? data['icon'] ?? 'https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg',
+      isFavorite: data['isFavorite'] ?? false,
+    );
+  }
+
+  // For local data migration
   factory GasStation.fromMap(String id, Map<String, dynamic> data) {
     return GasStation(
       id: id,
       name: data['name'] ?? 'Unknown Station',
       town: data['town'] ?? data['vicinity'] ?? 'Unknown Area',
-      latitude:
-          (data['latitude'] ?? data['geometry']['location']['lat'])?.toDouble(),
-      longitude: (data['longitude'] ?? data['geometry']['location']['lng'])
-          ?.toDouble(),
+      latitude: (data['latitude'] ?? data['geometry']['location']['lat'])?.toDouble(),
+      longitude: (data['longitude'] ?? data['geometry']['location']['lng'])?.toDouble(),
       blendPrice: (data['blendPrice'] ?? 0.0).toDouble(),
       dieselPrice: (data['dieselPrice'] ?? 0.0).toDouble(),
       logoAsset: data['logoAsset'] ?? _getDefaultLogo(data['name']),
-      stationIcon: data['stationIcon'] ??
-          data['icon'] ??
-          'https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg',
+      stationIcon: data['stationIcon'] ?? data['icon'] ?? 'https://fonts.gstatic.com/s/i/materialicons/local_gas_station/v12/24px.svg',
       isFavorite: data['isFavorite'] ?? false,
     );
   }

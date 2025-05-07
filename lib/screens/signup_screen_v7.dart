@@ -140,14 +140,14 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                 // Full Name TextField
                 TextField(
                   controller: _fullNameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       labelText: 'Full Name', border: OutlineInputBorder()),
                 ),
                 const SizedBox(height: 20),
                 // Email TextField
                 TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       labelText: 'Email', border: OutlineInputBorder()),
                 ),
                 const SizedBox(height: 20),
@@ -157,7 +157,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                   obscureText: _obscureText,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureText
                           ? Icons.visibility
@@ -173,7 +173,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                   obscureText: _obscureText,
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureText
                           ? Icons.visibility
@@ -191,7 +191,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       child: TextField(
                         controller: _countryCodeController,
                         maxLength: 3, // Limit to 3 characters
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Country Code',
                           border: OutlineInputBorder(),
                         ),
@@ -203,7 +203,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       child: TextField(
                         controller: _phoneController,
                         maxLength: 10, // Limit to 10 characters
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Phone Number',
                           border: OutlineInputBorder(),
                         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart'; // Importing email validator package
-import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'fuel_type_selection_screen.dart'; // Import the FuelTypeSelectionScreen
 import 'signup_screen_v7.dart'; // Import for the SignUpScreenV7
 import 'forgot_password_screen.dart'; // Import the ForgotPasswordScreen
@@ -24,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  Future<void> _login() async { // Marking the method as async
+  void _login() {
     String email = _emailController.text;
     String password = _passwordController.text;
 
@@ -44,12 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     } else {
-      // Firebase Authentication logic
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
+      // Example authentication logic
+      if (email == 'akwera@gmail.com' && password == '1234Abc') {
         if (mounted) { // Check if the widget is still mounted
           Navigator.pushReplacement(
             context,
@@ -57,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 builder: (context) => const FuelTypeSelectionScreen()),
           );
         }
-      } catch (e) {
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid email or password')),
         );
@@ -165,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ForgotPasswordScreen()),
+                          builder: (context) => const ForgotPasswordScreen()),
                     );
                   },
                   child: const Text(

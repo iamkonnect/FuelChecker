@@ -5,6 +5,8 @@ class SearchBarWithFilter extends StatefulWidget {
   final String from;
   final String to;
   final String searchTerm;
+  final ValueChanged<double> onRadiusChanged;
+  final ValueChanged<String> onSearchChanged;
 
   const SearchBarWithFilter({
     Key? key,
@@ -12,6 +14,8 @@ class SearchBarWithFilter extends StatefulWidget {
     required this.from,
     required this.to,
     required this.searchTerm,
+    required this.onRadiusChanged,
+    required this.onSearchChanged,
   }) : super(key: key);
 
   @override
@@ -19,30 +23,27 @@ class SearchBarWithFilter extends StatefulWidget {
 }
 
 class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
-  String from = '';
-  String to = '';
-  String searchTerm = '';
+  final TextEditingController _fromController = TextEditingController();
+  final TextEditingController _toController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String? _selectedFilter;
   double _currentPrice = 0.0;
-
-  final TextEditingController fromController = TextEditingController();
-  final TextEditingController toController = TextEditingController();
-  final TextEditingController searchController = TextEditingController();
+  double _currentRadius = 5000;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha((0.1 * 255).toInt()),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
             spreadRadius: 2,
-            offset: Offset(0, 4), // Shadow position
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -53,142 +54,81 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: fromController,
-                    decoration: InputDecoration(
-                      labelText: 'From',
-                      prefixIcon: Icon(Icons.location_on, color: Colors.red),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    ),
+                    controller: _fromController,
+                    decoration: _inputDecoration('From', Icons.location_on),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
-                    controller: toController,
-                    decoration: InputDecoration(
-                      labelText: 'To',
-                      prefixIcon: Icon(Icons.location_on, color: Colors.red),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    ),
+                    controller: _toController,
+                    decoration: _inputDecoration('To', Icons.location_on),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      prefixIcon: IconButton(
-                        icon: Icon(Icons.search, color: Colors.red),
-                        onPressed: () {
-                          String from = fromController.text.trim();
-                          String to = toController.text.trim();
-                          String searchTerm = searchController.text.trim();
-
-                          if (from.isEmpty || to.isEmpty) {
-                            print('Please provide both "From" and "To" locations.');
-                            return;
-                          }
-
-                          List<String> results = filterResults(
-                              from, to, searchTerm, _selectedFilter);
-                          print(
-                              'Searching from: $from to: $to with term: $searchTerm');
-                          print('Results: $results');
-                        },
-                      ),
-                      labelText: 'Search (optional)...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.blue),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                    ),
-                  ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _searchController,
+              onChanged: widget.onSearchChanged,
+              decoration: InputDecoration(
+                prefixIcon: IconButton(
+                  icon: const Icon(Icons.search, color: Colors.red),
+                  onPressed: _handleSearch,
                 ),
-              ],
+                labelText: 'Search gas stations...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    // "Detour" text
-                    Text(
-                      'Detour',
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                    SizedBox(width: 8),
-                    // Filter icon with PopupMenuButton for options
-                    PopupMenuButton<String>(
-                      // icon: Icon(Icons.filter_alt, color: Colors.black),
-                      icon: Icon(Icons.tune, color: Colors.red),
-                      onSelected: (String selectedValue) {
-                        setState(() {
-                          _selectedFilter = selectedValue;
-                        });
-                      },
-                      itemBuilder: (BuildContext context) {
-                        return <String>['500m', '1km', '2km', '5km', '10km']
-                            .map((String value) {
-                          return PopupMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          );
-                        }).toList();
+                    const Text('Distance:'),
+                    const SizedBox(width: 8),
+                    DropdownButton<double>(
+                      value: _currentRadius,
+                      items: const [
+                        DropdownMenuItem(value: 500, child: Text('500m')),
+                        DropdownMenuItem(value: 15000, child: Text('15km')),
+                        DropdownMenuItem(value: 1000, child: Text('1km')),
+                        DropdownMenuItem(value: 2000, child: Text('2km')),
+                        DropdownMenuItem(value: 3000, child: Text('3km')),
+                        DropdownMenuItem(value: 4000, child: Text('4km')),
+                        DropdownMenuItem(value: 5000, child: Text('5km')),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => _currentRadius = value);
+                          widget.onRadiusChanged(value);
+                        }
                       },
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    Text(
-                      '\$${_currentPrice.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'Price Estimation:',
-                      style: TextStyle(color: Colors.black),
-                    ),
+                    Text('\$${_currentPrice.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 10),
+                    const Text('Price Estimation:'),
                   ],
                 ),
               ],
             ),
-            SizedBox(height: 20),
             Slider(
               value: _currentPrice,
               min: 0,
               max: 2,
               divisions: 100,
-              label: _currentPrice.round().toString(),
+              label: _currentPrice.toStringAsFixed(2),
               activeColor: Colors.red,
-              onChanged: (double value) {
-                setState(() {
-                  _currentPrice = value;
-                });
-              },
+              onChanged: (value) => setState(() => _currentPrice = value),
             ),
           ],
         ),
@@ -196,20 +136,33 @@ class _SearchBarWithFilterState extends State<SearchBarWithFilter> {
     );
   }
 
-  List<String> filterResults(
-      String from, String to, String searchTerm, String? filter) {
+  InputDecoration _inputDecoration(String label, IconData icon) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon, color: Colors.red),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Colors.blue),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    );
+  }
+
+  void _handleSearch() {
+    final from = _fromController.text.trim();
+    final to = _toController.text.trim();
+    final searchTerm = _searchController.text.trim();
+
     if (from.isEmpty || to.isEmpty) {
       print('Please provide both "From" and "To" locations.');
-      return [];
+      return;
     }
-    
-    // Example filtering logic (this should be replaced with actual logic)
-    List<String> allResults = ['Result 1', 'Result 2', 'Result 3']; // Placeholder for actual results
-    List<String> filteredResults = allResults.where((result) {
-      return result.contains(searchTerm) && 
-             result.contains(filter ?? '');
-    }).toList();
-    
-    return filteredResults;
+
+    widget.onSearchChanged(searchTerm);
+  }
+
+  List<String> filterResults(
+      String from, String to, String searchTerm, String? filter) {
+    return [];
   }
 }

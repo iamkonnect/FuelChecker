@@ -1,6 +1,5 @@
-import './services/firebase_service.dart';
+import 'package:firebase_core/firebase_core.dart'; // Ensure this import exists
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'screens/about_screen.dart';
 import 'screens/analytics_screen.dart';
 import 'screens/deactivate_account_screen.dart';
@@ -17,22 +16,36 @@ import 'screens/report_issue_screen.dart';
 import 'screens/help_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/verification_screen.dart';
+import 'package:provider/provider.dart';
+import 'services/favorites_service.dart';
+import 'services/nearby_service.dart';
 import 'providers/favorite_provider.dart';
 import 'providers/theme_provider.dart';
-import './scripts/migration_script.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   print("Firebase initialized successfully!");
-  // Initialize Firebase
-  await FirebaseService.initialize(); // Use service class
-// Run migration (remove after first run)
-  await uploadLocalStations();
+  // Initialize Firebase with your configuration
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+        apiKey: "AIzaSyAyySS4qUvBiSadoplbTQT6g-vi3OElxWM",
+        authDomain: "bahati-4911e.firebaseapp.com",
+        projectId: "bahati-4911e",
+        storageBucket: "bahati-4911e.firebasestorage.app",
+        messagingSenderId: "588077245698",
+        appId: "1:588077245698:web:0122f07e52f59e65a70e1b",
+        measurementId: "G-ER707HTEVD"),
+  );
+
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => FavoritesService()),
         ChangeNotifierProvider(
-          create: (context) => FavoriteProvider()..populateDummyFavorites(), // Correctly returns FavoriteProvider
+          create: (context) => NearbyService(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FavoriteProvider()..populateDummyFavorites(),
         ),
         ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
@@ -42,8 +55,6 @@ void main() async {
     ),
   );
 }
-
-// Removed incorrect ChangeNotifierProvider definition
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -63,7 +74,7 @@ class MyApp extends StatelessWidget {
           return FuelMapScreen(fuelType: args ?? 'defaultFuelType');
         },
         '/favorites': (context) => const FavoriteScreen(),
-        '/trends_screen': (context) => TrendsScreen(),
+        '/trends_screen': (context) => const TrendsScreen(),
         '/nearby': (context) => const NearbyScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/about': (context) => const AboutScreen(),

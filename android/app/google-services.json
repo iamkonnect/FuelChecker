@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "588077245698",
+    "project_id": "bahati-4911e",
+    "storage_bucket": "bahati-4911e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588077245698:android:998066915dccff81a70e1b",
+        "android_client_info": {
+          "package_name": "com.fuelcheckzw.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "588077245698",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "1:588077245698:ios:49bdd5aa826a7eaca70e1b"
+        }
+      ]
+    }
+  ],
+  "configuration_version": "1"
+}
