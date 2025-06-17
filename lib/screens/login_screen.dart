@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart'; // Importing email validator package
-import 'fuel_type_selection_screen.dart'; // Import the FuelTypeSelectionScreen
-import 'signup_screen_v7.dart'; // Import for the SignUpScreenV7
-import 'forgot_password_screen.dart'; // Import the ForgotPasswordScreen
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'fuel_type_selection_screen.dart';
+import 'signup_screen_v7.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,6 +17,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true; // To toggle password visibility
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   void _togglePasswordVisibility() {
     setState(() {
       _obscureText = !_obscureText;
@@ -23,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void _login() {
+  void _login() async {
     String email = _emailController.text;
     String password = _passwordController.text;
 
@@ -43,18 +46,28 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     } else {
-      // Example authentication logic
-      if (email == 'akwera@gmail.com' && password == '1234Abc') {
-        if (mounted) { // Check if the widget is still mounted
+      try {
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email.trim(),
+          password: password.trim(),
+        );
+
+        if (mounted) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => const FuelTypeSelectionScreen()),
           );
         }
-      } else {
+      } on FirebaseAuthException catch (e) {
+        print('FirebaseAuthException: ${e.code} - ${e.message}'); // Added detailed error logging
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid email or password')),
+          SnackBar(content: Text('Failed to sign in: ${e.message}')),
+        );
+      } catch (e) {
+        print('Unexpected error during sign in: $e'); // Added catch-all error logging
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('An unexpected error occurred. Please try again.')),
         );
       }
     }
@@ -103,8 +116,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscureText
-                              ? Icons.visibility // Updated to use Google Icons equivalent
-                              : Icons.visibility_off, // Updated to use Google Icons equivalent
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                         onPressed: _togglePasswordVisibility,
                       ),
@@ -127,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const SignUpScreenV7()), // Updated reference without const
+                              builder: (context) => const SignUpScreenV7()),
                         );
                       },
                       child: const Text(
@@ -146,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     backgroundColor: Colors.red,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    minimumSize: const Size(328, 51), // Set the button size
+                    minimumSize: const Size(328, 51),
                   ),
                   onPressed: _login,
                   child: const Text('Login',

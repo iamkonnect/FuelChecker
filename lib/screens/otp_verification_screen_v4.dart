@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
-  const OtpVerificationScreen({super.key});
+  const OtpVerificationScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,4 +22,13 @@ class OtpVerificationScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: OtpVerificationScreen(),
+  ));
+  // This command is used to get the dependencies listed in the pubspec.yaml file.
+  // It is not part of the Dart code and should be run in the terminal.
+  // flutter pub get
 }

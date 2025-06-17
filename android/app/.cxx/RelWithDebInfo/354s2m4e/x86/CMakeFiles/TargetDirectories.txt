@@ -1,0 +1,2 @@
+C:/Users/infin/Downloads/FuelChecker-1/android/app/.cxx/RelWithDebInfo/354s2m4e/x86/CMakeFiles/edit_cache.dir
+C:/Users/infin/Downloads/FuelChecker-1/android/app/.cxx/RelWithDebInfo/354s2m4e/x86/CMakeFiles/rebuild_cache.dir

@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
         '/help': (context) => const HelpScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/verification': (context) =>
-            const VerificationScreen(isVerified: false),
+            VerificationScreen(isVerified: false, email: 'test@example.com'),
       },
     );
   }

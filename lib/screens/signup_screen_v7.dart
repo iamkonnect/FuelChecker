@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'verification_screen.dart';
 
 class SignUpScreenV7 extends StatefulWidget {
@@ -27,7 +31,10 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
       TextEditingController(text: '+263');
   final TextEditingController _phoneController = TextEditingController();
 
-  void _signUp() {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  void _signUp() async {
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Passwords do not match!')),
@@ -42,13 +49,72 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
       return;
     }
 
-    // Handle sign-up logic here (e.g., API call)
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const VerificationScreen(isVerified: false),
-      ),
-    );
+    // Generate OTP
+    String otp = _generateOTP();
+
+    // Send OTP email (placeholder)
+    bool otpSent = await _sendOTPEmail(_emailController.text.trim(), otp);
+
+    if (!otpSent) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to send OTP email. Please try again.')),
+      );
+      return;
+    }
+
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Save additional user info and OTP to Firestore
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'fullName': _fullNameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'phone': _phoneController.text.trim(),
+        'otp': otp,
+      });
+
+      print('User created and data saved successfully.');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerificationScreen(
+            isVerified: false,
+            email: _emailController.text.trim(),
+          ),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      print('FirebaseAuthException: ${e.message}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to sign up: ${e.message}')),
+      );
+    } catch (e) {
+      print('Exception during signup: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    }
+  }
+
+  String _generateOTP() {
+    final random = Random();
+    String otp = '';
+    for (int i = 0; i < 6; i++) {
+      otp += random.nextInt(10).toString();
+    }
+    return otp;
+  }
+
+  Future<bool> _sendOTPEmail(String email, String otp) async {
+    // TODO: Implement actual email sending logic using Firebase Cloud Functions or other service
+    print('Sending OTP $otp to email $email');
+    // Simulate success
+    await Future.delayed(const Duration(seconds: 1));
+    return true;
   }
 
   @override
@@ -231,7 +297,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                 // Login TextButton
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context); // Navigate back to the login screen
+                    Navigator.pop(context);
                   },
                   child: const Text(
                     "Already Got an account? Login",
