@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -181,6 +182,32 @@ class FuelMapScreenState extends State<FuelMapScreen> {
     return await BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(size: Size(48, 48)),
       'assets/images/location1.png',
+    );
+  }
+
+  /// Get marker icon - prefers Google photo URL if available, falls back to local asset
+  Future<BitmapDescriptor> _getMarkerIcon(GasStation station) async {
+    // Check if stationIcon is a valid network URL (Google Places photo)
+    final stationIcon = station.stationIcon;
+    if (stationIcon.isNotEmpty && 
+        (stationIcon.startsWith('http://') || stationIcon.startsWith('https://'))) {
+      try {
+        // Download the image from URL
+        final response = await http.get(Uri.parse(stationIcon));
+        if (response.statusCode == 200) {
+          final Uint8List bytes = response.bodyBytes;
+          return BitmapDescriptor.bytes(bytes);
+        }
+      } catch (e) {
+        print('Error loading network image: $e');
+        // Fall back to local asset
+      }
+    }
+    
+    // Fall back to local asset
+    return await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(50, 50)),
+      station.logoAsset,
     );
   }
 

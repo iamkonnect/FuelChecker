@@ -15,6 +15,7 @@ class SignUpScreenV7 extends StatefulWidget {
 
 class SignUpScreenV7State extends State<SignUpScreenV7> {
   bool _obscureText = true;
+  bool _isLoading = false;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -35,6 +36,15 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void _signUp() async {
+    // Validate password strength
+    String? passwordError = _validatePassword(_passwordController.text);
+    if (passwordError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(passwordError)),
+      );
+      return;
+    }
+
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Passwords do not match!')),
@@ -49,6 +59,18 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
       return;
     }
 
+    // Validate phone number
+    if (_phoneController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Phone number is required')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
     // Generate OTP
     String otp = _generateOTP();
 
@@ -56,6 +78,9 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
     bool otpSent = await _sendOTPEmail(_emailController.text.trim(), otp);
 
     if (!otpSent) {
+      setState(() {
+        _isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to send OTP email. Please try again.')),
       );
@@ -74,30 +99,65 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
         'email': _emailController.text.trim(),
         'phone': _phoneController.text.trim(),
         'otp': otp,
+        'otpCreatedAt': DateTime.now().toIso8601String(), // Add timestamp for OTP expiration
+        'isVerified': false,
       });
 
-      print('User created and data saved successfully.');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VerificationScreen(
-            isVerified: false,
-            email: _emailController.text.trim(),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerificationScreen(
+              isVerified: false,
+              email: _emailController.text.trim(),
+            ),
           ),
-        ),
-      );
+        );
+      }
     } on FirebaseAuthException catch (e) {
-      print('FirebaseAuthException: ${e.message}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to sign up: ${e.message}')),
-      );
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to sign up: ${e.message}')),
+        );
+      }
     } catch (e) {
-      print('Exception during signup: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
-      );
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('An error occurred. Please try again.')),
+        );
+      }
     }
+  }
+
+  /// Validates password strength
+  /// Returns null if valid, error message if invalid
+  String? _validatePassword(String password) {
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters long';
+    }
+    if (!password.contains(RegExp(r'[A-Z]'))) {
+      return 'Password must contain at least one uppercase letter';
+    }
+    if (!password.contains(RegExp(r'[a-z]'))) {
+      return 'Password must contain at least one lowercase letter';
+    }
+    if (!password.contains(RegExp(r'[0-9]'))) {
+      return 'Password must contain at least one number';
+    }
+    if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      return 'Password must contain at least one special character';
+    }
+    return null;
   }
 
   String _generateOTP() {
@@ -111,10 +171,20 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
 
   Future<bool> _sendOTPEmail(String email, String otp) async {
     // TODO: Implement actual email sending logic using Firebase Cloud Functions or other service
-    print('Sending OTP $otp to email $email');
     // Simulate success
     await Future.delayed(const Duration(seconds: 1));
     return true;
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _countryCodeController.dispose();
+    _phoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -159,21 +229,18 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                 // Social Media Icons
                 Wrap(
                   alignment: WrapAlignment.center,
-                  spacing: 10, // Reduced the spacing between icons
+                  spacing: 10,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(
-                          10), // Reduced padding inside the icon container
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.grey), // Add a border with a color
-                        borderRadius: BorderRadius.circular(
-                            10), // Slightly rounded corners
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Image.asset(
                         'assets/images/Facebook Icon.png',
-                        width: 24, // Set a consistent width
-                        height: 24, // Set a consistent height
+                        width: 24,
+                        height: 24,
                       ),
                     ),
                     Container(
@@ -184,8 +251,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       ),
                       child: Image.asset(
                         'assets/images/apple icon logo.png',
-                        width: 24, // Set a consistent width
-                        height: 24, // Set a consistent height
+                        width: 24,
+                        height: 24,
                       ),
                     ),
                     Container(
@@ -196,8 +263,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       ),
                       child: Image.asset(
                         'assets/images/Black Google Icon.png',
-                        width: 24, // Set a consistent width
-                        height: 24, // Set a consistent height
+                        width: 24,
+                        height: 24,
                       ),
                     ),
                   ],
@@ -256,19 +323,19 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       flex: 1,
                       child: TextField(
                         controller: _countryCodeController,
-                        maxLength: 3, // Limit to 3 characters
+                        maxLength: 3,
                         decoration: const InputDecoration(
                           labelText: 'Country Code',
                           border: OutlineInputBorder(),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10), // Space between the fields
+                    const SizedBox(width: 10),
                     Expanded(
                       flex: 3,
                       child: TextField(
                         controller: _phoneController,
-                        maxLength: 10, // Limit to 10 characters
+                        maxLength: 10,
                         decoration: const InputDecoration(
                           labelText: 'Phone Number',
                           border: OutlineInputBorder(),
@@ -286,12 +353,21 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                         borderRadius: BorderRadius.circular(10)),
                     minimumSize: const Size(328, 51),
                   ),
-                  onPressed: _signUp,
-                  child: const Text('Sign Up',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+                  onPressed: _isLoading ? null : _signUp,
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text('Sign Up',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                 ),
                 const SizedBox(height: 20),
                 // Login TextButton
