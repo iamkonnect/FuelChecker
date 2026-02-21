@@ -57,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/map_background.png'), // Updated map background image
+            image: AssetImage('assets/images/zimbabwe map.png'), // Changed to relative asset path for Flutter best practice
             fit: BoxFit.cover,
           ),
         ),

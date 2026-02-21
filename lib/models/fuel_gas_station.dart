@@ -44,9 +44,20 @@ class GasStation {
 
   static String _getDefaultLogo(String? name) {
     final cleanedName = name?.toLowerCase() ?? '';
-    if (cleanedName.contains('shell')) return 'assets/logos/shell.png';
-    if (cleanedName.contains('bp')) return 'assets/logos/bp.png';
-    return 'assets/logos/default_station.png';
+    
+    // Map fuel station names to their logo assets
+    if (cleanedName.contains('shell')) return 'assets/Logo/shell.png';
+    if (cleanedName.contains('bp')) return 'assets/Logo/bp.png';
+    if (cleanedName.contains('puma')) return 'assets/Logo/puma.png';
+    if (cleanedName.contains('total') || cleanedName.contains('energies')) return 'assets/Logo/totalBR.png';
+    if (cleanedName.contains('oryx')) return 'assets/Logo/oryx.png';
+    if (cleanedName.contains('tsn')) return 'assets/Logo/tsn.png';
+    if (cleanedName.contains('egen') || cleanedName.contains('energy')) return 'assets/Logo/egen.png';
+    if (cleanedName.contains('oilcom')) return 'assets/Logo/oilcom.jpeg';
+    if (cleanedName.contains('camel')) return 'assets/Logo/cameloil.jpeg';
+    
+    // Default logo if no match found
+    return 'assets/Logo/pumaBR.png';
   }
 
   GasStation copyWith({

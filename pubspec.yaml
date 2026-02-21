@@ -60,6 +60,7 @@ flutter:
     - assets/images/Total Energies.png # Added logo for TotalEnergies
     - assets/images/zuva energy.png # Added logo for ZUVA
     - assets/images/energy park.png # Added logo for Energy Park
+    - assets/images/zimbabwe map.png # Added Zimbabwe map image asset
 
   fonts:
     - family: GoogleIcons

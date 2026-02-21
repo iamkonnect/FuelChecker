@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'verification_screen.dart';
 
 class SignUpScreenV7 extends StatefulWidget {
@@ -11,6 +15,7 @@ class SignUpScreenV7 extends StatefulWidget {
 
 class SignUpScreenV7State extends State<SignUpScreenV7> {
   bool _obscureText = true;
+  bool _isLoading = false;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -27,7 +32,19 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
       TextEditingController(text: '+263');
   final TextEditingController _phoneController = TextEditingController();
 
-  void _signUp() {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  void _signUp() async {
+    // Validate password strength
+    String? passwordError = _validatePassword(_passwordController.text);
+    if (passwordError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(passwordError)),
+      );
+      return;
+    }
+
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Passwords do not match!')),
@@ -42,13 +59,132 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
       return;
     }
 
-    // Handle sign-up logic here (e.g., API call)
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const VerificationScreen(isVerified: false),
-      ),
-    );
+    // Validate phone number
+    if (_phoneController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Phone number is required')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Generate OTP
+    String otp = _generateOTP();
+
+    // Send OTP email (placeholder)
+    bool otpSent = await _sendOTPEmail(_emailController.text.trim(), otp);
+
+    if (!otpSent) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to send OTP email. Please try again.')),
+      );
+      return;
+    }
+
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Save additional user info and OTP to Firestore
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'fullName': _fullNameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'phone': _phoneController.text.trim(),
+        'otp': otp,
+        'otpCreatedAt': DateTime.now().toIso8601String(), // Add timestamp for OTP expiration
+        'isVerified': false,
+      });
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerificationScreen(
+              isVerified: false,
+              email: _emailController.text.trim(),
+            ),
+          ),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to sign up: ${e.message}')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('An error occurred. Please try again.')),
+        );
+      }
+    }
+  }
+
+  /// Validates password strength
+  /// Returns null if valid, error message if invalid
+  String? _validatePassword(String password) {
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters long';
+    }
+    if (!password.contains(RegExp(r'[A-Z]'))) {
+      return 'Password must contain at least one uppercase letter';
+    }
+    if (!password.contains(RegExp(r'[a-z]'))) {
+      return 'Password must contain at least one lowercase letter';
+    }
+    if (!password.contains(RegExp(r'[0-9]'))) {
+      return 'Password must contain at least one number';
+    }
+    if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      return 'Password must contain at least one special character';
+    }
+    return null;
+  }
+
+  String _generateOTP() {
+    final random = Random();
+    String otp = '';
+    for (int i = 0; i < 6; i++) {
+      otp += random.nextInt(10).toString();
+    }
+    return otp;
+  }
+
+  Future<bool> _sendOTPEmail(String email, String otp) async {
+    // TODO: Implement actual email sending logic using Firebase Cloud Functions or other service
+    // Simulate success
+    await Future.delayed(const Duration(seconds: 1));
+    return true;
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _countryCodeController.dispose();
+    _phoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,21 +229,18 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                 // Social Media Icons
                 Wrap(
                   alignment: WrapAlignment.center,
-                  spacing: 10, // Reduced the spacing between icons
+                  spacing: 10,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(
-                          10), // Reduced padding inside the icon container
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.grey), // Add a border with a color
-                        borderRadius: BorderRadius.circular(
-                            10), // Slightly rounded corners
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Image.asset(
                         'assets/images/Facebook Icon.png',
-                        width: 24, // Set a consistent width
-                        height: 24, // Set a consistent height
+                        width: 24,
+                        height: 24,
                       ),
                     ),
                     Container(
@@ -118,8 +251,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       ),
                       child: Image.asset(
                         'assets/images/apple icon logo.png',
-                        width: 24, // Set a consistent width
-                        height: 24, // Set a consistent height
+                        width: 24,
+                        height: 24,
                       ),
                     ),
                     Container(
@@ -130,8 +263,8 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       ),
                       child: Image.asset(
                         'assets/images/Black Google Icon.png',
-                        width: 24, // Set a consistent width
-                        height: 24, // Set a consistent height
+                        width: 24,
+                        height: 24,
                       ),
                     ),
                   ],
@@ -140,14 +273,14 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                 // Full Name TextField
                 TextField(
                   controller: _fullNameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       labelText: 'Full Name', border: OutlineInputBorder()),
                 ),
                 const SizedBox(height: 20),
                 // Email TextField
                 TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       labelText: 'Email', border: OutlineInputBorder()),
                 ),
                 const SizedBox(height: 20),
@@ -157,7 +290,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                   obscureText: _obscureText,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureText
                           ? Icons.visibility
@@ -173,7 +306,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                   obscureText: _obscureText,
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureText
                           ? Icons.visibility
@@ -190,20 +323,20 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                       flex: 1,
                       child: TextField(
                         controller: _countryCodeController,
-                        maxLength: 3, // Limit to 3 characters
-                        decoration: InputDecoration(
+                        maxLength: 3,
+                        decoration: const InputDecoration(
                           labelText: 'Country Code',
                           border: OutlineInputBorder(),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10), // Space between the fields
+                    const SizedBox(width: 10),
                     Expanded(
                       flex: 3,
                       child: TextField(
                         controller: _phoneController,
-                        maxLength: 10, // Limit to 10 characters
-                        decoration: InputDecoration(
+                        maxLength: 10,
+                        decoration: const InputDecoration(
                           labelText: 'Phone Number',
                           border: OutlineInputBorder(),
                         ),
@@ -220,18 +353,27 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                         borderRadius: BorderRadius.circular(10)),
                     minimumSize: const Size(328, 51),
                   ),
-                  onPressed: _signUp,
-                  child: const Text('Sign Up',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+                  onPressed: _isLoading ? null : _signUp,
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text('Sign Up',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                 ),
                 const SizedBox(height: 20),
                 // Login TextButton
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context); // Navigate back to the login screen
+                    Navigator.pop(context);
                   },
                   child: const Text(
                     "Already Got an account? Login",

@@ -183,20 +183,21 @@ class GasStationService {
   }
 
   String _getLocalAsset(String stationName) {
-    const brandAssets = {
-      'shell': 'assets/logos/shell.png',
-      'bp': 'assets/logos/bp.png',
-      'puma': 'assets/logos/puma.png',
-      'camel': 'assets/logos/camel.png',
-    };
-
     final cleanedName = stationName.toLowerCase();
-    return brandAssets.entries
-        .firstWhere(
-          (entry) => cleanedName.contains(entry.key),
-          orElse: () => const MapEntry('default', 'assets/Logo/pumaBR.png'),
-        )
-        .value;
+    
+    // Map fuel station names to their logo assets
+    if (cleanedName.contains('shell')) return 'assets/Logo/shell.png';
+    if (cleanedName.contains('bp')) return 'assets/Logo/bp.png';
+    if (cleanedName.contains('puma')) return 'assets/Logo/puma.png';
+    if (cleanedName.contains('total') || cleanedName.contains('energies')) return 'assets/Logo/totalBR.png';
+    if (cleanedName.contains('oryx')) return 'assets/Logo/oryx.png';
+    if (cleanedName.contains('tsn')) return 'assets/Logo/tsn.png';
+    if (cleanedName.contains('egen') || cleanedName.contains('energy')) return 'assets/Logo/egen.png';
+    if (cleanedName.contains('oilcom')) return 'assets/Logo/oilcom.jpeg';
+    if (cleanedName.contains('camel')) return 'assets/Logo/cameloil.jpeg';
+    
+    // Default logo if no match found
+    return 'assets/Logo/pumaBR.png';
   }
 }
 

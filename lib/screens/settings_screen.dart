@@ -17,8 +17,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   /// Handles navigation based on the tapped index.
   void _onNavigationItemTapped(int index) {
-    if (_selectedIndex == index)
+    if (_selectedIndex == index) {
       return; // Avoid unnecessary rebuilds for the current screen
+    }
 
     setState(() {
       _selectedIndex = index;

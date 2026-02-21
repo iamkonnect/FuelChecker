@@ -27,7 +27,7 @@ void main() async {
   print("Firebase initialized successfully!");
   // Initialize Firebase with your configuration
   await Firebase.initializeApp(
-    options: FirebaseOptions(
+    options: const FirebaseOptions(
         apiKey: "AIzaSyAyySS4qUvBiSadoplbTQT6g-vi3OElxWM",
         authDomain: "bahati-4911e.firebaseapp.com",
         projectId: "bahati-4911e",
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
           return FuelMapScreen(fuelType: args ?? 'defaultFuelType');
         },
         '/favorites': (context) => const FavoriteScreen(),
-        '/trends_screen': (context) => TrendsScreen(),
+        '/trends_screen': (context) => const TrendsScreen(),
         '/nearby': (context) => const NearbyScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/about': (context) => const AboutScreen(),
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
         '/help': (context) => const HelpScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/verification': (context) =>
-            const VerificationScreen(isVerified: false),
+            VerificationScreen(isVerified: false, email: 'test@example.com'),
       },
     );
   }

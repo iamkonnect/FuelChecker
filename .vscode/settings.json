@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "C:/Users/infin/Downloads/FuelChecker/windows",
+    "cmake.sourceDirectory": "C:/Users/infin/Downloads/FuelChecker-1/windows",
     "yaml.schemas": {
         "https://json.schemastore.org/pubspec.json": "file:///c%3A/Users/infin/Desktop/FuelChecker/FuelChecker/pubspec.yaml"
     },

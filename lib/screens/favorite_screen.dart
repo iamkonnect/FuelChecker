@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/favorites_service.dart';
-import '../models/fuel_gas_station.dart';
 import '../widgets/custom_bottom_navigation_bar.dart';
 
 class FavoriteScreen extends StatefulWidget {

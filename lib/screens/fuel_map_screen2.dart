@@ -27,7 +27,7 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   final Set<Marker> _markers = {};
   final Map<PolylineId, Polyline> _polylines = {};
   int _selectedIndex = 0;
-  String _searchTerm = '';
+  final String _searchTerm = '';
   GoogleMapController? _mapController;
   String _locationName = '';
   bool _isLocationDetailsVisible = false;
@@ -475,9 +475,9 @@ class FuelMapScreenState extends State<FuelMapScreen> {
   Widget _buildCurrentLocationBottomSheet() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
       ),
       child: Column(
