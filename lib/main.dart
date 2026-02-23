@@ -30,11 +30,13 @@ void main() async {
     options: FirebaseOptions(
         apiKey: "AIzaSyAyySS4qUvBiSadoplbTQT6g-vi3OElxWM",
         authDomain: "bahati-4911e.firebaseapp.com",
+        databaseURL: "https://bahati-4911e-default-rtdb.asia-southeast1.firebasedatabase.app",
         projectId: "bahati-4911e",
         storageBucket: "bahati-4911e.firebasestorage.app",
         messagingSenderId: "588077245698",
-        appId: "1:588077245698:web:0122f07e52f59e65a70e1b",
-        measurementId: "G-ER707HTEVD"),
+        appId: "1:588077245698:android:67a90e92ff6d85c1a70e1b",
+        measurementId: "G-ER707HTEVD"
+    ),
   );
 
   runApp(

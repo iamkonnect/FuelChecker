@@ -44,7 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     } else {
       // Example authentication logic
-      if (email == 'akwera@gmail.com' && password == '1234Abc') {
+      if
+      //  (email == 'akwera@gmail.com' && password == '1234Abc') 
+              (email == 'rajausama8421@gmail.com' && password == '123456') 
+
+      {
         if (mounted) { // Check if the widget is still mounted
           Navigator.pushReplacement(
             context,

@@ -1,6 +1,12 @@
+import 'package:FuelCheckZW/widgets/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'fuel_type_selection_screen.dart';
 import 'verification_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
 
 class SignUpScreenV7 extends StatefulWidget {
   const SignUpScreenV7({super.key});
@@ -11,6 +17,7 @@ class SignUpScreenV7 extends StatefulWidget {
 
 class SignUpScreenV7State extends State<SignUpScreenV7> {
   bool _obscureText = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -220,7 +227,7 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
                         borderRadius: BorderRadius.circular(10)),
                     minimumSize: const Size(328, 51),
                   ),
-                  onPressed: _signUp,
+                  onPressed: _signup,
                   child: const Text('Sign Up',
                       style: TextStyle(
                           fontSize: 16,
@@ -247,5 +254,91 @@ class SignUpScreenV7State extends State<SignUpScreenV7> {
         ),
       ),
     );
+  }
+
+  Future<void> _signup() async {
+
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match!')),
+      );
+      return;
+    }
+
+    if (!EmailValidator.validate(_emailController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid email format!')),
+      );
+      return;
+    }
+
+    try {
+      showLoading(context: context);
+
+      UserCredential userCredential =
+      await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // User created successfully
+      User? user = userCredential.user;
+      // 🔥 Force refresh token
+
+      if (user != null) {
+        print("Signup successful: ${user.email}");
+        await user.getIdToken(true);
+        await storeUserData();
+        Navigator.of(context).pop();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const FuelTypeSelectionScreen(),
+          ),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      String message = "";
+      if (e.code == 'weak-password') {
+        message = 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        message = 'The account already exists for that email.';
+      } else {
+        message = e.message ?? 'Signup failed.';
+      }
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+      print(e);
+    }
+  }
+
+  Future<void> storeUserData() async {
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      print("User is NULL");
+      return;
+    }
+
+    print("Auth UID: ${user.uid}");
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .set({
+      'uid': user.uid,
+      'email': user.email,
+      'username': _fullNameController.text.trim(),
+      'countryCode': _countryCodeController.text.trim(),
+      'phoneNumber': _phoneController.text.trim(),
+      'createdAt': FieldValue.serverTimestamp(),
+    });
   }
 }
